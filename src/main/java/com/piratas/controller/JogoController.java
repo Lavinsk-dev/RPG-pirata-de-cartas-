@@ -14,7 +14,7 @@ public class JogoController {
 
     private final Map<String, Personagem> herois = new LinkedHashMap<>();
     private final Map<String, Object> inimigo = new LinkedHashMap<>();
-    private final List> armadilhasAtivas = new ArrayList<>();
+    private final List<java.util.Map<String, Object>> armadilhasAtivas = new ArrayList<>();
     private final List<String> logs = new ArrayList<>();
     private String cenarioAtual = "porto";
     private String cenarioTitulo = "Porto Pirata — Docas da Alvorada";
