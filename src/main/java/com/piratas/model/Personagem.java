@@ -4,88 +4,97 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Personagem {
+    private String id;
     private String nome;
-    private String epiteto;
+    private String titulo;
     private String profissao;
-    private int pvAtual;
+    private String imagemUrl;
+    private int nivel;
+    private int xp;
+    private int ouro;
+    private int pv;
     private int pvMax;
+    private int ep;
+    private int epMax;
     private int atk;
     private int def;
     private int vlc;
-    private int epAtual;
-    private int epMax;
+    private int escudo;
+    private int bonusImproviso;
+    private int atkTemp;
+    private int defTemp;
+    private String frutaNome;
+    private String frutaDescricao;
+    private List<Carta> baralho = new ArrayList<>();
 
-    private int escudoTemporario = 0;
-    private int bonusImproviso = 0;
-    private List<Carta> mao = new ArrayList<>();
-    private List<Carta> armadilhasSetadas = new ArrayList<>();
+    public Personagem() {}
 
-    public Personagem(String nome, String epiteto, String profissao, int pvMax, int atk, int def, int vlc) {
+    public Personagem(String id, String nome, String titulo, String profissao, String imagemUrl, int pvMax, int atk, int def, int vlc) {
+        this.id = id;
         this.nome = nome;
-        this.epiteto = epiteto;
+        this.titulo = titulo;
         this.profissao = profissao;
+        this.imagemUrl = imagemUrl;
+        this.nivel = 1;
+        this.xp = 0;
+        this.ouro = 20;
         this.pvMax = pvMax;
-        this.pvAtual = pvMax;
+        this.pv = pvMax;
+        this.epMax = 5;
+        this.ep = 5;
         this.atk = atk;
         this.def = def;
         this.vlc = vlc;
-        this.epMax = 5;
-        this.epAtual = 5;
-    }
-
-    public static Personagem criarLua() {
-        Personagem lua = new Personagem("Lua", "A Flor de Sangue", "Arqueóloga", 20, 4, 2, 2);
-        lua.mao.add(new Carta("Disparo de Pederneira", "ATAQUE", 1, 2, "Causa ATK + 2 de dano (+bônus do d20)."));
-        lua.mao.add(new Carta("Estocada na Brecha", "ATAQUE", 2, 3, "Causa ATK + 3 de dano e ignora até 3 de DEF."));
-        lua.mao.add(new Carta("Defesa Protetora", "TECNICA", 2, 5, "+5 DEF neste turno; protege um aliado."));
-        lua.mao.add(new Carta("Memória da Civilização", "TECNICA", 1, 3, "Próximo Improviso Narrativo ganha +3 no dado."));
-        lua.mao.add(new Carta("Mecanismo Antigo", "ARMADILHA", 2, 4, "(Setada) Causa 4 de dano e atrapalha o ataque inimigo."));
-        return lua;
-    }
-
-    public static Personagem criarInimigoTeste() {
-        return new Personagem("Capitão Morgano", "Mão de Ferro", "Marinha", 25, 5, 2, 1);
-    }
-
-    public boolean gastarEP(int custo) {
-        if (this.epAtual >= custo) {
-            this.epAtual -= custo;
-            return true;
-        }
-        return false;
-    }
-
-    public void iniciarNovoTurno() {
-        this.epAtual = Math.min(this.epMax, this.epAtual + 3);
-        this.escudoTemporario = 0;
-    }
-
-    public void receberDano(int danoBruto, int ignorarDefesa) {
-        int defesaEfetiva = Math.max(0, (this.def + this.escudoTemporario) - ignorarDefesa);
-        int danoFinal = Math.max(1, danoBruto - defesaEfetiva);
-        this.pvAtual = Math.max(0, this.pvAtual - danoFinal);
-    }
-
-    public void adicionarEscudo(int valor) { this.escudoTemporario += valor; }
-    public void adicionarBonusImproviso(int valor) { this.bonusImproviso += valor; }
-    public int consumirBonusImproviso() {
-        int b = this.bonusImproviso;
+        this.escudo = 0;
         this.bonusImproviso = 0;
-        return b;
+        this.atkTemp = 0;
+        this.defTemp = 0;
+        this.frutaNome = "";
+        this.frutaDescricao = "";
     }
 
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     public String getNome() { return nome; }
-    public String getEpiteto() { return epiteto; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
     public String getProfissao() { return profissao; }
-    public int getPvAtual() { return pvAtual; }
+    public void setProfissao(String profissao) { this.profissao = profissao; }
+    public String getImagemUrl() { return imagemUrl; }
+    public void setImagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; }
+    public int getNivel() { return nivel; }
+    public void setNivel(int nivel) { this.nivel = nivel; }
+    public int getXp() { return xp; }
+    public void setXp(int xp) { this.xp = xp; }
+    public int getOuro() { return ouro; }
+    public void setOuro(int ouro) { this.ouro = ouro; }
+    public int getPv() { return pv; }
+    public void setPv(int pv) { this.pv = pv; }
     public int getPvMax() { return pvMax; }
-    public int getAtk() { return atk; }
-    public int getDef() { return def; }
-    public int getVlc() { return vlc; }
-    public int getEpAtual() { return epAtual; }
+    public void setPvMax(int pvMax) { this.pvMax = pvMax; }
+    public int getEp() { return ep; }
+    public void setEp(int ep) { this.ep = ep; }
     public int getEpMax() { return epMax; }
-    public int getEscudoTemporario() { return escudoTemporario; }
+    public void setEpMax(int epMax) { this.epMax = epMax; }
+    public int getAtk() { return atk; }
+    public void setAtk(int atk) { this.atk = atk; }
+    public int getDef() { return def; }
+    public void setDef(int def) { this.def = def; }
+    public int getVlc() { return vlc; }
+    public void setVlc(int vlc) { this.vlc = vlc; }
+    public int getEscudo() { return escudo; }
+    public void setEscudo(int escudo) { this.escudo = escudo; }
     public int getBonusImproviso() { return bonusImproviso; }
-    public List<Carta> getMao() { return mao; }
-    public List<Carta> getArmadilhasSetadas() { return armadilhasSetadas; }
+    public void setBonusImproviso(int bonusImproviso) { this.bonusImproviso = bonusImproviso; }
+    public int getAtkTemp() { return atkTemp; }
+    public void setAtkTemp(int atkTemp) { this.atkTemp = atkTemp; }
+    public int getDefTemp() { return defTemp; }
+    public void setDefTemp(int defTemp) { this.defTemp = defTemp; }
+    public String getFrutaNome() { return frutaNome; }
+    public void setFrutaNome(String frutaNome) { this.frutaNome = frutaNome; }
+    public String getFrutaDescricao() { return frutaDescricao; }
+    public void setFrutaDescricao(String frutaDescricao) { this.frutaDescricao = frutaDescricao; }
+    public List<Carta> getBaralho() { return baralho; }
+    public void setBaralho(List<Carta> baralho) { this.baralho = baralho; }
 }
