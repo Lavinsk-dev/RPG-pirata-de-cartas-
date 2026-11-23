@@ -9,11 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-painel: rgba(24, 17, 12, 0.94);
+      --bg-painel: rgba(22, 14, 9, 0.92);
       --pergaminho: #f3e5c8;
-      --pergaminho-escuro: #d8c29d;
+      --pergaminho-escuro: #d5bc92;
       --ouro: #d4af37;
-      --ouro-brilho: #f7d774;
+      --ouro-brilho: #ffe082;
       --carmesim: #8b1e24;
       --esmeralda: #1f6f54;
       --azul-arcano: #245c8a;
@@ -26,26 +26,32 @@
 
     body {
       font-family: 'Crimson Text', Georgia, serif;
-      background:
-        radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 60%),
-        linear-gradient(180deg, #09111a 0%, #141c27 50%, #1a110b 100%);
       color: var(--texto-claro);
       min-height: 100vh;
+      /* Fundo temático de Oceano Profundo + Mapa Náutico + Vinheta de Madeira */
+      background-color: #09111a;
+      background-image:
+        radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.16) 0%, rgba(10, 16, 26, 0.88) 70%, #06090e 100%),
+        repeating-linear-gradient(0deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 1px, transparent 1px, transparent 60px),
+        repeating-linear-gradient(90deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 1px, transparent 1px, transparent 60px),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Cg fill='none' stroke='%23d4af37' stroke-opacity='0.09'%3E%3Ccircle cx='250' cy='250' r='180' stroke-width='2'/%3E%3Ccircle cx='250' cy='250' r='140' stroke-width='1' stroke-dasharray='6 6'/%3E%3Cpolygon points='250,30 270,230 470,250 270,270 250,470 230,270 30,250 230,230' stroke-width='1.5'/%3E%3Cpolygon points='110,110 250,220 390,110 280,250 390,390 250,280 110,390 220,250' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+      background-attachment: fixed;
+      background-position: center;
     }
 
     h1, h2, h3, h4, .fonte-titulo {
       font-family: 'Cinzel', serif;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
 
     .titulo-epico {
       font-family: 'Cinzel Decorative', serif;
       color: var(--ouro-brilho);
-      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.85), 0 0 20px rgba(212, 175, 55, 0.35);
+      text-shadow: 0 3px 14px rgba(0, 0, 0, 0.95), 0 0 24px rgba(212, 175, 55, 0.45);
     }
 
     header {
-      background: linear-gradient(90deg, #120c08, #24170e, #120c08);
+      background: linear-gradient(90deg, #0f0905, #29180d, #0f0905);
       border-bottom: 2px solid var(--ouro);
       padding: 14px 24px;
       display: flex;
@@ -53,39 +59,42 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.85);
     }
 
     .cenario-badge {
-      background: rgba(212, 175, 55, 0.14);
+      background: rgba(212, 175, 55, 0.16);
       border: 1px solid var(--ouro);
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--ouro-brilho);
+      box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.15);
     }
 
     .btn-pirata {
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      background: linear-gradient(180deg, #3b2616, #22150c);
+      background: linear-gradient(180deg, #4a2f1a, #24150b);
       color: var(--ouro-brilho);
       border: 1px solid var(--ouro);
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
     }
 
     .btn-pirata:hover {
-      background: linear-gradient(180deg, #52351e, #2f1d11);
+      background: linear-gradient(180deg, #633f23, #331e10);
       transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(212, 175, 55, 0.35);
     }
 
     .btn-perigo {
-      background: linear-gradient(180deg, #7a1c21, #4a0f12);
-      border-color: #e06c75;
+      background: linear-gradient(180deg, #851d23, #4a0d11);
+      border-color: #f1948a;
       color: #ffe6e6;
     }
 
@@ -111,25 +120,25 @@
     }
 
     .card-heroi-selecao {
-      background: linear-gradient(180deg, #241911 0%, #140e0a 100%);
+      background: linear-gradient(180deg, #261910 0%, #120b07 100%);
       border: 2px solid var(--ouro);
       border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85), inset 0 0 18px rgba(212, 175, 55, 0.12);
       display: flex;
       flex-direction: column;
     }
 
     .card-heroi-selecao:hover {
       transform: translateY(-6px);
-      box-shadow: 0 16px 36px rgba(212, 175, 55, 0.35);
+      box-shadow: 0 18px 40px rgba(212, 175, 55, 0.4);
     }
 
     .moldura-retrato {
       position: relative;
-      height: 320px;
+      height: 330px;
       background: #0d0907;
       border-bottom: 2px solid var(--ouro);
       overflow: hidden;
@@ -148,7 +157,7 @@
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(18, 12, 8, 0.92);
+      background: rgba(18, 12, 8, 0.94);
       border: 1px solid var(--ouro);
       color: var(--ouro-brilho);
       padding: 4px 14px;
@@ -167,7 +176,7 @@
     }
 
     .info-heroi-selecao h3 {
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       color: var(--ouro-brilho);
     }
 
@@ -181,8 +190,8 @@
     .atributos-mini {
       display: flex;
       justify-content: space-around;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 16px;
@@ -214,17 +223,17 @@
       border: 2px solid var(--ouro);
       border-radius: 12px;
       padding: 18px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
     }
 
     .inimigo-box {
-      border-color: #b8323a;
-      background: linear-gradient(135deg, rgba(45, 14, 18, 0.94), rgba(20, 12, 12, 0.96));
+      border-color: #c0392b;
+      background: linear-gradient(135deg, rgba(52, 14, 18, 0.94), rgba(20, 11, 11, 0.96));
     }
 
     .barra-container {
       background: #0b0806;
-      border: 1px solid rgba(212, 175, 55, 0.4);
+      border: 1px solid rgba(212, 175, 55, 0.45);
       border-radius: 8px;
       height: 22px;
       overflow: hidden;
@@ -233,7 +242,7 @@
     }
 
     .barra-fill-pv {
-      background: linear-gradient(90deg, #7a161c, #c92a34);
+      background: linear-gradient(90deg, #7a161c, #d9303b);
       height: 100%;
       transition: width 0.3s ease;
     }
@@ -264,14 +273,15 @@
     }
 
     .avatar-circular {
-      width: 82px;
-      height: 82px;
+      width: 84px;
+      height: 84px;
       border-radius: 50%;
       border: 2px solid var(--ouro);
       object-fit: cover;
       object-position: top;
       flex-shrink: 0;
       background: #120c08;
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
     }
 
     .cristais-ep {
@@ -301,7 +311,7 @@
       justify-content: space-between;
       align-items: center;
       margin: 18px 0 12px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.4);
       padding-bottom: 6px;
     }
 
@@ -320,7 +330,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.75);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -362,7 +372,7 @@
     }
 
     .carta-arte {
-      height: 115px;
+      height: 120px;
       border-radius: 6px;
       border: 1px solid #6e4e2e;
       margin-bottom: 8px;
@@ -379,7 +389,7 @@
       object-fit: cover;
     }
 
-    .carta-arte-placeholder { font-size: 2.4rem; }
+    .carta-arte-placeholder { font-size: 2.5rem; }
 
     .carta-tipo {
       font-family: 'Cinzel', serif;
@@ -441,7 +451,7 @@
 
     .log-item {
       padding: 6px 10px;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.4);
       border-left: 3px solid var(--ouro);
       border-radius: 4px;
     }
@@ -461,7 +471,7 @@
   </header>
 
   <section id="tela-selecao">
-    <h2 class="titulo-epico" style="font-size: 2.1rem;">Escolha Seu Pirata</h2>
+    <h2 class="titulo-epico" style="font-size: 2.2rem;">Escolha Seu Pirata</h2>
     <p class="subtitulo-selecao">Selecione quem liderará a investida contra as forças corsárias</p>
     <div class="grid-herois" id="lista-herois-selecao"></div>
   </section>
@@ -512,7 +522,6 @@
         const novoEstado = await resp.json();
         const novoJson = JSON.stringify(novoEstado);
 
-        // Só atualiza a tela se algo realmente mudou (evita flick/tremor!)
         if (!forcar && novoJson === ultimoEstadoJson) {
           return;
         }
