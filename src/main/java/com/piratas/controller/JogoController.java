@@ -5,7 +5,6 @@ import com.piratas.model.Personagem;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("/api/jogo")
@@ -14,181 +13,194 @@ public class JogoController {
 
     private final Map<String, Personagem> herois = new LinkedHashMap<>();
     private final Map<String, Object> inimigo = new LinkedHashMap<>();
-    private final List<java.util.Map<String, Object>> armadilhasAtivas = new ArrayList<>();
+    private final List<Carta> baralhoInimigo = new ArrayList<>();
     private final List<String> logs = new ArrayList<>();
+    private final List<java.util.Map<String, Object>> armadilhasAtivas = new ArrayList<>();
     private String cenarioAtual = "porto";
     private String cenarioTitulo = "Porto Pirata — Docas da Alvorada";
+    private final Random random = new Random();
 
     public JogoController() {
-        inicializarDados();
+        inicializarJogo();
     }
 
-    private void inicializarDados() {
+    private void inicializarJogo() {
         herois.clear();
-        armadilhasAtivas.clear();
         logs.clear();
+        armadilhasAtivas.clear();
+        baralhoInimigo.clear();
 
-        // 1. LUA - A Flor de Sangue
-        Personagem lua = new Personagem("lua", "Lua", "A Flor de Sangue", "Arqueóloga", "/imagens/lua.jpg", 20, 4, 2, 2);
-        lua.getBaralho().add(new Carta("lua_1", "Disparo de Precisão", "ATAQUE", 2, 4, "PRECISAO", "Tiro com pistola de cano longo. +2 no d20 se houver armadilha ou análise.", "/imagens/carta_lua.jpg"));
-        lua.getBaralho().add(new Carta("lua_2", "Estocada e Chute de Salto", "ATAQUE", 1, 2, "AGIL_EP", "Faca + golpe com salto de cano longo. Recupera 1 EP se d20 >= 12.", ""));
-        lua.getBaralho().add(new Carta("lua_3", "Leitura de Ruínas", "SUPORTE", 1, 2, "BUFF_ATK", "Analisa falhas antigas no alvo. Concede +2 ATK para o grupo no turno.", ""));
-        lua.getBaralho().add(new Carta("lua_4", "Fio de Escavação", "ARMADILHA", 2, 4, "ESTACAS", "Carta oculta: prende o atacante, bloqueia 4 de dano e causa 4 de dano.", ""));
-        lua.getBaralho().add(new Carta("lua_5", "Fragmento do Códice", "SUPORTE", 2, 3, "CURA_DEF", "Anotações da civilização perdida. Cura 3 PV de todos e dá +1 DEF.", ""));
+        Personagem lua = new Personagem("lua", "Lua", "Olhos de Águia", "Atiradora", "/imagens/lua.jpg", 18, 4, 1, 5);
+        lua.getBaralho().add(new Carta("c1", "Disparo de Precisão", "ATAQUE", 2, 4, "CRITICO_VELOZ", "Tiro certeiro. Se VLC > DEF inimiga, +2 de dano.", "/imagens/carta_lua.jpg"));
+        lua.getBaralho().add(new Carta("c2", "Rajada de Pólvora", "ATAQUE", 3, 6, "QUEIMADURA", "Disparo explosivo que atravessa parte da defesa.", ""));
+        lua.getBaralho().add(new Carta("c3", "Cortina de Fumaça", "DEFESA", 1, 3, "ESQUIVA", "Concede +3 de Escudo e +1 VLC no turno.", ""));
+        lua.getBaralho().add(new Carta("c4", "Fio Invisível de Pólvora", "ARMADILHA", 2, 5, "EXPLOSAO_OCULTA", "Carta oculta: detona quando o inimigo atacar, causando 5 de dano.", ""));
+        lua.getBaralho().add(new Carta("c5", "Olhar do Horizonte", "SUPORTE", 1, 2, "FOCO", "Aumenta +2 ATK neste turno e +1 em testes de d20.", ""));
+
+        Personagem kyan = new Personagem("kyan", "Kyan", "O Lobo Branco", "Carpinteiro", "/imagens/kyan.jpg", 20, 3, 2, 3);
+        kyan.getBaralho().add(new Carta("k1", "Corte Duplo dos Machados", "ATAQUE", 2, 3, "GOLPE_DUPLO", "Golpe veloz (VLC 3). Se d20 >= 14, desfere segundo corte (+3 dano).", "/imagens/carta_kyan.jpg"));
+        kyan.getBaralho().add(new Carta("k2", "Martelo & Cinzel", "ATAQUE", 1, 2, "QUEBRA_DEFESA", "Impacto de construtor que abala a guarda inimiga.", ""));
+        kyan.getBaralho().add(new Carta("k3", "Barricada de Carpinteiro", "DEFESA", 2, 4, "FORTIFICAR", "Ergue vigas reforçadas: ganha +4 Escudo e +1 DEF no turno.", ""));
+        kyan.getBaralho().add(new Carta("k4", "Estrepes e Vigas Ocultas", "ARMADILHA", 2, 4, "CONTRA_ATAQUE", "Carta oculta: estrutura desaba no atacante, bloqueando 4 e causando 4 de dano.", ""));
+        kyan.getBaralho().add(new Carta("k5", "Pulso Rúnico Latente", "SUPORTE", 2, 3, "CURA_RUNICA", "As runas do machado aquecem com seus batimentos: cura 3 PV e dá +2 ATK.", ""));
+
+        Personagem zafira = new Personagem("zafira", "Zafira", "Chama Escarlate", "Combatente", "/imagens/zafira.jpg", 22, 4, 2, 2);
+        zafira.getBaralho().add(new Carta("z1", "Sopro Dracônico", "ATAQUE", 3, 6, "CHAMAS", "Chamas ancestrais envolvem o alvo com poder devastador.", "/imagens/carta_zafira.jpg"));
+        zafira.getBaralho().add(new Carta("z2", "Garra Rubra", "ATAQUE", 1, 3, "SANGRAMENTO", "Investida feroz corpo-a-corpo.", ""));
+        zafira.getBaralho().add(new Carta("z3", "Escamas de Obsidiana", "DEFESA", 2, 4, "BLOQUEIO_TOTAL", "Endurece a postura e recebe +4 de Escudo.", ""));
+        zafira.getBaralho().add(new Carta("z4", "Rastro de Brasas", "ARMADILHA", 2, 5, "CHAMAS_OCULTAS", "Carta oculta: incendeia o oponente ao ser atacada.", ""));
+        zafira.getBaralho().add(new Carta("z5", "Fúria Ancestral", "SUPORTE", 2, 3, "FURIA", "Desperta o sangue dracônico: +3 ATK no turno.", ""));
+
         herois.put("lua", lua);
-
-        // 2. KYAN - O Lobo Branco
-        Personagem kyan = new Personagem("kyan", "Kyan", "O Lobo Branco", "Carpinteiro / Pirata", "/imagens/kyan.jpg", 20, 3, 2, 3);
-        kyan.getBaralho().add(new Carta("kyan_1", "Corte Duplo dos Machados", "ATAQUE", 2, 3, "DUPLO", "Golpe veloz (VLC 3). Se d20 >= 14, desfere segundo corte (+3 dano).", ""));
-        kyan.getBaralho().add(new Carta("kyan_2", "Martelo & Cinzel", "ATAQUE", 1, 2, "QUEBRA_DEF", "Impacto de construtor que abala a guarda inimiga.", ""));
-        kyan.getBaralho().add(new Carta("kyan_3", "Barricada de Carpinteiro", "DEFESA", 2, 4, "ESCUDO_DEF", "Ergue vigas reforçadas: ganha +4 Escudo e +1 DEF no turno.", ""));
-        kyan.getBaralho().add(new Carta("kyan_4", "Estrepes e Vigas Ocultas", "ARMADILHA", 2, 4, "DESABAMENTO", "Carta oculta: estrutura desaba no atacante, bloqueando 4 e causando 4 de dano.", ""));
-        kyan.getBaralho().add(new Carta("kyan_5", "Pulso Rúnico Latente", "SUPORTE", 2, 3, "CURA_ATK", "As runas do machado aquecem com seus batimentos: cura 3 PV e dá +2 ATK.", "/imagens/carta_kyan.jpg"));
         herois.put("kyan", kyan);
-
-        // 3. ZAFIRA D'ÁVILLA - A Marcada pelo Dragão
-        Personagem zafira = new Personagem("zafira", "Zafira D'Ávilla", "A Marcada pelo Dragão", "Navegadora / Pirata", "/imagens/zafira.jpg", 20, 3, 3, 2);
-        zafira.getBaralho().add(new Carta("zafira_1", "Dança das Lâminas", "ATAQUE", 2, 3, "ESQUIVA_ATK", "Golpe giratório com leques laminados. Causa dano e ganha +1 DEF.", "/imagens/carta_zafira.jpg"));
-        zafira.getBaralho().add(new Carta("zafira_2", "Corrente de Vento", "SUPORTE", 1, 2, "VENTO_EP", "Lê os ventos como sua mãe: restaura +2 EP para todos os aliados.", ""));
-        zafira.getBaralho().add(new Carta("zafira_3", "Guarda do Dragão", "DEFESA", 2, 4, "REFLETE", "Fecha os leques reforçados: ganha +4 Escudo e causa 2 de dano imediato.", ""));
-        zafira.getBaralho().add(new Carta("zafira_4", "Agulhas & Névoa Náutica", "ARMADILHA", 2, 4, "VENENO", "Carta oculta: some na fumaça, bloqueia 4 de dano e dispara agulhas (4 dano).", ""));
-        zafira.getBaralho().add(new Carta("zafira_5", "Bússola Estelar", "SUPORTE", 2, 3, "CURA_SORTE", "Traça a rota perfeita: cura 3 PV e concede +2 de bônus na próxima rolagem.", ""));
         herois.put("zafira", zafira);
 
-        inimigo.put("nome", "Capitão Morgano — Corsário de Ferro");
-        inimigo.put("pv", 45);
-        inimigo.put("pvMax", 45);
-        inimigo.put("atk", 5);
-        inimigo.put("def", 2);
-
-        registrarLog("⚓ A tripulação desembarcou em Porto Pirata. Escolha seu personagem!");
+        configurarInimigo("Capitão Morgano — Corsário de Ferro", 45, 5, 2);
+        registrarLog("⚓ A batalha começou em " + cenarioTitulo + "!");
     }
 
-    private void registrarLog(String msg) {
-        logs.add(0, msg);
-        if (logs.size() > 25) {
-            logs.remove(logs.size() - 1);
-        }
+    private void configurarInimigo(String nome, int pvMax, int atk, int def) {
+        inimigo.clear();
+        inimigo.put("nome", nome);
+        inimigo.put("pv", pvMax);
+        inimigo.put("pvMax", pvMax);
+        inimigo.put("atk", atk);
+        inimigo.put("def", def);
+        inimigo.put("escudo", 0);
+
+        baralhoInimigo.clear();
+        baralhoInimigo.add(new Carta("ini1", "Sabre Corsário", "ATAQUE", 1, atk, "CORTE", "Ataque direto com lâmina pesada.", ""));
+        baralhoInimigo.add(new Carta("ini2", "Disparo de Canhão", "ATAQUE", 2, atk + 3, "IMPACTO", "Tiro de pólvora que estilhaça o convés.", ""));
+        baralhoInimigo.add(new Carta("ini3", "Guarda de Ferro", "DEFESA", 1, 4, "ESCUDO", "Ergue defesa corsária (+4 Escudo).", ""));
+        baralhoInimigo.add(new Carta("ini4", "Saque & Intimidação", "SUPORTE", 1, 2, "FURIA_INIMIGA", "Recupera 4 PV e ganha +2 ATK.", ""));
+    }
+
+    private void registrarLog(String texto) {
+        logs.add(0, texto);
+        if (logs.size() > 35) logs.remove(logs.size() - 1);
     }
 
     @GetMapping("/estado")
     public Map<String, Object> getEstado() {
-        Map<String, Object> resp = new LinkedHashMap<>();
-        resp.put("cenario", cenarioAtual);
-        resp.put("cenarioTitulo", cenarioTitulo);
-        resp.put("inimigo", inimigo);
-        resp.put("herois", new ArrayList<>(herois.values()));
-        resp.put("armadilhasAtivas", armadilhasAtivas);
-        resp.put("logs", logs);
-        return resp;
+        Map<String, Object> res = new LinkedHashMap<>();
+        res.put("cenario", cenarioAtual);
+        res.put("cenarioTitulo", cenarioTitulo);
+        res.put("herois", new ArrayList<>(herois.values()));
+        res.put("inimigo", inimigo);
+        res.put("baralhoInimigo", baralhoInimigo);
+        res.put("armadilhasAtivas", armadilhasAtivas);
+        res.put("logs", logs);
+        return res;
     }
 
     @PostMapping("/jogar")
     public Map<String, Object> jogarCarta(@RequestBody Map<String, String> payload) {
-        String pId = payload.get("personagemId");
-        String cId = payload.get("cartaId");
-        Personagem h = herois.get(pId);
-        if (h == null) return Map.of("erro", "Personagem não encontrado");
+        Personagem p = herois.get(payload.get("personagemId"));
+        String cartaId = payload.get("cartaId");
+        if (p == null) return Map.of("erro", "Personagem não encontrado.");
 
-        Carta carta = h.getBaralho().stream().filter(c -> c.getId().equals(cId)).findFirst().orElse(null);
-        if (carta == null) return Map.of("erro", "Carta não encontrada");
+        Carta carta = p.getBaralho().stream().filter(c -> c.getId().equals(cartaId)).findFirst().orElse(null);
+        if (carta == null) return Map.of("erro", "Carta não encontrada.");
+        if (p.getEp() < carta.getCustoEp()) return Map.of("erro", "Energia (EP) insuficiente!");
 
-        if (h.getEp() < carta.getCustoEp()) {
-            return Map.of("erro", "Energia (EP) insuficiente! Encerre o turno para recuperar.");
-        }
+        p.setEp(p.getEp() - carta.getCustoEp());
+        int d20 = random.nextInt(20) + 1 + p.getBonusImproviso();
+        p.setBonusImproviso(0);
 
-        h.setEp(h.getEp() - carta.getCustoEp());
-        int d20 = ThreadLocalRandom.current().nextInt(1, 21);
-        int improviso = h.getBonusImproviso();
-        h.setBonusImproviso(0);
-
-        if ("PRECISAO".equals(carta.getEfeitoEspecial()) && !armadilhasAtivas.isEmpty()) {
-            improviso += 2;
-        }
-
-        int rolagemFinal = d20 + improviso;
-        int poder = carta.getPoderTotal();
-        String resumo = "";
-
+        String resumo;
         switch (carta.getTipo()) {
-            case "ATAQUE": {
-                int atkTotal = h.getAtk() + h.getAtkTemp();
+            case "ATAQUE" -> {
                 int defInimigo = (int) inimigo.get("def");
-                int bonusCritico = (rolagemFinal >= 18) ? 3 : (rolagemFinal == 1 ? -2 : 0);
-                int bonusExtra = 0;
-
-                if ("DUPLO".equals(carta.getEfeitoEspecial()) && rolagemFinal >= 14) {
-                    bonusExtra += 3;
+                int escudoIni = (int) inimigo.getOrDefault("escudo", 0);
+                int poder = carta.getPoderTotal() + p.getAtk() + p.getAtkTemp();
+                if ("GOLPE_DUPLO".equals(carta.getEfeitoEspecial()) && d20 >= 14) poder += 3;
+                if ("CRITICO_VELOZ".equals(carta.getEfeitoEspecial()) && p.getVlc() > defInimigo) poder += 2;
+                if (d20 >= 19) poder += 3;
+                int danoTotal = Math.max(1, poder - defInimigo);
+                if (escudoIni > 0) {
+                    int absorvido = Math.min(escudoIni, danoTotal);
+                    inimigo.put("escudo", escudoIni - absorvido);
+                    danoTotal -= absorvido;
                 }
-                if ("AGIL_EP".equals(carta.getEfeitoEspecial()) && rolagemFinal >= 12) {
-                    h.setEp(Math.min(h.getEpMax(), h.getEp() + 1));
-                }
-                if ("ESQUIVA_ATK".equals(carta.getEfeitoEspecial())) {
-                    h.setDefTemp(h.getDefTemp() + 1);
-                }
-
-                int dano = Math.max(1, poder + atkTotal + bonusCritico + bonusExtra - defInimigo);
-                int pvInimigo = Math.max(0, (int) inimigo.get("pv") - dano);
-                inimigo.put("pv", pvInimigo);
-
-                resumo = String.format("⚔️ %s usou [%s] (1d20=%d%s) e causou %d de dano em %s!",
-                        h.getNome(), carta.getNome(), d20,
-                        improviso > 0 ? "+" + improviso : "", dano, inimigo.get("nome"));
-                break;
+                int pvAtual = Math.max(0, (int) inimigo.get("pv") - danoTotal);
+                inimigo.put("pv", pvAtual);
+                resumo = "⚔️ " + p.getNome() + " usou [" + carta.getNome() + "] (1d20=" + d20 + ") e causou " + danoTotal + " de dano!";
             }
-            case "DEFESA": {
-                int escudoGanho = poder + h.getDef() + (rolagemFinal >= 15 ? 2 : 0);
-                h.setEscudo(h.getEscudo() + escudoGanho);
-                if ("ESCUDO_DEF".equals(carta.getEfeitoEspecial())) {
-                    h.setDefTemp(h.getDefTemp() + 1);
-                }
-                if ("REFLETE".equals(carta.getEfeitoEspecial())) {
-                    int pvInimigo = Math.max(0, (int) inimigo.get("pv") - 2);
-                    inimigo.put("pv", pvInimigo);
-                }
-                resumo = String.format("🛡️ %s ativou [%s] (1d20=%d) e ganhou +%d de Escudo!",
-                        h.getNome(), carta.getNome(), d20, escudoGanho);
-                break;
+            case "DEFESA" -> {
+                int ganhoEscudo = carta.getPoderTotal();
+                p.setEscudo(p.getEscudo() + ganhoEscudo);
+                p.setDefTemp(p.getDefTemp() + 1);
+                resumo = "🛡️ " + p.getNome() + " ativou [" + carta.getNome() + "] e ganhou +" + ganhoEscudo + " de Escudo!";
             }
-            case "ARMADILHA": {
+            case "ARMADILHA" -> {
                 Map<String, Object> trap = new LinkedHashMap<>();
-                trap.put("id", UUID.randomUUID().toString());
-                trap.put("donoId", h.getId());
-                trap.put("donoNome", h.getNome());
-                trap.put("nome", carta.getNome());
-                trap.put("poder", poder);
+                trap.put("donoId", p.getId());
+                trap.put("donoNome", p.getNome());
+                trap.put("cartaNome", carta.getNome());
+                trap.put("poder", carta.getPoderTotal());
                 armadilhasAtivas.add(trap);
-                resumo = String.format("🪤 %s posicionou uma carta virada para baixo na mesa!", h.getNome());
-                break;
+                resumo = "🪤 " + p.getNome() + " posicionou uma Carta Oculta na mesa!";
             }
-            case "SUPORTE": {
-                if ("BUFF_ATK".equals(carta.getEfeitoEspecial())) {
-                    herois.values().forEach(aliado -> aliado.setAtkTemp(aliado.getAtkTemp() + 2));
-                    resumo = String.format("📜 %s usou [%s]: +2 ATK para toda a tripulação neste turno!", h.getNome(), carta.getNome());
-                } else if ("VENTO_EP".equals(carta.getEfeitoEspecial())) {
-                    herois.values().forEach(aliado -> aliado.setEp(Math.min(aliado.getEpMax(), aliado.getEp() + 2)));
-                    resumo = String.format("🌬️ %s usou [%s]: +2 EP restaurados para todos os aliados!", h.getNome(), carta.getNome());
-                } else {
-                    h.setPv(Math.min(h.getPvMax(), h.getPv() + poder));
-                    if ("CURA_DEF".equals(carta.getEfeitoEspecial())) h.setDefTemp(h.getDefTemp() + 1);
-                    if ("CURA_ATK".equals(carta.getEfeitoEspecial())) h.setAtkTemp(h.getAtkTemp() + 2);
-                    if ("CURA_SORTE".equals(carta.getEfeitoEspecial())) h.setBonusImproviso(h.getBonusImproviso() + 2);
-                    resumo = String.format("✨ %s ativou [%s] (1d20=%d) e recuperou %d PV!", h.getNome(), carta.getNome(), d20, poder);
-                }
-                break;
+            default -> {
+                int cura = carta.getPoderTotal();
+                p.setPv(Math.min(p.getPvMax(), p.getPv() + cura));
+                p.setAtkTemp(p.getAtkTemp() + 2);
+                resumo = "✨ " + p.getNome() + " usou [" + carta.getNome() + "], recuperou " + cura + " PV e ganhou +2 ATK!";
             }
         }
 
         registrarLog(resumo);
-        return Map.of("ok", true, "d20", d20, "mensagem", resumo);
+        return Map.of("ok", true, "mensagem", resumo, "d20", d20);
+    }
+
+    @PostMapping("/mestre/jogar-carta-inimigo")
+    public Map<String, Object> mestreJogarCartaInimigo(@RequestBody Map<String, String> payload) {
+        String cartaId = payload.get("cartaId");
+        String alvoId = payload.get("alvoId");
+        Personagem alvo = herois.get(alvoId);
+        if (alvo == null) return Map.of("erro", "Selecione um pirata alvo.");
+
+        Carta carta = baralhoInimigo.stream().filter(c -> c.getId().equals(cartaId)).findFirst().orElse(null);
+        if (carta == null) return Map.of("erro", "Carta inimiga inválida.");
+
+        String msg;
+        if ("DEFESA".equals(carta.getTipo())) {
+            int esc = (int) inimigo.getOrDefault("escudo", 0) + carta.getValorBase();
+            inimigo.put("escudo", esc);
+            msg = "🛡️ " + inimigo.get("nome") + " usou [" + carta.getNome() + "] (+4 Escudo)!";
+        } else if ("SUPORTE".equals(carta.getTipo())) {
+            int novoPv = Math.min((int) inimigo.get("pvMax"), (int) inimigo.get("pv") + 4);
+            inimigo.put("pv", novoPv);
+            inimigo.put("atk", (int) inimigo.get("atk") + 2);
+            msg = "💀 " + inimigo.get("nome") + " usou [" + carta.getNome() + "] (+4 PV, +2 ATK)!";
+        } else {
+            if (!armadilhasAtivas.isEmpty()) {
+                Map<String, Object> trap = armadilhasAtivas.remove(0);
+                int danoTrap = (int) trap.get("poder");
+                inimigo.put("pv", Math.max(0, (int) inimigo.get("pv") - danoTrap));
+                msg = "💥 ARMADILHA ATIVADA! [" + trap.get("cartaNome") + "] de " + trap.get("donoNome") + " causou " + danoTrap + " de dano!";
+            } else {
+                int d20 = random.nextInt(20) + 1;
+                int dano = Math.max(1, carta.getValorBase() + (d20 >= 18 ? 3 : 0) - (alvo.getDef() + alvo.getDefTemp()));
+                if (alvo.getEscudo() > 0) {
+                    int absorvido = Math.min(alvo.getEscudo(), dano);
+                    alvo.setEscudo(alvo.getEscudo() - absorvido);
+                    dano -= absorvido;
+                }
+                alvo.setPv(Math.max(0, alvo.getPv() - dano));
+                msg = "🩸 " + inimigo.get("nome") + " jogou [" + carta.getNome() + "] em " + alvo.getNome() + " (1d20=" + d20 + ") causando " + dano + " de dano!";
+            }
+        }
+        registrarLog(msg);
+        return Map.of("ok", true, "mensagem", msg);
     }
 
     @PostMapping("/turno")
     public Map<String, Object> encerrarTurno() {
-        for (Personagem h : herois.values()) {
-            h.setEp(h.getEpMax());
-            h.setAtkTemp(0);
-            h.setDefTemp(0);
+        for (Personagem p : herois.values()) {
+            p.setEp(p.getEpMax());
+            p.setAtkTemp(0);
+            p.setDefTemp(0);
         }
         registrarLog("🔄 Novo Turno! Energia (EP) restaurada para toda a tripulação.");
         return Map.of("ok", true);
@@ -196,157 +208,122 @@ public class JogoController {
 
     @PostMapping("/loja")
     public Map<String, Object> comprarLoja(@RequestBody Map<String, String> payload) {
-        Personagem h = herois.get(payload.get("personagemId"));
+        Personagem p = herois.get(payload.get("personagemId"));
         String item = payload.get("item");
-        if (h == null) return Map.of("erro", "Herói inválido");
+        if (p == null) return Map.of("erro", "Personagem inválido.");
 
         if ("pocao".equals(item)) {
-            if (h.getOuro() < 15) return Map.of("erro", "Ouro insuficiente (15 ouros)");
-            h.setOuro(h.getOuro() - 15);
-            h.setPv(Math.min(h.getPvMax(), h.getPv() + 6));
-            registrarLog("🧪 " + h.getNome() + " comprou Elixir Pirata (+6 PV).");
+            if (p.getOuro() < 15) return Map.of("erro", "Ouro insuficiente (15g).");
+            p.setOuro(p.getOuro() - 15);
+            p.setPv(Math.min(p.getPvMax(), p.getPv() + 6));
+            registrarLog("🧪 " + p.getNome() + " bebeu um Elixir (+6 PV).");
         } else if ("tonico".equals(item)) {
-            if (h.getOuro() < 15) return Map.of("erro", "Ouro insuficiente (15 ouros)");
-            h.setOuro(h.getOuro() - 15);
-            h.setEp(Math.min(h.getEpMax(), h.getEp() + 2));
-            registrarLog("⚡ " + h.getNome() + " comprou Tônico de Fôlego (+2 EP).");
+            if (p.getOuro() < 15) return Map.of("erro", "Ouro insuficiente (15g).");
+            p.setOuro(p.getOuro() - 15);
+            p.setEp(Math.min(p.getEpMax() + 2, p.getEp() + 2));
+            registrarLog("⚡ " + p.getNome() + " tomou Tônico de Fôlego (+2 EP).");
         } else if ("forja".equals(item)) {
-            if (h.getOuro() < 25) return Map.of("erro", "Ouro insuficiente (25 ouros)");
-            h.setOuro(h.getOuro() - 25);
-            Carta primeira = h.getBaralho().get(0);
-            primeira.setNivel(primeira.getNivel() + 1);
-            registrarLog("🔨 " + h.getNome() + " aprimorou [" + primeira.getNome() + "] para Nv." + primeira.getNivel() + "!");
+            if (p.getOuro() < 25) return Map.of("erro", "Ouro insuficiente (25g).");
+            p.setOuro(p.getOuro() - 25);
+            Carta c = p.getBaralho().get(0);
+            c.setNivel(c.getNivel() + 1);
+            registrarLog("🔨 " + p.getNome() + " forjou [" + c.getNome() + "] para Nível " + c.getNivel() + "!");
         }
         return Map.of("ok", true);
     }
-
-    // --- ROTAS EXCLUSIVAS DO MESTRE ---
 
     @PostMapping("/mestre/cenario")
     public Map<String, Object> mudarCenario(@RequestBody Map<String, String> payload) {
         this.cenarioAtual = payload.getOrDefault("cenario", "porto");
-        this.cenarioTitulo = payload.getOrDefault("titulo", "Porto Pirata");
-        registrarLog("🗺️ O Mestre alterou o cenário para: " + this.cenarioTitulo);
+        this.cenarioTitulo = switch (cenarioAtual) {
+            case "conves" -> "Convés do Galeão — Tempestade em Alto-Mar";
+            case "ruinas" -> "Ilha das Ruínas — Santuário Esquecido";
+            case "taverna" -> "Taverna Subterrânea — Porto dos Renegados";
+            default -> "Porto Pirata — Docas da Alvorada";
+        };
+        registrarLog("🗺️ O Mestre alterou o cenário para: " + cenarioTitulo);
         return Map.of("ok", true);
     }
 
-    @PostMapping("/mestre/inimigo")
-    public Map<String, Object> configurarInimigo(@RequestBody Map<String, Object> payload) {
-        if (payload.containsKey("nome")) inimigo.put("nome", payload.get("nome"));
-        if (payload.containsKey("pvMax")) {
-            int max = Integer.parseInt(payload.get("pvMax").toString());
-            inimigo.put("pvMax", max);
-            inimigo.put("pv", max);
-        }
-        if (payload.containsKey("atk")) inimigo.put("atk", Integer.parseInt(payload.get("atk").toString()));
-        if (payload.containsKey("def")) inimigo.put("def", Integer.parseInt(payload.get("def").toString()));
-        registrarLog("👹 Novo inimigo em campo: " + inimigo.get("nome") + " (PV " + inimigo.get("pvMax") + ")");
+    @PostMapping("/mestre/novo-inimigo")
+    public Map<String, Object> novoInimigo(@RequestBody Map<String, Object> payload) {
+        String nome = payload.getOrDefault("nome", "Corsário Misterioso").toString();
+        int pv = Integer.parseInt(payload.getOrDefault("pv", 40).toString());
+        int atk = Integer.parseInt(payload.getOrDefault("atk", 4).toString());
+        int def = Integer.parseInt(payload.getOrDefault("def", 2).toString());
+        configurarInimigo(nome, pv, atk, def);
+        registrarLog("💀 Novo oponente surgiu: " + nome + " (PV " + pv + ")!");
         return Map.of("ok", true);
     }
 
-    @PostMapping("/mestre/ataque-inimigo")
-    public Map<String, Object> ataqueInimigo(@RequestBody Map<String, String> payload) {
-        Personagem alvo = herois.get(payload.get("alvoId"));
-        if (alvo == null) return Map.of("erro", "Alvo não encontrado");
-
-        int atkInimigo = (int) inimigo.get("atk");
-        int d20 = ThreadLocalRandom.current().nextInt(1, 21);
-        int danoBruto = atkInimigo + (d20 >= 17 ? 3 : 0);
-
-        // Verifica Armadilha virada para baixo!
-        if (!armadilhasAtivas.isEmpty()) {
-            Map<String, Object> trap = armadilhasAtivas.remove(0);
-            int poderTrap = (int) trap.get("poder");
-            int pvInimigo = Math.max(0, (int) inimigo.get("pv") - poderTrap);
-            inimigo.put("pv", pvInimigo);
-            danoBruto = Math.max(0, danoBruto - poderTrap);
-            registrarLog(String.format("💥 ARMADILHA REVELADA! [%s] de %s ativou: causou %d de dano ao inimigo e bloqueou %d do ataque!",
-                    trap.get("nome"), trap.get("donoNome"), poderTrap, poderTrap));
-        }
-
-        int defesaTotal = alvo.getDef() + alvo.getDefTemp();
-        int danoFinal = Math.max(0, danoBruto - defesaTotal);
-
-        if (alvo.getEscudo() > 0 && danoFinal > 0) {
-            int absorvido = Math.min(alvo.getEscudo(), danoFinal);
-            alvo.setEscudo(alvo.getEscudo() - absorvido);
-            danoFinal -= absorvido;
-        }
-
-        alvo.setPv(Math.max(0, alvo.getPv() - danoFinal));
-        registrarLog(String.format("🩸 %s atacou %s (1d20=%d) causando %d de dano!", inimigo.get("nome"), alvo.getNome(), d20, danoFinal));
-        return Map.of("ok", true);
-    }
-
-    @PostMapping("/mestre/improviso")
-    public Map<String, Object> darImproviso(@RequestBody Map<String, Object> payload) {
-        Personagem h = herois.get(payload.get("alvoId").toString());
-        int bonus = Integer.parseInt(payload.get("bonus").toString());
-        if (h != null) {
-            h.setBonusImproviso(h.getBonusImproviso() + bonus);
-            registrarLog("🎭 Improviso Narrativo: " + h.getNome() + " recebeu +" + bonus + " para a próxima rolagem!");
-        }
-        return Map.of("ok", true);
-    }
-
-    @PostMapping("/mestre/evoluir")
-    public Map<String, Object> evoluirHeroi(@RequestBody Map<String, Object> payload) {
-        Personagem h = herois.get(payload.get("alvoId").toString());
+    @PostMapping("/mestre/heroi")
+    public Map<String, Object> ajustarHeroi(@RequestBody Map<String, Object> payload) {
+        Personagem p = herois.get(payload.get("personagemId"));
+        if (p == null) return Map.of("erro", "Herói inválido.");
         String acao = payload.get("acao").toString();
-        if (h == null) return Map.of("erro", "Herói inválido");
-
         switch (acao) {
-            case "nivel":
-                h.setNivel(h.getNivel() + 1);
-                h.setPvMax(h.getPvMax() + 3);
-                h.setPv(h.getPvMax());
-                if (h.getNivel() % 2 == 0) h.setAtk(h.getAtk() + 1);
-                else h.setDef(h.getDef() + 1);
-                registrarLog("⭐ LEVEL UP! " + h.getNome() + " alcançou o Nível " + h.getNivel() + "!");
-                break;
-            case "ouro":
-                int qtd = Integer.parseInt(payload.getOrDefault("valor", 15).toString());
-                h.setOuro(h.getOuro() + qtd);
-                registrarLog("💰 " + h.getNome() + " recebeu +" + qtd + " moedas de ouro!");
-                break;
-            case "carta":
-                String cartaId = payload.get("cartaId").toString();
-                h.getBaralho().stream().filter(c -> c.getId().equals(cartaId)).findFirst().ifPresent(c -> {
-                    c.setNivel(c.getNivel() + 1);
-                    registrarLog("📜 Carta evoluída! [" + c.getNome() + "] de " + h.getNome() + " agora é Nv." + c.getNivel() + "!");
-                });
-                break;
-            case "fruta":
-                String fNome = payload.get("frutaNome").toString();
-                String fDesc = payload.get("frutaDescricao").toString();
-                h.setFrutaNome(fNome);
-                h.setFrutaDescricao(fDesc);
-                h.setAtk(h.getAtk() + 1);
-                h.setEpMax(h.getEpMax() + 1);
-                h.setEp(h.getEpMax());
-                registrarLog("🍎 PODER DESPERTADO! " + h.getNome() + " consumiu a " + fNome + "!");
-                break;
-            case "curar":
-                h.setPv(h.getPvMax());
-                h.setEp(h.getEpMax());
-                registrarLog("💚 " + h.getNome() + " teve PV e EP totalmente restaurados pelo Mestre.");
-                break;
+            case "ouro" -> { p.setOuro(p.getOuro() + 15); registrarLog("💰 Mestre concedeu +15g para " + p.getNome()); }
+            case "nivel" -> {
+                p.setNivel(p.getNivel() + 1);
+                p.setPvMax(p.getPvMax() + 4);
+                p.setPv(p.getPvMax());
+                p.setAtk(p.getAtk() + 1);
+                registrarLog("⭐ " + p.getNome() + " subiu para o Nível " + p.getNivel() + "!");
+            }
+            case "fruta" -> {
+                String fNome = payload.getOrDefault("frutaNome", "Fruta Mística").toString();
+                p.setFrutaNome(fNome);
+                p.setAtk(p.getAtk() + 2);
+                registrarLog("🍎 " + p.getNome() + " despertou [" + fNome + "] (+2 ATK permanente)!");
+            }
+            case "curar" -> { p.setPv(p.getPvMax()); p.setEp(p.getEpMax()); registrarLog("✨ " + p.getNome() + " teve PV e EP restaurados!"); }
         }
+        return Map.of("ok", true);
+    }
+
+    @PostMapping("/mestre/restaurar-save")
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> restaurarSave(@RequestBody Map<String, Object> save) {
+        if (save == null || !save.containsKey("herois")) return Map.of("erro", "Save inválido.");
+        if (save.containsKey("cenario")) this.cenarioAtual = save.get("cenario").toString();
+        if (save.containsKey("cenarioTitulo")) this.cenarioTitulo = save.get("cenarioTitulo").toString();
+
+        if (save.get("inimigo") instanceof Map) {
+            this.inimigo.clear();
+            this.inimigo.putAll((Map<String, Object>) save.get("inimigo"));
+        }
+        if (save.get("herois") instanceof List) {
+            for (Map<String, Object> dadosH : (List>) save.get("herois")) {
+                Personagem p = herois.get(dadosH.get("id").toString());
+                if (p != null) {
+                    p.setNivel(Integer.parseInt(dadosH.get("nivel").toString()));
+                    p.setOuro(Integer.parseInt(dadosH.get("ouro").toString()));
+                    p.setPv(Integer.parseInt(dadosH.get("pv").toString()));
+                    p.setPvMax(Integer.parseInt(dadosH.get("pvMax").toString()));
+                    p.setEp(Integer.parseInt(dadosH.get("ep").toString()));
+                    p.setEpMax(Integer.parseInt(dadosH.get("epMax").toString()));
+                    p.setAtk(Integer.parseInt(dadosH.get("atk").toString()));
+                    p.setDef(Integer.parseInt(dadosH.get("def").toString()));
+                    p.setEscudo(Integer.parseInt(dadosH.get("escudo").toString()));
+                    p.setFrutaNome(String.valueOf(dadosH.getOrDefault("frutaNome", "")));
+                    if (dadosH.get("baralho") instanceof List) {
+                        for (Map<String, Object> cDados : (List>) dadosH.get("baralho")) {
+                            p.getBaralho().stream()
+                                .filter(c -> c.getId().equals(cDados.get("id").toString()))
+                                .findFirst()
+                                .ifPresent(c -> c.setNivel(Integer.parseInt(cDados.get("nivel").toString())));
+                        }
+                    }
+                }
+            }
+        }
+        registrarLog("📖 Crônica restaurada! Progresso da tripulação carregado.");
         return Map.of("ok", true);
     }
 
     @PostMapping("/mestre/resetar")
-    public Map<String, Object> resetarBatalha() {
-        for (Personagem h : herois.values()) {
-            h.setPv(h.getPvMax());
-            h.setEp(h.getEpMax());
-            h.setEscudo(0);
-            h.setAtkTemp(0);
-            h.setDefTemp(0);
-        }
-        armadilhasAtivas.clear();
-        inimigo.put("pv", inimigo.get("pvMax"));
-        registrarLog("🕊️ Batalha reiniciada! Níveis, evoluções e frutas foram preservados.");
+    public Map<String, Object> resetar() {
+        inicializarJogo();
         return Map.of("ok", true);
     }
 }
