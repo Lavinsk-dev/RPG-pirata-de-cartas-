@@ -282,7 +282,7 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/restaurar-save")
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Map<String, Object> restaurarSave(@RequestBody Map<String, Object> save) {
         if (save == null || !save.containsKey("herois")) return Map.of("erro", "Save inválido.");
         if (save.containsKey("cenario")) this.cenarioAtual = save.get("cenario").toString();
@@ -290,10 +290,12 @@ public class JogoController {
 
         if (save.get("inimigo") instanceof Map) {
             this.inimigo.clear();
-            this.inimigo.putAll((Map<String, Object>) save.get("inimigo"));
+            this.inimigo.putAll((Map) save.get("inimigo"));
         }
         if (save.get("herois") instanceof List) {
-            for (Map<String, Object> dadosH : (List>) save.get("herois")) {
+            List listaHerois = (List) save.get("herois");
+            for (Object itemH : listaHerois) {
+                Map dadosH = (Map) itemH;
                 Personagem p = herois.get(dadosH.get("id").toString());
                 if (p != null) {
                     p.setNivel(Integer.parseInt(dadosH.get("nivel").toString()));
@@ -307,7 +309,9 @@ public class JogoController {
                     p.setEscudo(Integer.parseInt(dadosH.get("escudo").toString()));
                     p.setFrutaNome(String.valueOf(dadosH.getOrDefault("frutaNome", "")));
                     if (dadosH.get("baralho") instanceof List) {
-                        for (Map<String, Object> cDados : (List>) dadosH.get("baralho")) {
+                        List listaCartas = (List) dadosH.get("baralho");
+                        for (Object itemC : listaCartas) {
+                            Map cDados = (Map) itemC;
                             p.getBaralho().stream()
                                 .filter(c -> c.getId().equals(cDados.get("id").toString()))
                                 .findFirst()
@@ -320,6 +324,7 @@ public class JogoController {
         registrarLog("📖 Crônica restaurada! Progresso da tripulação carregado.");
         return Map.of("ok", true);
     }
+    
 
     @PostMapping("/mestre/resetar")
     public Map<String, Object> resetar() {
