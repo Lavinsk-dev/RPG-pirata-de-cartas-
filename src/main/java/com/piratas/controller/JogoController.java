@@ -9,16 +9,17 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/jogo")
 @CrossOrigin(origins = "*")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class JogoController {
 
-    private final Map<String, Personagem> herois = new LinkedHashMap<>();
-    private final List> inimigos = new ArrayList<>();
-    private final List> ordemTurnos = new ArrayList<>();
+    private final Map herois = new LinkedHashMap();
+    private final List inimigos = new ArrayList();
+    private final List ordemTurnos = new ArrayList();
     private int indiceTurnoAtual = 0;
     private int numeroRodada = 1;
 
-    private final List<String> logs = new ArrayList<>();
-    private final List> armadilhasAtivas = new ArrayList<>();
+    private final List logs = new ArrayList();
+    private final List armadilhasAtivas = new ArrayList();
     private String cenarioAtual = "porto";
     private String cenarioTitulo = "Porto Pirata — Docas da Alvorada";
     private final Random random = new Random();
@@ -66,8 +67,8 @@ public class JogoController {
         registrarLog("⚓ Rodada 1 iniciada em " + cenarioTitulo + "! Turno de: " + getNomeTurnoAtual());
     }
 
-    private List<Carta> gerarBaralhoInimigo(String arquetipo, int atk) {
-        List<Carta> deck = new ArrayList<>();
+    private List gerarBaralhoInimigo(String arquetipo, int atk) {
+        List deck = new ArrayList();
         switch (arquetipo) {
             case "atirador" -> {
                 deck.add(new Carta("ia1", "Tiro de Mosquete", "ATAQUE", 1, atk + 1, "TIRO", "Disparo rápido de longa distância.", ""));
@@ -99,7 +100,7 @@ public class JogoController {
 
     private void adicionarInimigoInterno(String nome, int pvMax, int atk, int def, int vlc, String arquetipo) {
         String id = "ini_" + (inimigos.size() + 1) + "_" + (random.nextInt(900) + 100);
-        Map<String, Object> ini = new LinkedHashMap<>();
+        Map ini = new LinkedHashMap();
         ini.put("id", id);
         ini.put("nome", nome);
         ini.put("pv", pvMax);
@@ -114,14 +115,17 @@ public class JogoController {
     }
 
     private void recalcularOrdemTurnos() {
-        String idAtual = (!ordemTurnos.isEmpty() && indiceTurnoAtual < ordemTurnos.size())
-                ? ordemTurnos.get(indiceTurnoAtual).get("id").toString()
-                : null;
+        String idAtual = null;
+        if (!ordemTurnos.isEmpty() && indiceTurnoAtual < ordemTurnos.size()) {
+            Map atual = (Map) ordemTurnos.get(indiceTurnoAtual);
+            idAtual = atual.get("id").toString();
+        }
 
-        List> novaFila = new ArrayList<>();
-        for (Personagem p : herois.values()) {
+        List novaFila = new ArrayList();
+        for (Object obj : herois.values()) {
+            Personagem p = (Personagem) obj;
             if (p.getPv() > 0) {
-                Map<String, Object> item = new LinkedHashMap<>();
+                Map item = new LinkedHashMap();
                 item.put("id", p.getId());
                 item.put("nome", p.getNome());
                 item.put("tipo", "HEROI");
@@ -130,9 +134,10 @@ public class JogoController {
                 novaFila.add(item);
             }
         }
-        for (Map<String, Object> ini : inimigos) {
+        for (Object obj : inimigos) {
+            Map ini = (Map) obj;
             if ((int) ini.get("pv") > 0) {
-                Map<String, Object> item = new LinkedHashMap<>();
+                Map item = new LinkedHashMap();
                 item.put("id", ini.get("id"));
                 item.put("nome", ini.get("nome"));
                 item.put("tipo", "INIMIGO");
@@ -142,7 +147,11 @@ public class JogoController {
             }
         }
 
-        novaFila.sort((a, b) -> Integer.compare((int) b.get("vlc"), (int) a.get("vlc")));
+        novaFila.sort((a, b) -> {
+            Map mA = (Map) a;
+            Map mB = (Map) b;
+            return Integer.compare((int) mB.get("vlc"), (int) mA.get("vlc"));
+        });
         ordemTurnos.clear();
         ordemTurnos.addAll(novaFila);
 
@@ -151,7 +160,8 @@ public class JogoController {
         } else if (idAtual != null) {
             int idxEncontrado = 0;
             for (int i = 0; i < ordemTurnos.size(); i++) {
-                if (ordemTurnos.get(i).get("id").equals(idAtual)) {
+                Map m = (Map) ordemTurnos.get(i);
+                if (m.get("id").equals(idAtual)) {
                     idxEncontrado = i;
                     break;
                 }
@@ -162,11 +172,11 @@ public class JogoController {
         }
     }
 
-    private Map<String, Object> getTurnoAtualObj() {
+    private Map getTurnoAtualObj() {
         if (ordemTurnos.isEmpty()) recalcularOrdemTurnos();
         if (ordemTurnos.isEmpty()) return Map.of("id", "", "nome", "Ninguém", "tipo", "HEROI");
         if (indiceTurnoAtual >= ordemTurnos.size()) indiceTurnoAtual = 0;
-        return ordemTurnos.get(indiceTurnoAtual);
+        return (Map) ordemTurnos.get(indiceTurnoAtual);
     }
 
     private String getNomeTurnoAtual() {
@@ -174,15 +184,15 @@ public class JogoController {
     }
 
     @GetMapping("/estado")
-    public Map<String, Object> getEstado() {
+    public Map getEstado() {
         recalcularOrdemTurnos();
-        Map<String, Object> res = new LinkedHashMap<>();
+        Map res = new LinkedHashMap();
         res.put("cenario", cenarioAtual);
         res.put("cenarioTitulo", cenarioTitulo);
         res.put("numeroRodada", numeroRodada);
         res.put("ordemTurnos", ordemTurnos);
         res.put("turnoAtual", getTurnoAtualObj());
-        res.put("herois", new ArrayList<>(herois.values()));
+        res.put("herois", new ArrayList(herois.values()));
         res.put("inimigos", inimigos);
         res.put("armadilhasAtivas", armadilhasAtivas);
         res.put("logs", logs);
@@ -190,25 +200,23 @@ public class JogoController {
     }
 
     @PostMapping("/jogar")
-    public Map<String, Object> jogarCarta(@RequestBody Map<String, Object> payload) {
+    public Map jogarCarta(@RequestBody Map payload) {
         String personagemId = payload.get("personagemId").toString();
         String cartaId = payload.get("cartaId").toString();
         String inimigoAlvoId = payload.getOrDefault("inimigoAlvoId", "").toString();
 
-        // Trava obrigatória de turno
-        Map<String, Object> turno = getTurnoAtualObj();
+        Map turno = getTurnoAtualObj();
         if (!personagemId.equals(turno.get("id"))) {
             return Map.of("erro", "Aguarde sua vez! Turno atual: " + turno.get("nome"));
         }
 
-        Personagem p = herois.get(personagemId);
+        Personagem p = (Personagem) herois.get(personagemId);
         if (p == null) return Map.of("erro", "Personagem não encontrado.");
 
         Carta carta = p.getBaralho().stream().filter(c -> c.getId().equals(cartaId)).findFirst().orElse(null);
         if (carta == null) return Map.of("erro", "Carta não encontrada.");
         if (p.getEp() < carta.getCustoEp()) return Map.of("erro", "Energia (EP) insuficiente!");
 
-        // Dado físico informado pelo jogador/mestre ou rolagem automática se não informado
         int dadoBase = payload.containsKey("dadoFisico") && payload.get("dadoFisico") != null
                 ? Integer.parseInt(payload.get("dadoFisico").toString())
                 : (random.nextInt(20) + 1);
@@ -220,10 +228,23 @@ public class JogoController {
         String resumo;
         switch (carta.getTipo()) {
             case "ATAQUE" -> {
-                Map<String, Object> alvoIni = inimigos.stream()
-                        .filter(i -> i.get("id").equals(inimigoAlvoId) && (int) i.get("pv") > 0)
-                        .findFirst()
-                        .orElseGet(() -> inimigos.stream().filter(i -> (int) i.get("pv") > 0).findFirst().orElse(null));
+                Map alvoIni = null;
+                for (Object obj : inimigos) {
+                    Map i = (Map) obj;
+                    if (i.get("id").equals(inimigoAlvoId) && (int) i.get("pv") > 0) {
+                        alvoIni = i;
+                        break;
+                    }
+                }
+                if (alvoIni == null) {
+                    for (Object obj : inimigos) {
+                        Map i = (Map) obj;
+                        if ((int) i.get("pv") > 0) {
+                            alvoIni = i;
+                            break;
+                        }
+                    }
+                }
 
                 if (alvoIni == null) return Map.of("erro", "Não há inimigos vivos na arena!");
 
@@ -258,7 +279,7 @@ public class JogoController {
                 resumo = "🛡️ " + p.getNome() + " ativou [" + carta.getNome() + "] (+" + ganhoEscudo + " Escudo)!";
             }
             case "ARMADILHA" -> {
-                Map<String, Object> trap = new LinkedHashMap<>();
+                Map trap = new LinkedHashMap();
                 trap.put("donoId", p.getId());
                 trap.put("donoNome", p.getNome());
                 trap.put("cartaNome", carta.getNome());
@@ -280,28 +301,38 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/jogar-carta-inimigo")
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> mestreJogarCartaInimigo(@RequestBody Map<String, Object> payload) {
+    public Map mestreJogarCartaInimigo(@RequestBody Map payload) {
         String inimigoId = payload.get("inimigoId").toString();
         String cartaId = payload.get("cartaId").toString();
         String alvoId = payload.get("alvoId").toString();
 
-        // Trava obrigatória de turno para o inimigo também
-        Map<String, Object> turno = getTurnoAtualObj();
+        Map turno = getTurnoAtualObj();
         if (!inimigoId.equals(turno.get("id"))) {
             return Map.of("erro", "Não é a vez deste inimigo! Turno atual: " + turno.get("nome"));
         }
 
-        Map<String, Object> iniAtivo = inimigos.stream()
-                .filter(i -> i.get("id").equals(inimigoId))
-                .findFirst().orElse(null);
+        Map iniAtivo = null;
+        for (Object obj : inimigos) {
+            Map i = (Map) obj;
+            if (i.get("id").equals(inimigoId)) {
+                iniAtivo = i;
+                break;
+            }
+        }
         if (iniAtivo == null) return Map.of("erro", "Inimigo não encontrado.");
 
-        Personagem alvo = herois.get(alvoId);
+        Personagem alvo = (Personagem) herois.get(alvoId);
         if (alvo == null) return Map.of("erro", "Selecione um pirata alvo.");
 
-        List<Carta> deck = (List<Carta>) iniAtivo.get("baralho");
-        Carta carta = deck.stream().filter(c -> c.getId().equals(cartaId)).findFirst().orElse(null);
+        List deck = (List) iniAtivo.get("baralho");
+        Carta carta = null;
+        for (Object cObj : deck) {
+            Carta c = (Carta) cObj;
+            if (c.getId().equals(cartaId)) {
+                carta = c;
+                break;
+            }
+        }
         if (carta == null) return Map.of("erro", "Carta inimiga inválida.");
 
         int dadoBase = payload.containsKey("dadoFisico") && payload.get("dadoFisico") != null
@@ -320,7 +351,7 @@ public class JogoController {
             msg = "💀 " + iniAtivo.get("nome") + " usou [" + carta.getNome() + "] (+5 PV, +2 ATK)!";
         } else {
             if (!armadilhasAtivas.isEmpty()) {
-                Map<String, Object> trap = armadilhasAtivas.remove(0);
+                Map trap = (Map) armadilhasAtivas.remove(0);
                 int danoTrap = (int) trap.get("poder");
                 iniAtivo.put("pv", Math.max(0, (int) iniAtivo.get("pv") - danoTrap));
                 msg = "💥 ARMADILHA ATIVADA! [" + trap.get("cartaNome") + "] de " + trap.get("donoNome") + " causou " + danoTrap + " de dano em " + iniAtivo.get("nome") + "!";
@@ -343,7 +374,7 @@ public class JogoController {
     }
 
     @PostMapping("/turno")
-    public Map<String, Object> encerrarTurno(@RequestBody(required = false) Map<String, String> payload) {
+    public Map encerrarTurno(@RequestBody(required = false) Map payload) {
         recalcularOrdemTurnos();
         if (ordemTurnos.isEmpty()) return Map.of("ok", true);
 
@@ -351,7 +382,8 @@ public class JogoController {
         if (indiceTurnoAtual >= ordemTurnos.size()) {
             indiceTurnoAtual = 0;
             numeroRodada++;
-            for (Personagem p : herois.values()) {
+            for (Object obj : herois.values()) {
+                Personagem p = (Personagem) obj;
                 p.setEp(p.getEpMax());
                 p.setAtkTemp(0);
                 p.setDefTemp(0);
@@ -364,13 +396,13 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/improviso")
-    public Map<String, Object> calcularImproviso(@RequestBody Map<String, Object> payload) {
+    public Map calcularImproviso(@RequestBody Map payload) {
         String personagemId = payload.get("personagemId").toString();
         int dadoFisico = Integer.parseInt(payload.get("dadoFisico").toString());
         String atributo = payload.getOrDefault("atributo", "VLC").toString();
         String descricao = payload.getOrDefault("descricao", "Ação de Improviso").toString();
 
-        Personagem p = herois.get(personagemId);
+        Personagem p = (Personagem) herois.get(personagemId);
         if (p == null) return Map.of("erro", "Pirata inválido.");
 
         int bonusAtributo = switch (atributo) {
@@ -390,9 +422,9 @@ public class JogoController {
     }
 
     @PostMapping("/loja")
-    public Map<String, Object> comprarLoja(@RequestBody Map<String, String> payload) {
-        Personagem p = herois.get(payload.get("personagemId"));
-        String item = payload.get("item");
+    public Map comprarLoja(@RequestBody Map payload) {
+        Personagem p = (Personagem) herois.get(payload.get("personagemId"));
+        String item = String.valueOf(payload.get("item"));
         if (p == null) return Map.of("erro", "Personagem inválido.");
 
         if ("pocao".equals(item)) {
@@ -416,8 +448,8 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/cenario")
-    public Map<String, Object> mudarCenario(@RequestBody Map<String, String> payload) {
-        this.cenarioAtual = payload.getOrDefault("cenario", "porto");
+    public Map mudarCenario(@RequestBody Map payload) {
+        this.cenarioAtual = String.valueOf(payload.getOrDefault("cenario", "porto"));
         this.cenarioTitulo = switch (cenarioAtual) {
             case "conves" -> "Convés do Galeão — Tempestade em Alto-Mar";
             case "ruinas" -> "Ilha das Ruínas — Santuário Esquecido";
@@ -429,7 +461,7 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/novo-inimigo")
-    public Map<String, Object> novoInimigo(@RequestBody Map<String, Object> payload) {
+    public Map novoInimigo(@RequestBody Map payload) {
         String nome = payload.getOrDefault("nome", "Corsário Sombrio").toString();
         int pv = Integer.parseInt(payload.getOrDefault("pv", 35).toString());
         int atk = Integer.parseInt(payload.getOrDefault("atk", 4).toString());
@@ -446,17 +478,17 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/remover-inimigo")
-    public Map<String, Object> removerInimigo(@RequestBody Map<String, String> payload) {
-        String id = payload.get("inimigoId");
-        inimigos.removeIf(i -> i.get("id").equals(id));
+    public Map removerInimigo(@RequestBody Map payload) {
+        String id = String.valueOf(payload.get("inimigoId"));
+        inimigos.removeIf(obj -> ((Map) obj).get("id").equals(id));
         recalcularOrdemTurnos();
         registrarLog("🗑️ Oponente removido da arena pelo Mestre.");
         return Map.of("ok", true);
     }
 
     @PostMapping("/mestre/heroi")
-    public Map<String, Object> ajustarHeroi(@RequestBody Map<String, Object> payload) {
-        Personagem p = herois.get(payload.get("personagemId"));
+    public Map ajustarHeroi(@RequestBody Map payload) {
+        Personagem p = (Personagem) herois.get(payload.get("personagemId"));
         if (p == null) return Map.of("erro", "Herói inválido.");
         String acao = payload.get("acao").toString();
         switch (acao) {
@@ -486,8 +518,7 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/restaurar-save")
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Map<String, Object> restaurarSave(@RequestBody Map<String, Object> save) {
+    public Map restaurarSave(@RequestBody Map save) {
         if (save == null || !save.containsKey("herois")) return Map.of("erro", "Save inválido.");
         if (save.containsKey("cenario")) this.cenarioAtual = save.get("cenario").toString();
         if (save.containsKey("cenarioTitulo")) this.cenarioTitulo = save.get("cenarioTitulo").toString();
@@ -507,7 +538,7 @@ public class JogoController {
             List listaHerois = (List) save.get("herois");
             for (Object itemH : listaHerois) {
                 Map dadosH = (Map) itemH;
-                Personagem p = herois.get(dadosH.get("id").toString());
+                Personagem p = (Personagem) herois.get(dadosH.get("id").toString());
                 if (p != null) {
                     p.setNivel(Integer.parseInt(dadosH.get("nivel").toString()));
                     p.setOuro(Integer.parseInt(dadosH.get("ouro").toString()));
@@ -539,7 +570,7 @@ public class JogoController {
     }
 
     @PostMapping("/mestre/resetar")
-    public Map<String, Object> resetar() {
+    public Map resetar() {
         inicializarJogo();
         return Map.of("ok", true);
     }
