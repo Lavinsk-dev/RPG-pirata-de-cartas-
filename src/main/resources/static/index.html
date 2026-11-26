@@ -21,7 +21,7 @@
       --texto-escuro: #24150a;
     }
 
-    * {
+    html, body, div, span, h1, h2, h3, h4, p, button, input, select, section, main, aside {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -74,14 +74,11 @@
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
     }
 
-    .card-heroi-selecao:hover, .card-heroi-selecao:active {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px rgba(212, 175, 55, 0.45);
-    }
+    .card-heroi-selecao:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(212, 175, 55, 0.45); }
 
     .moldura-retrato {
       position: relative;
-      height: 290px;
+      height: 280px;
       background: #0c0805;
       border-bottom: 2px solid var(--ouro);
       overflow: hidden;
@@ -126,15 +123,15 @@
       background: linear-gradient(180deg, #4f311a, #231409);
       color: var(--ouro-brilho);
       border: 1px solid var(--ouro);
-      padding: 10px 14px;
-      min-height: 40px;
+      padding: 8px 12px;
+      min-height: 38px;
       border-radius: 7px;
       cursor: pointer;
-      transition: background 0.15s ease;
+      font-size: 0.78rem;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
     }
 
-    .btn-pirata:active { transform: scale(0.97); background: #6e4525; }
+    .btn-pirata:active { transform: scale(0.96); background: #6e4525; }
 
     /* ==================== TELA 2: ARENA DE BATALHA TOP-DOWN ==================== */
     #mesa-batalha {
@@ -150,7 +147,6 @@
     }
 
     .cenario-camada-viva { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
-
     .luz-tocha {
       position: absolute;
       width: 280px;
@@ -161,11 +157,7 @@
     }
     .luz-tocha.esq { top: 10%; left: -40px; }
     .luz-tocha.dir { bottom: 18%; right: -40px; animation-delay: 1.4s; }
-
-    @keyframes pulsarTocha {
-      0% { transform: scale(0.92); opacity: 0.65; }
-      100% { transform: scale(1.12); opacity: 1; }
-    }
+    @keyframes pulsarTocha { 0% { transform: scale(0.92); opacity: 0.65; } 100% { transform: scale(1.12); opacity: 1; } }
 
     .brasa {
       position: absolute;
@@ -177,7 +169,6 @@
       box-shadow: 0 0 8px #ff7b00;
       animation: subirBrasa linear infinite;
     }
-
     @keyframes subirBrasa {
       0% { transform: translateY(0) translateX(0); opacity: 0; }
       20% { opacity: 0.9; }
@@ -191,10 +182,10 @@
       width: 100%;
       height: 100%;
       display: grid;
-      grid-template-columns: 230px 1fr 200px;
-      grid-template-rows: 88px 1fr 220px;
+      grid-template-columns: 235px 1fr 205px;
+      grid-template-rows: 78px 1fr 222px;
       padding: 8px 12px;
-      gap: 8px;
+      gap: 6px;
     }
 
     .zona-topo-inimigo {
@@ -205,21 +196,45 @@
       gap: 8px;
     }
 
-    .mao-oponente-verso { display: flex; justify-content: center; gap: 6px; }
-
-    .carta-verso {
-      width: 48px;
-      height: 68px;
-      border-radius: 7px;
-      border: 2px solid #8c6239;
-      background:
-        radial-gradient(circle, rgba(212,175,55,0.28) 20%, transparent 65%),
-        repeating-linear-gradient(45deg, #2a1215, #2a1215 6px, #190a0c 6px, #190a0c 12px);
+    .barra-iniciativa {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      transform: perspective(400px) rotateX(18deg);
+      gap: 6px;
+      background: rgba(12, 8, 5, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      padding: 5px 10px;
+      border-radius: 20px;
+      overflow-x: auto;
+      max-width: 56vw;
+    }
+
+    .pill-turno {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      background: rgba(35, 22, 13, 0.9);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--pergaminho-escuro);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .pill-turno.ativo {
+      background: linear-gradient(90deg, #78350f, #b45309);
+      border: 2px solid var(--ouro-brilho);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 14px rgba(255, 224, 130, 0.65);
+      transform: scale(1.05);
+    }
+
+    .pill-turno.inimigo.ativo {
+      background: linear-gradient(90deg, #7f1d1d, #b91c1c);
+      border-color: #fca5a5;
     }
 
     .coluna-comandantes {
@@ -246,64 +261,19 @@
     }
 
     .comandante-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-
-    .avatar-arena {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: 2px solid var(--ouro);
-      object-fit: cover;
-      object-position: top;
-      flex-shrink: 0;
-    }
-
+    .avatar-arena { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--ouro); object-fit: cover; object-position: top; flex-shrink: 0; }
     .avatar-inimigo-icone {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: 2px solid #e74c3c;
+      width: 56px; height: 56px; border-radius: 50%; border: 2px solid #e74c3c;
       background: radial-gradient(circle, #641e16, #1b0808);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.7rem; flex-shrink: 0;
     }
 
-    .barra-hp {
-      height: 17px;
-      background: #090604;
-      border: 1px solid rgba(212, 175, 55, 0.45);
-      border-radius: 6px;
-      overflow: hidden;
-      position: relative;
-      margin: 4px 0;
-    }
-
+    .barra-hp { height: 16px; background: #090604; border: 1px solid rgba(212, 175, 55, 0.45); border-radius: 6px; overflow: hidden; position: relative; margin: 4px 0; }
     .barra-hp-fill { height: 100%; transition: width 0.3s ease; }
+    .barra-hp-texto { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 0.68rem; font-weight: 700; text-shadow: 0 1px 2px #000; }
 
-    .barra-hp-texto {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-shadow: 0 1px 2px #000;
-    }
-
-    .cristais-linha { display: flex; gap: 5px; align-items: center; margin-top: 5px; }
-
-    .gema-ep {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #bae6fd, #0284c7);
-      border: 1px solid #7dd3fc;
-      box-shadow: 0 0 8px #38bdf8;
-    }
+    .cristais-linha { display: flex; gap: 4px; align-items: center; margin-top: 5px; }
+    .gema-ep { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #bae6fd, #0284c7); border: 1px solid #7dd3fc; box-shadow: 0 0 8px #38bdf8; }
     .gema-ep.vazia { background: #1e293b; border-color: #475569; box-shadow: none; }
 
     .campo-central {
@@ -314,7 +284,7 @@
       justify-content: space-between;
       gap: 6px;
       padding: 4px 10px;
-      transform: perspective(950px) rotateX(9deg);
+      transform: perspective(950px) rotateX(8deg);
       transform-origin: center bottom;
     }
 
@@ -322,13 +292,13 @@
       flex: 1;
       border: 1px solid rgba(212, 175, 55, 0.28);
       border-radius: 10px;
-      background: rgba(14, 9, 6, 0.54);
+      background: rgba(14, 9, 6, 0.56);
       box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.75);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 6px 12px;
+      padding: 16px 12px 6px;
       position: relative;
       overflow-x: auto;
     }
@@ -336,16 +306,40 @@
     .fileira-label {
       position: absolute;
       left: 10px;
-      top: 4px;
+      top: 3px;
       font-family: 'Cinzel', serif;
-      font-size: 0.64rem;
-      color: rgba(244, 230, 200, 0.45);
+      font-size: 0.62rem;
+      color: rgba(244, 230, 200, 0.5);
       text-transform: uppercase;
     }
 
+    .card-inimigo-vanguarda {
+      min-width: 122px;
+      height: 106px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      border: 2px solid #991b1b;
+      background: linear-gradient(180deg, #3b1116, #17080a);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .card-inimigo-vanguarda.selecionado {
+      border-color: var(--ouro-brilho);
+      box-shadow: 0 0 18px rgba(255, 224, 130, 0.65);
+      transform: translateY(-3px) scale(1.04);
+    }
+
+    .card-inimigo-vanguarda.derrotado { opacity: 0.35; filter: grayscale(1); pointer-events: none; }
+
     .carta-em-campo {
-      width: 88px;
-      height: 112px;
+      width: 86px;
+      height: 104px;
       flex-shrink: 0;
       border-radius: 8px;
       border: 2px solid var(--ouro);
@@ -358,25 +352,12 @@
       text-align: center;
       animation: surgirNaMesa 0.3s ease-out;
     }
-
-    @keyframes surgirNaMesa {
-      0% { transform: scale(1.35) translateY(20px); opacity: 0; }
-      100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
+    @keyframes surgirNaMesa { 0% { transform: scale(1.3) translateY(18px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
     .carta-armadilha-mesa {
-      width: 84px;
-      height: 108px;
-      flex-shrink: 0;
-      border-radius: 8px;
-      border: 2px solid #c084fc;
-      background: radial-gradient(circle, #3b0764, #140524);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 5px;
-      text-align: center;
+      width: 82px; height: 100px; flex-shrink: 0; border-radius: 8px;
+      border: 2px solid #c084fc; background: radial-gradient(circle, #3b0764, #140524);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; text-align: center;
     }
 
     .coluna-direita {
@@ -386,24 +367,17 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 0 12px;
+      padding: 4px 0 12px;
       z-index: 10;
     }
 
     .placar-poder {
-      background: rgba(16, 10, 6, 0.9);
+      background: rgba(16, 10, 6, 0.92);
       border: 2px solid var(--ouro);
       border-radius: 10px;
-      padding: 6px 12px;
+      padding: 6px 10px;
       text-align: center;
       width: 100%;
-    }
-
-    .numero-gigante {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.65rem;
-      font-weight: 900;
-      color: var(--ouro-brilho);
     }
 
     .medalhao-turno {
@@ -416,38 +390,47 @@
       color: var(--ouro-brilho);
       font-family: 'Cinzel', serif;
       font-weight: 900;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 3px;
+      gap: 2px;
     }
-
-    .medalhao-turno:active { transform: scale(0.94); }
+    .medalhao-turno:active { transform: scale(0.93); }
 
     /* MÃO DE CARTAS */
     .zona-mao-jogador {
       grid-column: 2 / 3;
       grid-row: 3 / 4;
       display: flex;
-      justify-content: center;
-      align-items: flex-end;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
       padding-bottom: 4px;
       z-index: 20;
+      position: relative;
     }
 
-    .leque-cartas {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
+    .aviso-trava-turno {
+      background: rgba(127, 29, 29, 0.92);
+      border: 1px solid #fca5a5;
+      color: #fef2f2;
+      font-family: 'Cinzel', serif;
+      font-size: 0.76rem;
+      padding: 4px 14px;
+      border-radius: 14px;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     }
+
+    .leque-cartas { display: flex; justify-content: center; align-items: flex-end; }
 
     .carta-mao {
-      width: 162px;
-      height: 208px;
+      width: 160px;
+      height: 202px;
       margin: 0 -5px;
       background: linear-gradient(180deg, var(--pergaminho) 0%, var(--pergaminho-escuro) 100%);
       color: var(--texto-escuro);
@@ -464,82 +447,45 @@
       flex-shrink: 0;
     }
 
-    .carta-mao:hover {
-      transform: translateY(-28px) scale(1.12) rotate(0deg) !important;
-      z-index: 50;
-      border-color: var(--ouro-brilho);
-    }
-
-    .carta-mao.sem-energia { filter: grayscale(0.75) brightness(0.75); }
+    .carta-mao:hover { transform: translateY(-26px) scale(1.1) rotate(0deg) !important; z-index: 50; border-color: var(--ouro-brilho); }
+    .carta-mao.bloqueada { filter: grayscale(0.85) brightness(0.65); cursor: not-allowed; }
 
     .carta-mao-topo { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
-    .carta-mao-nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.73rem; line-height: 1.1; color: #211207; }
+    .carta-mao-nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.72rem; line-height: 1.1; color: #211207; }
 
     .carta-mao-custo {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #0f4c81;
-      color: #fff;
-      border: 1px solid var(--ouro);
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 0.76rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 23px; height: 23px; border-radius: 50%; background: #0f4c81; color: #fff;
+      border: 1px solid var(--ouro); font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.74rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
     .carta-mao-arte {
-      height: 72px;
-      border-radius: 6px;
-      border: 1px solid #6e4e2e;
-      background: #24160c;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 4px 0;
+      height: 68px; border-radius: 6px; border: 1px solid #6e4e2e; background: #24160c;
+      overflow: hidden; display: flex; align-items: center; justify-content: center; margin: 3px 0;
     }
     .carta-mao-arte img { width: 100%; height: 100%; object-fit: cover; }
 
-    .badge-tipo {
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: #fff;
-      padding: 2px 6px;
-      border-radius: 4px;
-      display: inline-block;
-    }
+    .badge-tipo { font-family: 'Cinzel', serif; font-size: 0.58rem; font-weight: 700; color: #fff; padding: 2px 6px; border-radius: 4px; display: inline-block; }
     .bg-ATAQUE { background: var(--carmesim); }
     .bg-DEFESA { background: var(--azul-arcano); }
     .bg-ARMADILHA { background: var(--roxo-armadilha); }
     .bg-SUPORTE { background: var(--esmeralda); }
 
     .carta-mao-desc {
-      font-size: 0.72rem;
-      line-height: 1.15;
-      color: #2b1a0e;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+      font-size: 0.71rem; line-height: 1.15; color: #2b1a0e; overflow: hidden;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
     }
 
-    /* ==================== ADAPTAÇÃO RESPONSIVA E TOQUE PARA CELULAR ==================== */
+    /* ==================== RESPONSIVO CELULAR ==================== */
     @media (max-width: 850px) {
-      .mao-oponente-verso { display: none; }
-
       .tabuleiro-arena {
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto 1fr 215px;
+        grid-template-rows: auto auto 1fr 224px;
         padding: 6px 8px;
-        gap: 6px;
+        gap: 5px;
       }
-
       .zona-topo-inimigo { grid-column: 1 / 3; grid-row: 1 / 2; flex-wrap: wrap; }
+      .barra-iniciativa { max-width: 100%; width: 100%; order: 3; }
 
       .coluna-comandantes {
         grid-column: 1 / 3;
@@ -548,160 +494,114 @@
         gap: 6px;
         padding: 0;
       }
-
       .coluna-comandantes > div { flex: 1; min-width: 0; }
-      .comandante-card { padding: 7px; }
-      .avatar-arena, .avatar-inimigo-icone { width: 42px; height: 42px; font-size: 1.3rem; }
+      .comandante-card { padding: 6px; }
+      .avatar-arena, .avatar-inimigo-icone { width: 40px; height: 40px; font-size: 1.2rem; }
 
-      .campo-central {
-        grid-column: 1 / 3;
-        grid-row: 3 / 4;
-        transform: none;
-        padding: 0;
-        gap: 4px;
-      }
+      .campo-central { grid-column: 1 / 3; grid-row: 3 / 4; transform: none; padding: 0; gap: 4px; }
 
-      .coluna-direita {
-        position: fixed;
-        right: 10px;
-        bottom: 222px;
-        flex-direction: row;
-        gap: 8px;
-        padding: 0;
-        z-index: 40;
-      }
+      .coluna-direita { position: fixed; right: 10px; bottom: 228px; flex-direction: row; gap: 6px; padding: 0; z-index: 40; }
       .placar-poder { display: none; }
-      .medalhao-turno { width: 68px; height: 68px; font-size: 0.62rem; border-width: 3px; }
+      .medalhao-turno { width: 66px; height: 66px; font-size: 0.6rem; border-width: 3px; }
 
       .zona-mao-jogador {
-        grid-column: 1 / 3;
-        grid-row: 4 / 5;
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding: 6px 8px 10px;
-        -webkit-overflow-scrolling: touch;
+        grid-column: 1 / 3; grid-row: 4 / 5;
+        align-items: flex-start; overflow-x: auto; padding: 4px 6px 8px;
       }
-
       .leque-cartas { justify-content: flex-start; gap: 10px; }
-
-      .carta-mao {
-        margin: 0;
-        width: 152px;
-        height: 196px;
-        transform: none !important;
-      }
-      .carta-mao:active {
-        transform: scale(0.95) !important;
-        border-color: var(--ouro-brilho);
-      }
+      .carta-mao { margin: 0; width: 148px; height: 186px; transform: none !important; }
+      .carta-mao:active { transform: scale(0.95) !important; }
     }
 
-    /* ==================== EFEITOS VISUAIS (VFX) & GAVETAS ==================== */
-    #camada-vfx { position: fixed; inset: 0; pointer-events: none; z-index: 120; }
-    .tremor-tela { animation: tremerImpacto 0.4s ease-in-out; }
-    @keyframes tremerImpacto {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(-7px, 4px); }
-      50% { transform: translate(7px, -4px); }
-      75% { transform: translate(-5px, -2px); }
-    }
-
-    .corte-espada {
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      width: 300px;
-      height: 10px;
-      background: linear-gradient(90deg, transparent, #fff, #38bdf8, transparent);
-      box-shadow: 0 0 28px #38bdf8;
-      transform: translate(-50%, -50%) rotate(-28deg);
-      animation: golpeCorte 0.45s ease-out forwards;
-    }
-    @keyframes golpeCorte {
-      0% { opacity: 1; transform: translate(-50%, -50%) rotate(-28deg) scaleX(0.2); }
-      100% { opacity: 0; transform: translate(-50%, -50%) rotate(-28deg) scaleX(1.3); }
-    }
-
-    .texto-flutuante {
-      position: fixed;
-      left: 50%;
-      top: 38%;
-      transform: translateX(-50%);
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.25rem;
-      font-weight: 900;
-      text-align: center;
-      max-width: 90vw;
-      background: rgba(12, 8, 5, 0.92);
-      border: 1px solid var(--ouro);
-      padding: 8px 14px;
-      border-radius: 10px;
-      animation: subirTextoVfx 1.9s ease-out forwards;
-    }
-    @keyframes subirTextoVfx {
-      0% { transform: translate(-50%, 10px); opacity: 0; }
-      15% { transform: translate(-50%, 0); opacity: 1; }
-      85% { transform: translate(-50%, -22px); opacity: 1; }
-      100% { transform: translate(-50%, -40px); opacity: 0; }
-    }
-
-    .gaveta-modal {
+    /* ==================== MODAL DADO FÍSICO & GAVETAS ==================== */
+    .modal-dado-overlay {
       display: none;
       position: fixed;
-      top: 56px;
-      right: 12px;
-      width: 370px;
-      max-width: 94vw;
-      max-height: 80dvh;
-      overflow-y: auto;
-      background: rgba(20, 13, 8, 0.98);
-      border: 2px solid var(--ouro);
-      border-radius: 12px;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      z-index: 150;
+      align-items: center;
+      justify-content: center;
       padding: 16px;
-      z-index: 110;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.92);
+    }
+
+    .modal-dado-box {
+      background: linear-gradient(180deg, #27190f, #120b07);
+      border: 2px solid var(--ouro-brilho);
+      border-radius: 14px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95);
+    }
+
+    .grid-d20 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin: 14px 0;
+    }
+
+    .btn-d20-num {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      padding: 10px 0;
+      background: #1c120b;
+      border: 1px solid var(--ouro);
+      color: var(--ouro-brilho);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .btn-d20-num:active, .btn-d20-num:hover { background: var(--ouro); color: #120b07; }
+
+    #camada-vfx { position: fixed; inset: 0; pointer-events: none; z-index: 160; }
+    .tremor-tela { animation: tremerImpacto 0.4s ease-in-out; }
+    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-7px, 4px); } 50% { transform: translate(7px, -4px); } 75% { transform: translate(-5px, -2px); } }
+
+    .texto-flutuante {
+      position: fixed; left: 50%; top: 36%; transform: translateX(-50%);
+      font-family: 'Cinzel Decorative', serif; font-size: 1.2rem; font-weight: 900; text-align: center;
+      max-width: 92vw; background: rgba(12, 8, 5, 0.94); border: 1px solid var(--ouro);
+      padding: 8px 14px; border-radius: 10px; animation: subirTextoVfx 2.1s ease-out forwards;
+    }
+    @keyframes subirTextoVfx { 0% { transform: translate(-50%, 10px); opacity: 0; } 15% { transform: translate(-50%, 0); opacity: 1; } 85% { transform: translate(-50%, -22px); opacity: 1; } 100% { transform: translate(-50%, -40px); opacity: 0; } }
+
+    .gaveta-modal {
+      display: none; position: fixed; top: 56px; right: 12px; width: 375px; max-width: 94vw; max-height: 82dvh;
+      overflow-y: auto; background: rgba(20, 13, 8, 0.98); border: 2px solid var(--ouro);
+      border-radius: 12px; padding: 16px; z-index: 140; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.92);
     }
 
     .input-pirata, .select-pirata {
-      width: 100%;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      background: #120b07;
-      border: 1px solid var(--ouro);
-      color: var(--texto-claro);
-      border-radius: 6px;
-      font-family: 'Crimson Text', serif;
-      font-size: 1rem;
+      width: 100%; padding: 8px 10px; margin-bottom: 8px; background: #120b07;
+      border: 1px solid var(--ouro); color: var(--texto-claro); border-radius: 6px;
+      font-family: 'Crimson Text', serif; font-size: 1rem;
     }
 
-    .log-item {
-      padding: 6px 8px;
-      margin-bottom: 6px;
-      background: rgba(0, 0, 0, 0.45);
-      border-left: 3px solid var(--ouro);
-      font-size: 0.92rem;
-    }
+    .log-item { padding: 6px 8px; margin-bottom: 6px; background: rgba(0, 0, 0, 0.45); border-left: 3px solid var(--ouro); font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
-  <!-- TELA 1: SELEÇÃO DE TRIPULAÇÃO (JOGADORES) -->
+  <!-- TELA 1: SELEÇÃO DE TRIPULAÇÃO -->
   <section id="tela-selecao">
     <h1 class="titulo-epico" style="font-size: 2.1rem;">
-      <span id="brasao-secreto" onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
+      <span onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
     </h1>
     <p style="font-size: 1.15rem; color: var(--pergaminho-escuro); font-style: italic; margin-top: 6px;">
-      Toque no seu pirata para entrar na mesa de batalha
+      Toque no seu pirata para assumir seu posto na iniciativa
     </p>
     <div id="aviso-modo-mestre" style="display:none; margin-top:12px;">
       <button class="btn-pirata" style="background:#7f1d1d; border-color:#f87171;" onclick="entrarComoMestre()">
-        👑 Entrar na Mesa como Mestre (Controlar Baralho do Oponente)
+        👑 Entrar como Mestre (Controlar Inimigos &amp; Dados)
       </button>
     </div>
     <div class="grid-herois" id="lista-herois-selecao"></div>
   </section>
 
-  <!-- TELA 2: ARENA DE BATALHA TOP-DOWN -->
+  <!-- TELA 2: ARENA DE BATALHA -->
   <div id="mesa-batalha">
     <div class="cenario-camada-viva" id="camada-viva">
       <div class="luz-tocha esq"></div>
@@ -711,22 +611,19 @@
     <div class="tabuleiro-arena">
       <div class="zona-topo-inimigo">
         <div style="display:flex; align-items:center; gap:6px;">
-          <button class="btn-pirata" onclick="voltarSelecao()">👥 Tripulação</button>
-          <span id="badge-cenario" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.7); padding:5px 10px; border-radius:14px; border:1px solid var(--ouro); font-size:0.78rem;">
-            🗺️ Porto Pirata
+          <button class="btn-pirata" onclick="voltarSelecao()">👥</button>
+          <span id="badge-rodada" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.75); padding:5px 10px; border-radius:14px; border:1px solid var(--ouro); font-size:0.76rem;">
+            Rodada 1
           </span>
         </div>
 
-        <div class="mao-oponente-verso">
-          <div class="carta-verso">☠️</div>
-          <div class="carta-verso">☠️</div>
-          <div class="carta-verso">☠️</div>
-          <div class="carta-verso">☠️</div>
-        </div>
+        <!-- BARRA DE ORDEM DE TURNOS (INICIATIVA POR VLC) -->
+        <div class="barra-iniciativa" id="barra-iniciativa"></div>
 
-        <div style="display:flex; gap:6px;">
-          <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜 Diário</button>
-          <button class="btn-pirata" id="btn-taverna-jogador" onclick="toggleGaveta('gaveta-taverna')">⚖️ Taverna</button>
+        <div style="display:flex; gap:5px;">
+          <button class="btn-pirata" onclick="abrirModalImproviso()">🎲 d20</button>
+          <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜</button>
+          <button class="btn-pirata" id="btn-taverna-jogador" onclick="toggleGaveta('gaveta-taverna')">⚖️</button>
           <button class="btn-pirata" id="btn-painel-mestre" style="display:none; background:#7f1d1d; border-color:#f87171;" onclick="toggleGaveta('gaveta-mestre')">👑 Mestre</button>
         </div>
       </div>
@@ -744,8 +641,8 @@
 
       <aside class="coluna-direita">
         <div class="placar-poder">
-          <div style="font-family:'Cinzel',serif; font-size:0.72rem; color:#f5b7b1;">PV INIMIGO</div>
-          <div class="numero-gigante" style="color:#ff7675;" id="placar-pv-inimigo">45</div>
+          <div style="font-family:'Cinzel',serif; font-size:0.68rem; color:#f5b7b1;">TURNO ATUAL</div>
+          <div style="font-family:'Cinzel',serif; font-size:0.88rem; font-weight:700; color:var(--ouro-brilho); margin-top:2px;" id="nome-turno-lateral">Lua</div>
         </div>
 
         <button class="medalhao-turno" onclick="encerrarTurno()">
@@ -754,15 +651,44 @@
         </button>
 
         <div class="placar-poder">
-          <div style="font-family:'Cinzel',serif; font-size:0.72rem; color:var(--pergaminho-escuro);">PV PIRATA</div>
-          <div class="numero-gigante" id="placar-pv-heroi">20</div>
+          <div style="font-family:'Cinzel',serif; font-size:0.68rem; color:var(--pergaminho-escuro);" id="badge-cenario-lateral">Porto Pirata</div>
         </div>
       </aside>
 
-      <!-- MÃO DE CARTAS (JOGADOR OU MESTRE) -->
       <section class="zona-mao-jogador">
+        <div id="aviso-trava-turno" class="aviso-trava-turno" style="display:none;"></div>
         <div class="leque-cartas" id="container-cartas"></div>
       </section>
+    </div>
+  </div>
+
+  <!-- MODAL DE ROLAGEM DE DADO FÍSICO (d20) -->
+  <div class="modal-dado-overlay" id="modal-dado">
+    <div class="modal-dado-box">
+      <h3 style="color:var(--ouro-brilho); margin-bottom:6px;" id="titulo-modal-dado">🎲 Rolagem de Dado Físico (d20)</h3>
+      <p style="font-size:0.95rem; color:var(--pergaminho-escuro);" id="desc-modal-dado">
+        Role o dado d20 na mesa e toque no número que caiu:
+      </p>
+
+      <div id="opcoes-improviso-extra" style="display:none; margin-top:10px; text-align:left;">
+        <select id="imp-pirata" class="select-pirata">
+          <option value="lua">Pirata: Lua</option>
+          <option value="kyan">Pirata: Kyan</option>
+          <option value="zafira">Pirata: Zafira</option>
+        </select>
+        <div style="display:flex; gap:6px;">
+          <select id="imp-atributo" class="select-pirata">
+            <option value="VLC">Atributo: Velocidade (VLC)</option>
+            <option value="ATK">Atributo: Ataque (ATK)</option>
+            <option value="DEF">Atributo: Defesa (DEF)</option>
+          </select>
+          <input id="imp-desc" class="input-pirata" placeholder="Ação (ex: Saltar mastro)">
+        </div>
+      </div>
+
+      <div class="grid-d20" id="grid-numeros-d20"></div>
+
+      <button class="btn-pirata" style="width:100%; background:#3b1316;" onclick="fecharModalDado()">Cancelar</button>
     </div>
   </div>
 
@@ -775,7 +701,7 @@
     <div id="lista-logs"></div>
   </div>
 
-  <!-- GAVETA 2: TAVERNA DO JOGADOR (SEM CONTROLES DO MESTRE) -->
+  <!-- GAVETA 2: TAVERNA DO JOGADOR -->
   <div class="gaveta-modal" id="gaveta-taverna">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h3 style="color:var(--ouro-brilho);">⚖️ Taverna &amp; Forja</h3>
@@ -795,22 +721,39 @@
       <button class="btn-pirata" style="padding:3px 9px;" onclick="toggleGaveta('gaveta-mestre')">✕</button>
     </div>
 
-    <label style="font-size:0.85rem; color:var(--ouro-brilho);">🎯 Pirata Alvo dos Ataques do Oponente:</label>
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🎯 Pirata Alvo / Selecionado:</label>
     <select id="select-alvo-mestre" class="select-pirata" onchange="heroiSelecionadoId = this.value; renderizarArena();">
       <option value="lua">Lua (Atiradora)</option>
       <option value="kyan">Kyan (Carpinteiro)</option>
       <option value="zafira">Zafira (Combatente)</option>
     </select>
 
-    <label style="font-size:0.85rem; color:var(--ouro-brilho); margin-top:6px; display:block;">⭐ Evolução &amp; Recompensas:</label>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
       <button class="btn-pirata" onclick="acaoMestreHeroi('nivel')">⭐ +1 Nível</button>
       <button class="btn-pirata" onclick="acaoMestreHeroi('ouro')">💰 +15 Ouro</button>
       <button class="btn-pirata" onclick="acaoMestreHeroi('fruta')">🍎 Fruta (+2 ATK)</button>
-      <button class="btn-pirata" onclick="acaoMestreHeroi('curar')">✨ Curar Tudo</button>
+      <button class="btn-pirata" onclick="acaoMestreHeroi('bonusDado')">🎲 +3 Bônus d20</button>
     </div>
 
-    <label style="font-size:0.85rem; color:var(--ouro-brilho);">🗺️ Cenário da Batalha:</label>
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">💀 Adicionar Novo Oponente na Fila:</label>
+    <input id="novo-ini-nome" class="input-pirata" placeholder="Nome (ex: Atirador do Cesto)">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:6px;">
+      <input id="novo-ini-pv" type="number" class="input-pirata" placeholder="PV (35)">
+      <input id="novo-ini-atk" type="number" class="input-pirata" placeholder="ATK (4)">
+      <input id="novo-ini-vlc" type="number" class="input-pirata" placeholder="VLC (4)">
+    </div>
+    <select id="novo-ini-arquetipo" class="select-pirata">
+      <option value="corsario">Baralho: Corsário / Espadachim</option>
+      <option value="atirador">Baralho: Atirador / Canhoneiro</option>
+      <option value="fera">Baralho: Fera / Monstro Marinho</option>
+      <option value="arcano">Baralho: Arcano / Feiticeiro</option>
+    </select>
+    <div style="display:flex; gap:6px; margin-bottom:12px;">
+      <button class="btn-pirata" style="flex:1;" onclick="invocarInimigo(false)">➕ Adicionar à Batalha</button>
+      <button class="btn-pirata" style="background:#5c1116;" onclick="invocarInimigo(true)">🔄 Substituir Todos</button>
+    </div>
+
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🗺️ Cenário:</label>
     <select class="select-pirata" onchange="mudarCenario(this.value)">
       <option value="porto">Porto Pirata — Docas da Alvorada</option>
       <option value="conves">Convés do Galeão — Tempestade</option>
@@ -818,15 +761,7 @@
       <option value="taverna">Taverna Subterrânea</option>
     </select>
 
-    <label style="font-size:0.85rem; color:var(--ouro-brilho); margin-top:6px; display:block;">💀 Invocar Novo Oponente:</label>
-    <input id="novo-ini-nome" class="input-pirata" placeholder="Nome (ex: Kraken Jovem)">
-    <div style="display:flex; gap:6px; margin-bottom:8px;">
-      <input id="novo-ini-pv" type="number" class="input-pirata" placeholder="PV (60)">
-      <input id="novo-ini-atk" type="number" class="input-pirata" placeholder="ATK (6)">
-    </div>
-    <button class="btn-pirata" style="width:100%; margin-bottom:12px;" onclick="invocarInimigo()">💀 Colocar Oponente em Campo</button>
-
-    <label style="font-size:0.85rem; color:var(--ouro-brilho);">📖 Progresso Permanente (Save):</label>
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">📖 Progresso Permanente:</label>
     <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
       <button class="btn-pirata" onclick="baixarSave()">💾 Baixar Save da Campanha (.json)</button>
       <label class="btn-pirata" style="text-align:center; display:block;">
@@ -840,18 +775,76 @@
   <div id="camada-vfx"></div>
 
   <script>
-    const CHAVE_SAVE = "cronicas_sete_mares_save_v1";
+    const CHAVE_SAVE = "cronicas_sete_mares_save_v2";
     let estadoAtual = null;
     let ultimoEstadoJson = "";
     let heroiSelecionadoId = "lua";
+    let inimigoSelecionadoId = "";
     let modoMestre = new URLSearchParams(window.location.search).get("mestre") === "1";
     let cliquesBrasao = 0;
     let cartasJogadasNaMesa = [];
     let verificouRestauracaoInicial = false;
+    let acaoDadoPendente = null;
 
     const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨" };
 
-    // Acesso secreto do Mestre: 3 cliques na caveira do título ou ?mestre=1 na URL
+    function montarBotoesDado() {
+      const grid = document.getElementById('grid-numeros-d20');
+      let html = '';
+      for (let n = 1; n <= 20; n++) {
+        html += `<button class="btn-d20-num" onclick="confirmarNumeroDado(${n})">${n}</button>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function abrirModalDadoCarta(cartaObj, isMestre) {
+      acaoDadoPendente = { tipo: isMestre ? 'MESTRE_CARTA' : 'HEROI_CARTA', carta: cartaObj };
+      document.getElementById('titulo-modal-dado').textContent = `🎲 Teste d20 — ${cartaObj.nome}`;
+      document.getElementById('desc-modal-dado').textContent = "Role o d20 físico na mesa e toque no resultado obtido:";
+      document.getElementById('opcoes-improviso-extra').style.display = 'none';
+      document.getElementById('modal-dado').style.display = 'flex';
+    }
+
+    function abrirModalImproviso() {
+      acaoDadoPendente = { tipo: 'IMPROVISO' };
+      document.getElementById('titulo-modal-dado').textContent = "🎲 Teste de Improviso Narrativo";
+      document.getElementById('desc-modal-dado').textContent = "Escolha o pirata, o atributo e toque no número do dado físico:";
+      document.getElementById('imp-pirata').value = heroiSelecionadoId;
+      document.getElementById('opcoes-improviso-extra').style.display = 'block';
+      document.getElementById('modal-dado').style.display = 'flex';
+    }
+
+    function fecharModalDado() {
+      acaoDadoPendente = null;
+      document.getElementById('modal-dado').style.display = 'none';
+    }
+
+    async function confirmarNumeroDado(valorDado) {
+      const pendente = acaoDadoPendente;
+      fecharModalDado();
+      if (!pendente) return;
+
+      if (pendente.tipo === 'HEROI_CARTA') {
+        await executarJogadaHeroi(pendente.carta, valorDado);
+      } else if (pendente.tipo === 'MESTRE_CARTA') {
+        await executarJogadaMestre(pendente.carta, valorDado);
+      } else if (pendente.tipo === 'IMPROVISO') {
+        const resp = await fetch('/api/jogo/mestre/improviso', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            personagemId: document.getElementById('imp-pirata').value,
+            atributo: document.getElementById('imp-atributo').value,
+            descricao: document.getElementById('imp-desc').value || "Ação Narrativa",
+            dadoFisico: valorDado
+          })
+        });
+        const res = await resp.json();
+        if (res.mensagem) dispararEfeitoVisual('SUPORTE', res.mensagem);
+        await carregarEstado(true);
+      }
+    }
+
     function cliqueBrasaoMestre() {
       cliquesBrasao++;
       if (cliquesBrasao >= 3) {
@@ -863,7 +856,6 @@
 
     function entrarComoMestre() {
       modoMestre = true;
-      heroiSelecionadoId = "lua";
       abrirArena();
     }
 
@@ -877,7 +869,7 @@
 
     function iniciarParticulasVivas() {
       const camada = document.getElementById('camada-viva');
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 14; i++) {
         const brasa = document.createElement('div');
         brasa.className = 'brasa';
         brasa.style.left = Math.random() * 100 + 'vw';
@@ -894,10 +886,6 @@
         mesa.classList.remove('tremor-tela');
         void mesa.offsetWidth;
         mesa.classList.add('tremor-tela');
-        const corte = document.createElement('div');
-        corte.className = 'corte-espada';
-        vfx.appendChild(corte);
-        setTimeout(() => corte.remove(), 480);
       }
       if (mensagem) {
         const txt = document.createElement('div');
@@ -905,7 +893,7 @@
         txt.style.color = (tipo === 'INIMIGO') ? '#ff7675' : '#ffe082';
         txt.textContent = mensagem;
         vfx.appendChild(txt);
-        setTimeout(() => txt.remove(), 1900);
+        setTimeout(() => txt.remove(), 2100);
       }
     }
 
@@ -949,7 +937,14 @@
           localStorage.setItem(CHAVE_SAVE, novoJson);
         }
 
-        document.getElementById('badge-cenario').textContent = '🗺️ ' + estadoAtual.cenarioTitulo;
+        const turno = estadoAtual.turnoAtual || {};
+        if (turno.tipo === 'INIMIGO') {
+          inimigoSelecionadoId = turno.id;
+        } else if (!inimigoSelecionadoId || !estadoAtual.inimigos.some(i => i.id === inimigoSelecionadoId && i.pv > 0)) {
+          const vivo = estadoAtual.inimigos.find(i => i.pv > 0);
+          if (vivo) inimigoSelecionadoId = vivo.id;
+        }
+
         if (modoMestre) document.getElementById('aviso-modo-mestre').style.display = 'block';
 
         if (document.getElementById('mesa-batalha').style.display === 'block') {
@@ -974,7 +969,7 @@
             <div class="atributos-mini">
               <span>❤️ ${h.pv}/${h.pvMax}</span>
               <span>⚔️ ${h.atk}</span>
-              <span>🛡️ ${h.def}</span>
+              <span>💨 VLC ${h.vlc}</span>
               <span>💰 ${h.ouro}g</span>
             </div>
             <button class="btn-pirata" style="width:100%;">Jogar com ${h.nome}</button>
@@ -994,30 +989,45 @@
       renderizarSelecao();
     }
 
+    function selecionarInimigoNaArena(id) {
+      inimigoSelecionadoId = id;
+      renderizarArena();
+    }
+
     function renderizarArena() {
       const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
-      const ini = estadoAtual.inimigo;
-      if (!h) return;
+      const inimigosLista = estadoAtual.inimigos || [];
+      const iniFocado = inimigosLista.find(i => i.id === inimigoSelecionadoId) || inimigosLista[0];
+      const turno = estadoAtual.turnoAtual || { id: '', nome: '', tipo: 'HEROI' };
 
-      document.getElementById('placar-pv-inimigo').textContent = ini.pv;
-      document.getElementById('placar-pv-heroi').textContent = h.pv;
+      document.getElementById('badge-rodada').textContent = `Rodada ${estadoAtual.numeroRodada || 1}`;
+      document.getElementById('badge-cenario-lateral').textContent = estadoAtual.cenarioTitulo;
+      document.getElementById('nome-turno-lateral').textContent = turno.nome;
 
-      const pctIni = Math.max(0, Math.min(100, (ini.pv / ini.pvMax) * 100));
-      document.getElementById('card-comandante-inimigo').innerHTML = `
-        <div class="comandante-card inimigo">
-          <div class="comandante-topo">
-            <div class="avatar-inimigo-icone">☠️</div>
-            <div style="min-width:0;">
-              <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.82rem; color:#ff8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ini.nome}</div>
-              <div style="font-size:0.75rem; color:#f5b7b1;">⚔️ ${ini.atk} • 🛡️ ${ini.def} ${ini.escudo ? '(+🛡️'+ini.escudo+')' : ''}</div>
+      document.getElementById('barra-iniciativa').innerHTML = (estadoAtual.ordemTurnos || []).map(item => {
+        const ativo = item.id === turno.id ? 'ativo' : '';
+        const classeTipo = item.tipo === 'INIMIGO' ? 'inimigo' : '';
+        return `<span class="pill-turno ${classeTipo} ${ativo}">${item.tipo === 'INIMIGO' ? '💀' : '⚓'} ${item.nome.split('—')[0]} (VLC ${item.vlc})</span>`;
+      }).join('');
+
+      if (iniFocado) {
+        const pctIni = Math.max(0, Math.min(100, (iniFocado.pv / iniFocado.pvMax) * 100));
+        document.getElementById('card-comandante-inimigo').innerHTML = `
+          <div class="comandante-card inimigo">
+            <div class="comandante-topo">
+              <div class="avatar-inimigo-icone">☠️</div>
+              <div style="min-width:0;">
+                <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.8rem; color:#ff8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${iniFocado.nome}</div>
+                <div style="font-size:0.72rem; color:#f5b7b1;">⚔️ ${iniFocado.atk} • 🛡️ ${iniFocado.def} • 💨 ${iniFocado.vlc}</div>
+              </div>
+            </div>
+            <div class="barra-hp">
+              <div class="barra-hp-fill" style="width:${pctIni}%; background:linear-gradient(90deg,#7f1d1d,#dc2626);"></div>
+              <div class="barra-hp-texto">🩸 ${iniFocado.pv}/${iniFocado.pvMax} ${iniFocado.escudo ? '(+🛡️'+iniFocado.escudo+')' : ''}</div>
             </div>
           </div>
-          <div class="barra-hp">
-            <div class="barra-hp-fill" style="width:${pctIni}%; background:linear-gradient(90deg,#7f1d1d,#dc2626);"></div>
-            <div class="barra-hp-texto">🩸 ${ini.pv}/${ini.pvMax}</div>
-          </div>
-        </div>
-      `;
+        `;
+      }
 
       const pctHeroi = Math.max(0, Math.min(100, (h.pv / h.pvMax) * 100));
       let gemas = '';
@@ -1028,38 +1038,43 @@
           <div class="comandante-topo">
             <img class="avatar-arena" src="${h.imagemUrl}" alt="${h.nome}">
             <div style="min-width:0;">
-              <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.9rem; color:var(--ouro-brilho);">${h.nome} (Nv.${h.nivel})</div>
-              <div style="font-size:0.74rem; color:var(--pergaminho-escuro);">💰 ${h.ouro}g • ⚔️ ${h.atk}${h.atkTemp ? '+'+h.atkTemp : ''} • 🛡️ ${h.def}</div>
-              ${h.frutaNome ? `<div style="font-size:0.7rem; color:#fde047;">🍎 ${h.frutaNome}</div>` : ''}
+              <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.88rem; color:var(--ouro-brilho);">${h.nome} (Nv.${h.nivel})</div>
+              <div style="font-size:0.72rem; color:var(--pergaminho-escuro);">💰 ${h.ouro}g • ⚔️ ${h.atk}${h.atkTemp ? '+'+h.atkTemp : ''} • 💨 ${h.vlc}</div>
             </div>
           </div>
           <div class="barra-hp">
             <div class="barra-hp-fill" style="width:${pctHeroi}%; background:linear-gradient(90deg,#14532d,#16a34a);"></div>
             <div class="barra-hp-texto">❤️ ${h.pv}/${h.pvMax} ${h.escudo > 0 ? '(+🛡️' + h.escudo + ')' : ''}</div>
           </div>
-          <div class="cristais-linha"><span style="font-family:'Cinzel',serif; font-size:0.7rem;">EP:</span>${gemas}</div>
+          <div class="cristais-linha"><span style="font-family:'Cinzel',serif; font-size:0.68rem;">EP:</span>${gemas}</div>
         </div>
       `;
 
       document.getElementById('fileira-inimiga').innerHTML = `
-        <span class="fileira-label">⚔️ Vanguarda Corsária</span>
-        <div class="carta-em-campo" style="border-color:#e74c3c;">
-          <span style="font-size:1.6rem;">🏴‍☠️</span>
-          <strong style="font-family:'Cinzel',serif; font-size:0.65rem; color:#ff8a8a;">${ini.nome.split('—')[0]}</strong>
-          <span style="font-size:0.68rem; background:#7f1d1d; padding:2px 6px; border-radius:4px;">ATK ${ini.atk}</span>
-        </div>
+        <span class="fileira-label">⚔️ Vanguarda Corsária (Toque para focar alvo/baralho)</span>
+        ${inimigosLista.map(ini => {
+          const sel = ini.id === inimigoSelecionadoId ? 'selecionado' : '';
+          const morto = ini.pv <= 0 ? 'derrotado' : '';
+          return `
+            <div class="card-inimigo-vanguarda ${sel} ${morto}" onclick="selecionarInimigoNaArena('${ini.id}')">
+              <div style="font-family:'Cinzel',serif; font-size:0.66rem; font-weight:700; color:#fca5a5;">${ini.nome.split('—')[0]}</div>
+              <div style="font-size:0.68rem;">🩸 ${ini.pv}/${ini.pvMax} • 💨 ${ini.vlc}</div>
+              <div style="font-size:0.62rem; background:#7f1d1d; padding:2px 5px; border-radius:4px;">ATK ${ini.atk} • ${ini.arquetipo.toUpperCase()}</div>
+            </div>
+          `;
+        }).join('')}
       `;
 
       const traps = estadoAtual.armadilhasAtivas || [];
       document.getElementById('fileira-armadilhas').innerHTML = `
         <span class="fileira-label">🪤 Emboscadas (${traps.length})</span>
         ${traps.length === 0
-          ? '<span style="font-size:0.78rem; color:rgba(244,230,200,0.35); font-style:italic;">Nenhuma armadilha oculta</span>'
+          ? '<span style="font-size:0.76rem; color:rgba(244,230,200,0.35); font-style:italic;">Nenhuma armadilha oculta</span>'
           : traps.map(t => `
               <div class="carta-armadilha-mesa">
-                <span style="font-size:1.4rem;">🪤</span>
-                <strong style="font-family:'Cinzel',serif; font-size:0.64rem; color:#e9d5ff;">Carta Oculta</strong>
-                <span style="font-size:0.62rem; color:#d8b4fe;">(${t.donoNome})</span>
+                <span style="font-size:1.3rem;">🪤</span>
+                <strong style="font-family:'Cinzel',serif; font-size:0.62rem; color:#e9d5ff;">Oculta</strong>
+                <span style="font-size:0.6rem; color:#d8b4fe;">(${t.donoNome})</span>
               </div>
             `).join('')}
       `;
@@ -1068,30 +1083,40 @@
         <span class="fileira-label">⚓ Convés de Ação</span>
         ${cartasJogadasNaMesa.slice(-4).map(c => `
           <div class="carta-em-campo">
-            <span style="font-size:1.4rem;">${iconesTipo[c.tipo] || '🃏'}</span>
-            <strong style="font-family:'Cinzel',serif; font-size:0.64rem; color:var(--ouro-brilho);">${c.nome}</strong>
-            <span style="font-size:0.65rem;">Poder ${c.valorBase}</span>
+            <span style="font-size:1.3rem;">${iconesTipo[c.tipo] || '🃏'}</span>
+            <strong style="font-family:'Cinzel',serif; font-size:0.62rem; color:var(--ouro-brilho);">${c.nome}</strong>
+            <span style="font-size:0.62rem;">Poder ${c.valorBase}</span>
           </div>
         `).join('')}
       `;
 
-      // SE FOR MESTRE: mostra o BARALHO DO OPONENTE na mão!
-      // SE FOR JOGADOR: mostra o BARALHO DO PIRATA selecionado!
-      const cartasMao = modoMestre ? (estadoAtual.baralhoInimigo || []) : h.baralho;
-      const total = cartasMao.length;
+      const podeAgir = modoMestre
+        ? (turno.tipo === 'INIMIGO')
+        : (turno.id === h.id);
 
+      const avisoTrava = document.getElementById('aviso-trava-turno');
+      if (!podeAgir) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.textContent = `⏳ Aguardando turno de: ${turno.nome} (Encerre o turno no timão ☸️ para avançar)`;
+      } else {
+        avisoTrava.style.display = 'none';
+      }
+
+      const cartasMao = modoMestre
+        ? (iniFocado ? iniFocado.baralho : [])
+        : h.baralho;
+
+      const total = cartasMao.length;
       document.getElementById('container-cartas').innerHTML = cartasMao.map((c, idx) => {
         const angulo = (idx - (total - 1) / 2) * 3;
         const elevacao = Math.abs(idx - (total - 1) / 2) * 3;
-        const semEp = !modoMestre && (h.ep < c.custoEp) ? 'sem-energia' : '';
-        const acaoClick = modoMestre
-          ? `jogarCartaMestre('${c.id}', '${c.tipo}')`
-          : `jogarCarta('${c.id}', '${c.tipo}')`;
+        const semEp = !modoMestre && (h.ep < c.custoEp);
+        const bloqueada = (!podeAgir || semEp) ? 'bloqueada' : '';
 
         return `
-          <div class="carta-mao ${semEp}"
+          <div class="carta-mao ${bloqueada}"
                style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${modoMestre ? 'border-color:#dc2626;' : ''}"
-               onclick="${acaoClick}">
+               onclick="aoClicarCarta('${c.id}', ${podeAgir})">
             <div>
               <div class="carta-mao-topo">
                 <span class="carta-mao-nome">${c.nome}</span>
@@ -1099,10 +1124,10 @@
               </div>
               <div class="carta-mao-arte">
                 ${c.imagemUrl
-                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.9rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
-                  : `<span style="font-size:1.9rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
+                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.8rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
+                  : `<span style="font-size:1.8rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
               </div>
-              <span class="badge-tipo bg-${c.tipo}">${modoMestre ? 'OPONENTE • ' : ''}${c.tipo}</span>
+              <span class="badge-tipo bg-${c.tipo}">${c.tipo}</span>
             </div>
             <p class="carta-mao-desc">${c.descricao}</p>
           </div>
@@ -1113,39 +1138,70 @@
         .map(l => `<div class="log-item">${l}</div>`).join('');
     }
 
-    async function jogarCarta(cartaId, tipoCarta) {
-      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId);
-      const cartaObj = h ? h.baralho.find(c => c.id === cartaId) : null;
+    async function aoClicarCarta(cartaId, podeAgir) {
+      if (!podeAgir) {
+        return dispararEfeitoVisual('INIMIGO', `⏳ Aguarde o turno de ${estadoAtual.turnoAtual.nome}!`);
+      }
+
+      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
+      const iniFocado = (estadoAtual.inimigos || []).find(i => i.id === inimigoSelecionadoId);
+      const listaCartas = modoMestre ? (iniFocado ? iniFocado.baralho : []) : h.baralho;
+      const cartaObj = listaCartas.find(c => c.id === cartaId);
+      if (!cartaObj) return;
+
+      const exigeDado = (cartaObj.descricao && cartaObj.descricao.includes('d20')) || cartaObj.tipo === 'ATAQUE';
+      if (exigeDado) {
+        abrirModalDadoCarta(cartaObj, modoMestre);
+      } else if (modoMestre) {
+        await executarJogadaMestre(cartaObj, null);
+      } else {
+        await executarJogadaHeroi(cartaObj, null);
+      }
+    }
+
+    async function executarJogadaHeroi(cartaObj, dadoFisico) {
       const resp = await fetch('/api/jogo/jogar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personagemId: heroiSelecionadoId, cartaId })
+        body: JSON.stringify({
+          personagemId: heroiSelecionadoId,
+          cartaId: cartaObj.id,
+          inimigoAlvoId: inimigoSelecionadoId,
+          dadoFisico
+        })
       });
       const res = await resp.json();
       if (res.erro) return dispararEfeitoVisual('INIMIGO', '⚠️ ' + res.erro);
-      if (cartaObj) cartasJogadasNaMesa.push(cartaObj);
-      dispararEfeitoVisual(tipoCarta, res.mensagem);
+      cartasJogadasNaMesa.push(cartaObj);
+      dispararEfeitoVisual(cartaObj.tipo, res.mensagem);
       await carregarEstado(true);
     }
 
-    async function jogarCartaMestre(cartaId, tipoCarta) {
-      const cartaObj = (estadoAtual.baralhoInimigo || []).find(c => c.id === cartaId);
+    async function executarJogadaMestre(cartaObj, dadoFisico) {
       const resp = await fetch('/api/jogo/mestre/jogar-carta-inimigo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cartaId, alvoId: heroiSelecionadoId })
+        body: JSON.stringify({
+          inimigoId: inimigoSelecionadoId,
+          cartaId: cartaObj.id,
+          alvoId: heroiSelecionadoId,
+          dadoFisico
+        })
       });
       const res = await resp.json();
       if (res.erro) return dispararEfeitoVisual('INIMIGO', '⚠️ ' + res.erro);
-      if (cartaObj) cartasJogadasNaMesa.push(cartaObj);
+      cartasJogadasNaMesa.push(cartaObj);
       dispararEfeitoVisual('INIMIGO', res.mensagem);
       await carregarEstado(true);
     }
 
     async function encerrarTurno() {
       cartasJogadasNaMesa = [];
-      await fetch('/api/jogo/turno', { method: 'POST' });
-      dispararEfeitoVisual('SUPORTE', '☸️ Novo Turno! Energia Restaurada');
+      const resp = await fetch('/api/jogo/turno', { method: 'POST' });
+      const res = await resp.json();
+      if (res.turnoAtual) {
+        dispararEfeitoVisual('SUPORTE', `☸️ Turno de: ${res.turnoAtual.nome}`);
+      }
       await carregarEstado(true);
     }
 
@@ -1168,7 +1224,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ personagemId: heroiSelecionadoId, acao, frutaNome })
       });
-      dispararEfeitoVisual('SUPORTE', '👑 Alteração do Mestre Aplicada!');
+      dispararEfeitoVisual('SUPORTE', '👑 Alteração Aplicada!');
       await carregarEstado(true);
     }
 
@@ -1181,16 +1237,19 @@
       await carregarEstado(true);
     }
 
-    async function invocarInimigo() {
+    async function invocarInimigo(limpar) {
       const nome = document.getElementById('novo-ini-nome').value || "Corsário Sombrio";
-      const pv = document.getElementById('novo-ini-pv').value || 50;
-      const atk = document.getElementById('novo-ini-atk').value || 5;
+      const pv = document.getElementById('novo-ini-pv').value || 35;
+      const atk = document.getElementById('novo-ini-atk').value || 4;
+      const vlc = document.getElementById('novo-ini-vlc').value || 4;
+      const arquetipo = document.getElementById('novo-ini-arquetipo').value;
+
       await fetch('/api/jogo/mestre/novo-inimigo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, pv, atk, def: 2 })
+        body: JSON.stringify({ nome, pv, atk, def: 2, vlc, arquetipo, limpar })
       });
-      dispararEfeitoVisual('INIMIGO', '💀 Novo Oponente Invocado!');
+      dispararEfeitoVisual('INIMIGO', `💀 ${nome} entrou na iniciativa!`);
       await carregarEstado(true);
     }
 
@@ -1228,9 +1287,10 @@
       await carregarEstado(true);
     }
 
+    montarBotoesDado();
     iniciarParticulasVivas();
     carregarEstado(true);
-    setInterval(() => carregarEstado(false), 3000);
+    setInterval(() => carregarEstado(false), 2500);
   </script>
 </body>
 </html>
