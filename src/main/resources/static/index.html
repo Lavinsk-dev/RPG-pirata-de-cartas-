@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Crônicas dos Sete Mares — Arena Tática</title>
+  <title>Crônicas dos Sete Mares — Exploração &amp; Arena</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -45,23 +45,67 @@
       text-shadow: 0 3px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(212, 175, 55, 0.5);
     }
 
-    /* ==================== TELA 1: SELEÇÃO DE TRIPULAÇÃO ==================== */
-    #tela-selecao {
+    .btn-pirata {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      background: linear-gradient(180deg, #4f311a, #231409);
+      color: var(--ouro-brilho);
+      border: 1px solid var(--ouro);
+      padding: 8px 12px;
+      min-height: 38px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
+    }
+
+    .btn-pirata:active { transform: scale(0.96); background: #6e4525; }
+
+    /* ==================== TELA 1: EXPLORAÇÃO & PREPARAÇÃO ==================== */
+    #tela-exploracao {
       height: 100dvh;
       overflow-y: auto;
-      padding: 26px 16px 40px;
+      padding: 18px 16px 40px;
       text-align: center;
       background:
-        radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.18), rgba(8, 12, 18, 0.94) 75%),
+        radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.2), rgba(8, 12, 18, 0.95) 75%),
         repeating-linear-gradient(45deg, rgba(212,175,55,0.03) 0px, rgba(212,175,55,0.03) 2px, transparent 2px, transparent 28px);
+    }
+
+    .barra-topo-exploracao {
+      max-width: 1120px;
+      margin: 0 auto 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 10, 6, 0.9);
+      border: 1px solid var(--ouro);
+      padding: 10px 14px;
+      border-radius: 12px;
+    }
+
+    .painel-acao-combate {
+      max-width: 1120px;
+      margin: 16px auto 0;
+      background: linear-gradient(180deg, rgba(45, 16, 18, 0.92), rgba(18, 10, 8, 0.95));
+      border: 2px solid #dc2626;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
     .grid-herois {
       max-width: 1120px;
-      margin: 24px auto 0;
+      margin: 18px auto 0;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 22px;
+      gap: 18px;
     }
 
     .card-heroi-selecao {
@@ -69,19 +113,22 @@
       border: 2px solid var(--ouro);
       border-radius: 14px;
       overflow: hidden;
-      cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
     }
 
-    .card-heroi-selecao:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(212, 175, 55, 0.45); }
+    .card-heroi-selecao.focado {
+      border-color: var(--ouro-brilho);
+      box-shadow: 0 0 24px rgba(255, 224, 130, 0.45);
+    }
 
     .moldura-retrato {
       position: relative;
-      height: 280px;
+      height: 240px;
       background: #0c0805;
       border-bottom: 2px solid var(--ouro);
       overflow: hidden;
+      cursor: pointer;
     }
 
     .moldura-retrato img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
@@ -101,9 +148,9 @@
       white-space: nowrap;
     }
 
-    .info-heroi-selecao { padding: 16px; }
-    .info-heroi-selecao h3 { font-size: 1.45rem; color: var(--ouro-brilho); }
-    .epitetos { color: var(--pergaminho-escuro); font-style: italic; margin-bottom: 10px; }
+    .info-heroi-selecao { padding: 14px; }
+    .info-heroi-selecao h3 { font-size: 1.4rem; color: var(--ouro-brilho); }
+    .epitetos { color: var(--pergaminho-escuro); font-style: italic; margin-bottom: 8px; }
 
     .atributos-mini {
       display: flex;
@@ -112,26 +159,10 @@
       border: 1px solid rgba(212, 175, 55, 0.35);
       border-radius: 8px;
       padding: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
     }
-
-    .btn-pirata {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      background: linear-gradient(180deg, #4f311a, #231409);
-      color: var(--ouro-brilho);
-      border: 1px solid var(--ouro);
-      padding: 8px 12px;
-      min-height: 38px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
-    }
-
-    .btn-pirata:active { transform: scale(0.96); background: #6e4525; }
 
     /* ==================== TELA 2: ARENA DE BATALHA TOP-DOWN ==================== */
     #mesa-batalha {
@@ -205,7 +236,7 @@
       padding: 5px 10px;
       border-radius: 20px;
       overflow-x: auto;
-      max-width: 56vw;
+      max-width: 50vw;
     }
 
     .pill-turno {
@@ -338,8 +369,9 @@
     .card-inimigo-vanguarda.derrotado { opacity: 0.35; filter: grayscale(1); pointer-events: none; }
 
     .carta-em-campo {
-      width: 86px;
-      height: 104px;
+      min-width: 118px;
+      max-width: 140px;
+      height: 106px;
       flex-shrink: 0;
       border-radius: 8px;
       border: 2px solid var(--ouro);
@@ -350,9 +382,16 @@
       justify-content: space-between;
       padding: 5px;
       text-align: center;
-      animation: surgirNaMesa 0.3s ease-out;
+      animation: surgirNaMesa 0.35s ease-out;
     }
-    @keyframes surgirNaMesa { 0% { transform: scale(1.3) translateY(18px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+
+    .carta-em-campo.inimiga {
+      border-color: #f87171;
+      background: linear-gradient(180deg, #450a0a, #1c0505);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+    }
+
+    @keyframes surgirNaMesa { 0% { transform: scale(1.35) translateY(-14px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
 
     .carta-armadilha-mesa {
       width: 82px; height: 100px; flex-shrink: 0; border-radius: 8px;
@@ -415,15 +454,16 @@
     }
 
     .aviso-trava-turno {
-      background: rgba(127, 29, 29, 0.92);
+      background: rgba(127, 29, 29, 0.95);
       border: 1px solid #fca5a5;
       color: #fef2f2;
       font-family: 'Cinzel', serif;
       font-size: 0.76rem;
-      padding: 4px 14px;
+      padding: 5px 14px;
       border-radius: 14px;
       margin-bottom: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85);
+      text-align: center;
     }
 
     .leque-cartas { display: flex; justify-content: center; align-items: flex-end; }
@@ -513,7 +553,7 @@
       .carta-mao:active { transform: scale(0.95) !important; }
     }
 
-    /* ==================== MODAL DADO FÍSICO & GAVETAS ==================== */
+    /* ==================== CONFRONTO CINEMATOGRÁFICO & VFX ==================== */
     .modal-dado-overlay {
       display: none;
       position: fixed;
@@ -556,20 +596,157 @@
     }
     .btn-d20-num:active, .btn-d20-num:hover { background: var(--ouro); color: #120b07; }
 
-    #camada-vfx { position: fixed; inset: 0; pointer-events: none; z-index: 160; }
-    .tremor-tela { animation: tremerImpacto 0.4s ease-in-out; }
-    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-7px, 4px); } 50% { transform: translate(7px, -4px); } 75% { transform: translate(-5px, -2px); } }
+    #camada-vfx { position: fixed; inset: 0; pointer-events: none; z-index: 160; overflow: hidden; }
+    .tremor-tela { animation: tremerImpacto 0.45s ease-in-out; }
+    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-8px, 4px); } 50% { transform: translate(8px, -4px); } 75% { transform: translate(-5px, -2px); } }
 
-    .texto-flutuante {
-      position: fixed; left: 50%; top: 36%; transform: translateX(-50%);
-      font-family: 'Cinzel Decorative', serif; font-size: 1.2rem; font-weight: 900; text-align: center;
-      max-width: 92vw; background: rgba(12, 8, 5, 0.94); border: 1px solid var(--ouro);
-      padding: 8px 14px; border-radius: 10px; animation: subirTextoVfx 2.1s ease-out forwards;
+    /* PALCO DE CONFRONTO VISUAL (ATACANTE -> CARTA -> ALVO) */
+    .palco-confronto {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px;
+      background: radial-gradient(circle, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.8) 100%);
+      animation: animarPalco 3.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    @keyframes subirTextoVfx { 0% { transform: translate(-50%, 10px); opacity: 0; } 15% { transform: translate(-50%, 0); opacity: 1; } 85% { transform: translate(-50%, -22px); opacity: 1; } 100% { transform: translate(-50%, -40px); opacity: 0; } }
+
+    @keyframes animarPalco {
+      0% { opacity: 0; transform: scale(0.88); }
+      12% { opacity: 1; transform: scale(1); }
+      85% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.06); }
+    }
+
+    .combatente-duelo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 110px;
+      animation: deslizarCombatente 0.45s ease-out;
+    }
+
+    .combatente-duelo img, .combatente-duelo .icone-duelo {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 3px solid var(--ouro-brilho);
+      object-fit: cover;
+      object-position: top;
+      box-shadow: 0 0 24px rgba(255, 224, 130, 0.7);
+      background: #1a0c08;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+    }
+
+    .combatente-duelo.alvo img, .combatente-duelo.alvo .icone-duelo {
+      border-color: #ef4444;
+      box-shadow: 0 0 28px rgba(239, 68, 68, 0.85);
+      animation: impactoAlvo 0.5s ease-in-out 0.25s;
+    }
+
+    @keyframes impactoAlvo {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      25% { transform: translateX(10px) rotate(6deg); filter: brightness(1.8); }
+      50% { transform: translateX(-8px) rotate(-4deg); }
+    }
+
+    .carta-showdown {
+      width: 185px;
+      background: linear-gradient(180deg, #2b1a0e, #120905);
+      border: 3px solid var(--ouro-brilho);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.85);
+      position: relative;
+      animation: cartaImpactoCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .carta-showdown.inimiga {
+      border-color: #f87171;
+      background: linear-gradient(180deg, #4c0519, #180308);
+      box-shadow: 0 0 45px rgba(239, 68, 68, 0.9);
+    }
+
+    @keyframes cartaImpactoCentro {
+      0% { transform: scale(1.7) rotate(-8deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .numero-dano-flutuante {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fde047;
+      text-shadow: 0 2px 10px #000, 0 0 18px #ea580c;
+      margin-top: 6px;
+      animation: pularValor 0.6s ease-out;
+    }
+
+    @keyframes pularValor {
+      0% { transform: scale(0.4) translateY(15px); }
+      60% { transform: scale(1.25) translateY(-4px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    /* EFEITOS ELEMENTAIS SOBRE A ARENA */
+    .vfx-flash-fogo {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at center, rgba(251, 146, 60, 0.55) 0%, rgba(220, 38, 38, 0.35) 55%, transparent 85%);
+      animation: fadeVfx 1.1s ease-out forwards;
+    }
+
+    .vfx-slash-corte {
+      position: fixed; left: 50%; top: 50%;
+      width: 420px; height: 8px;
+      background: linear-gradient(90deg, transparent, #fff, #38bdf8, transparent);
+      box-shadow: 0 0 25px #7dd3fc;
+      transform: translate(-50%, -50%) rotate(-32deg) scaleX(0);
+      animation: rasgoCorte 0.65s ease-out forwards;
+    }
+
+    @keyframes rasgoCorte {
+      0% { transform: translate(-50%, -50%) rotate(-32deg) scaleX(0); opacity: 1; }
+      45% { transform: translate(-50%, -50%) rotate(-32deg) scaleX(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(-32deg) scaleX(1.4); opacity: 0; }
+    }
+
+    .vfx-domo-escudo {
+      position: fixed; left: 50%; top: 50%;
+      width: 240px; height: 240px; border-radius: 50%;
+      border: 4px solid #38bdf8;
+      box-shadow: inset 0 0 40px rgba(56, 189, 248, 0.6), 0 0 40px rgba(56, 189, 248, 0.8);
+      transform: translate(-50%, -50%) scale(0.3);
+      animation: expandirEscudo 1.1s ease-out forwards;
+    }
+
+    @keyframes expandirEscudo {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    }
+
+    .vfx-aura-cura {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at center, rgba(74, 222, 128, 0.42) 0%, rgba(16, 185, 129, 0.15) 60%, transparent 85%);
+      animation: fadeVfx 1.3s ease-out forwards;
+    }
+
+    .vfx-vinheta-sangue {
+      position: fixed; inset: 0;
+      box-shadow: inset 0 0 110px rgba(220, 38, 38, 0.85);
+      animation: fadeVfx 1.2s ease-out forwards;
+    }
+
+    @keyframes fadeVfx { 0% { opacity: 1; } 100% { opacity: 0; } }
 
     .gaveta-modal {
-      display: none; position: fixed; top: 56px; right: 12px; width: 375px; max-width: 94vw; max-height: 82dvh;
+      display: none; position: fixed; top: 56px; right: 12px; width: 385px; max-width: 94vw; max-height: 84dvh;
       overflow-y: auto; background: rgba(20, 13, 8, 0.98); border: 2px solid var(--ouro);
       border-radius: 12px; padding: 16px; z-index: 140; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.92);
     }
@@ -585,19 +762,42 @@
 </head>
 <body>
 
-  <!-- TELA 1: SELEÇÃO DE TRIPULAÇÃO -->
-  <section id="tela-selecao">
-    <h1 class="titulo-epico" style="font-size: 2.1rem;">
-      <span onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
-    </h1>
-    <p style="font-size: 1.15rem; color: var(--pergaminho-escuro); font-style: italic; margin-top: 6px;">
-      Toque no seu pirata para assumir seu posto na iniciativa
-    </p>
-    <div id="aviso-modo-mestre" style="display:none; margin-top:12px;">
-      <button class="btn-pirata" style="background:#7f1d1d; border-color:#f87171;" onclick="entrarComoMestre()">
-        👑 Entrar como Mestre (Controlar Inimigos &amp; Dados)
-      </button>
+  <!-- TELA 1: EXPLORAÇÃO & PREPARAÇÃO DA TRIPULAÇÃO -->
+  <section id="tela-exploracao">
+    <div class="barra-topo-exploracao">
+      <div style="text-align:left;">
+        <h1 class="titulo-epico" style="font-size: 1.5rem;">
+          <span onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
+        </h1>
+        <div style="font-size:0.95rem; color:var(--pergaminho-escuro);" id="exp-cenario-titulo">
+          🧭 Fase de Exploração — Porto Pirata
+        </div>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">
+        <button class="btn-pirata" onclick="abrirModalImproviso()">🎲 Teste Narrativo (d20)</button>
+        <button class="btn-pirata" onclick="toggleGaveta('gaveta-taverna')">⚖️ Taverna</button>
+        <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜 Diário</button>
+        <button class="btn-pirata" id="btn-mestre-exp" style="display:none; background:#7f1d1d; border-color:#f87171;" onclick="toggleGaveta('gaveta-mestre')">👑 Mestre</button>
+      </div>
     </div>
+
+    <!-- PAINEL DE INÍCIO DE COMBATE -->
+    <div class="painel-acao-combate">
+      <div style="text-align:left;">
+        <strong style="font-family:'Cinzel',serif; color:#fca5a5; font-size:1rem;">⚔️ Oponentes à Espreita:</strong>
+        <div id="exp-lista-inimigos" style="font-size:0.95rem; color:var(--pergaminho); margin-top:3px;">
+          Capitão Morgano — Corsário (VLC 4)
+        </div>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button class="btn-pirata" style="background:#991b1b; border-color:#fca5a5; font-size:0.86rem;" onclick="iniciarCombateServidor('')">
+          ⚔️ Iniciar Combate (Ordem por VLC)
+        </button>
+      </div>
+    </div>
+
     <div class="grid-herois" id="lista-herois-selecao"></div>
   </section>
 
@@ -611,19 +811,20 @@
     <div class="tabuleiro-arena">
       <div class="zona-topo-inimigo">
         <div style="display:flex; align-items:center; gap:6px;">
-          <button class="btn-pirata" onclick="voltarSelecao()">👥</button>
-          <span id="badge-rodada" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.75); padding:5px 10px; border-radius:14px; border:1px solid var(--ouro); font-size:0.76rem;">
-            Rodada 1
+          <button class="btn-pirata" onclick="voltarExploracao()" title="Voltar para Exploração">🧭</button>
+          <button class="btn-pirata" id="btn-auto-troca" onclick="alternarAutoTrocaTela()" title="Alterna automaticamente entre os jogadores">
+            🖥️ Mesa: ON
+          </button>
+          <span id="badge-rodada" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.75); padding:5px 9px; border-radius:14px; border:1px solid var(--ouro); font-size:0.74rem;">
+            R1
           </span>
         </div>
 
-        <!-- BARRA DE ORDEM DE TURNOS (INICIATIVA POR VLC) -->
         <div class="barra-iniciativa" id="barra-iniciativa"></div>
 
         <div style="display:flex; gap:5px;">
           <button class="btn-pirata" onclick="abrirModalImproviso()">🎲 d20</button>
           <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜</button>
-          <button class="btn-pirata" id="btn-taverna-jogador" onclick="toggleGaveta('gaveta-taverna')">⚖️</button>
           <button class="btn-pirata" id="btn-painel-mestre" style="display:none; background:#7f1d1d; border-color:#f87171;" onclick="toggleGaveta('gaveta-mestre')">👑 Mestre</button>
         </div>
       </div>
@@ -707,6 +908,9 @@
       <h3 style="color:var(--ouro-brilho);">⚖️ Taverna &amp; Forja</h3>
       <button class="btn-pirata" style="padding:3px 9px;" onclick="toggleGaveta('gaveta-taverna')">✕</button>
     </div>
+    <p style="font-size:0.88rem; color:var(--pergaminho-escuro); margin-bottom:8px;">
+      Comprando para o pirata selecionado: <strong id="nome-pirata-taverna" style="color:var(--ouro-brilho);">Lua</strong>
+    </p>
     <div style="display:flex; flex-direction:column; gap:10px;">
       <button class="btn-pirata" onclick="comprarLoja('pocao')">🧪 Elixir Pirata (+6 PV) — 15g</button>
       <button class="btn-pirata" onclick="comprarLoja('tonico')">⚡ Tônico de Fôlego (+2 EP) — 15g</button>
@@ -721,12 +925,25 @@
       <button class="btn-pirata" style="padding:3px 9px;" onclick="toggleGaveta('gaveta-mestre')">✕</button>
     </div>
 
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🎯 Pirata Alvo / Selecionado:</label>
-    <select id="select-alvo-mestre" class="select-pirata" onchange="heroiSelecionadoId = this.value; renderizarArena();">
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🎯 Pirata Selecionado (Alvo / Cura / Bênçãos):</label>
+    <select id="select-alvo-mestre" class="select-pirata" onchange="heroiSelecionadoId = this.value; renderizarTudo();">
       <option value="lua">Lua (Atiradora)</option>
       <option value="kyan">Kyan (Carpinteiro)</option>
       <option value="zafira">Zafira (Combatente)</option>
     </select>
+
+    <!-- CONTROLE MANUAL DE PONTOS DE VIDA (CURA, DANO E MÁXIMO) -->
+    <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(212,175,55,0.4); border-radius:8px; padding:8px; margin-bottom:10px;">
+      <label style="font-size:0.78rem; color:var(--ouro-brilho); display:block; margin-bottom:4px;">❤️ Ajuste Manual de PV (Improviso):</label>
+      <div style="display:flex; gap:5px; align-items:center;">
+        <input id="mestre-valor-pv" type="number" min="1" value="5" class="input-pirata" style="width:65px; margin-bottom:0; text-align:center;">
+        <button class="btn-pirata" style="flex:1; background:#14532d; border-color:#4ade80;" onclick="ajustarPvManual(1)">💚 +Curar</button>
+        <button class="btn-pirata" style="flex:1; background:#7f1d1d; border-color:#f87171;" onclick="ajustarPvManual(-1)">💔 -Dano</button>
+      </div>
+      <button class="btn-pirata" style="width:100%; margin-top:6px; background:#0f4c81; border-color:#7dd3fc;" onclick="acaoMestreHeroi('curar')">
+        ✨ Restaurar PV &amp; EP Máximos
+      </button>
+    </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
       <button class="btn-pirata" onclick="acaoMestreHeroi('nivel')">⭐ +1 Nível</button>
@@ -735,7 +952,7 @@
       <button class="btn-pirata" onclick="acaoMestreHeroi('bonusDado')">🎲 +3 Bônus d20</button>
     </div>
 
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">💀 Adicionar Novo Oponente na Fila:</label>
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">💀 Adicionar Oponente na Emboscada/Fila:</label>
     <input id="novo-ini-nome" class="input-pirata" placeholder="Nome (ex: Atirador do Cesto)">
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:6px;">
       <input id="novo-ini-pv" type="number" class="input-pirata" placeholder="PV (35)">
@@ -749,8 +966,8 @@
       <option value="arcano">Baralho: Arcano / Feiticeiro</option>
     </select>
     <div style="display:flex; gap:6px; margin-bottom:12px;">
-      <button class="btn-pirata" style="flex:1;" onclick="invocarInimigo(false)">➕ Adicionar à Batalha</button>
-      <button class="btn-pirata" style="background:#5c1116;" onclick="invocarInimigo(true)">🔄 Substituir Todos</button>
+      <button class="btn-pirata" style="flex:1;" onclick="invocarInimigo(false)">➕ Adicionar</button>
+      <button class="btn-pirata" style="background:#5c1116;" onclick="invocarInimigo(true)">🔄 Substituir</button>
     </div>
 
     <label style="font-size:0.82rem; color:var(--ouro-brilho);">🗺️ Cenário:</label>
@@ -761,32 +978,52 @@
       <option value="taverna">Taverna Subterrânea</option>
     </select>
 
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">📖 Progresso Permanente:</label>
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">📖 Campanha &amp; Fases:</label>
     <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
-      <button class="btn-pirata" onclick="baixarSave()">💾 Baixar Save da Campanha (.json)</button>
+      <button class="btn-pirata" onclick="baixarSave()">💾 Baixar Save (.json)</button>
       <label class="btn-pirata" style="text-align:center; display:block;">
         📂 Carregar Save (.json)
         <input type="file" accept=".json" style="display:none;" onchange="carregarArquivoSave(event)">
       </label>
-      <button class="btn-pirata" style="background:#5c1116;" onclick="resetarBatalha()">🕊️ Reiniciar Batalha</button>
+      <button class="btn-pirata" style="background:#5c1116;" onclick="resetarBatalha()">🕊️ Reiniciar Campanha</button>
     </div>
   </div>
 
   <div id="camada-vfx"></div>
 
   <script>
-    const CHAVE_SAVE = "cronicas_sete_mares_save_v2";
+    const CHAVE_SAVE = "cronicas_sete_mares_save_v5";
     let estadoAtual = null;
     let ultimoEstadoJson = "";
+    let ultimoEventoIdExibido = 0;
     let heroiSelecionadoId = "lua";
     let inimigoSelecionadoId = "";
     let modoMestre = new URLSearchParams(window.location.search).get("mestre") === "1";
-    let cliquesBrasao = 0;
-    let cartasJogadasNaMesa = [];
+    let autoTrocaTela = true;
     let verificouRestauracaoInicial = false;
     let acaoDadoPendente = null;
+    let cliquesBrasao = 0;
 
-    const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨" };
+    const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨", INIMIGO: "🩸" };
+
+    function alternarAutoTrocaTela() {
+      autoTrocaTela = !autoTrocaTela;
+      const btn = document.getElementById('btn-auto-troca');
+      btn.textContent = autoTrocaTela ? "🖥️ Mesa: ON" : "📱 Meu Pirata";
+      sincronizarCameraTurno();
+      renderizarTudo();
+    }
+
+    function sincronizarCameraTurno() {
+      if (!estadoAtual || !estadoAtual.turnoAtual) return;
+      const turno = estadoAtual.turnoAtual;
+
+      if (turno.tipo === 'HEROI' && autoTrocaTela) {
+        heroiSelecionadoId = turno.id;
+      } else if (turno.tipo === 'INIMIGO') {
+        inimigoSelecionadoId = turno.id;
+      }
+    }
 
     function montarBotoesDado() {
       const grid = document.getElementById('grid-numeros-d20');
@@ -797,8 +1034,8 @@
       grid.innerHTML = html;
     }
 
-    function abrirModalDadoCarta(cartaObj, isMestre) {
-      acaoDadoPendente = { tipo: isMestre ? 'MESTRE_CARTA' : 'HEROI_CARTA', carta: cartaObj };
+    function abrirModalDadoCarta(cartaObj, isInimigoTurno) {
+      acaoDadoPendente = { tipo: isInimigoTurno ? 'MESTRE_CARTA' : 'HEROI_CARTA', carta: cartaObj };
       document.getElementById('titulo-modal-dado').textContent = `🎲 Teste d20 — ${cartaObj.nome}`;
       document.getElementById('desc-modal-dado').textContent = "Role o d20 físico na mesa e toque no resultado obtido:";
       document.getElementById('opcoes-improviso-extra').style.display = 'none';
@@ -829,7 +1066,7 @@
       } else if (pendente.tipo === 'MESTRE_CARTA') {
         await executarJogadaMestre(pendente.carta, valorDado);
       } else if (pendente.tipo === 'IMPROVISO') {
-        const resp = await fetch('/api/jogo/mestre/improviso', {
+        await fetch('/api/jogo/mestre/improviso', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -839,8 +1076,6 @@
             dadoFisico: valorDado
           })
         });
-        const res = await resp.json();
-        if (res.mensagem) dispararEfeitoVisual('SUPORTE', res.mensagem);
         await carregarEstado(true);
       }
     }
@@ -849,22 +1084,13 @@
       cliquesBrasao++;
       if (cliquesBrasao >= 3) {
         modoMestre = true;
-        document.getElementById('aviso-modo-mestre').style.display = 'block';
-        dispararEfeitoVisual('SUPORTE', '👑 Acesso de Mestre Desbloqueado!');
+        document.getElementById('btn-mestre-exp').style.display = 'inline-block';
+        exibirConfrontoCinematografico({
+          tipo: 'SUPORTE', efeitoEspecial: 'FOCO', autor: 'Mestre', autorImg: '',
+          alvo: '', alvoImg: '', cartaNome: 'Controle do Mestre', cartaImg: '',
+          valorDestaque: 'Desbloqueado!', mensagem: '👑 Painel de Mestre ativado!'
+        });
       }
-    }
-
-    function entrarComoMestre() {
-      modoMestre = true;
-      abrirArena();
-    }
-
-    function abrirArena() {
-      document.getElementById('tela-selecao').style.display = 'none';
-      document.getElementById('mesa-batalha').style.display = 'block';
-      document.getElementById('btn-painel-mestre').style.display = modoMestre ? 'inline-block' : 'none';
-      document.getElementById('btn-taverna-jogador').style.display = modoMestre ? 'none' : 'inline-block';
-      renderizarArena();
     }
 
     function iniciarParticulasVivas() {
@@ -879,22 +1105,79 @@
       }
     }
 
-    function dispararEfeitoVisual(tipo, mensagem) {
+    // CINEMÁTICA DE CONFRONTO + EFEITOS ELEMENTAIS PERSONALIZADOS
+    function exibirConfrontoCinematografico(ev) {
+      if (!ev || !ev.cartaNome) return;
       const vfx = document.getElementById('camada-vfx');
       const mesa = document.getElementById('mesa-batalha');
-      if (tipo === 'ATAQUE' || tipo === 'INIMIGO') {
+      const isInimigo = ev.tipo === 'INIMIGO';
+      const ef = ev.efeitoEspecial || '';
+
+      // 1. Efeito Ambiental Específico por Carta/Elemento
+      const camadaEfeito = document.createElement('div');
+      if (ef.includes('CHAMAS') || ef.includes('QUEIMADURA') || ef.includes('CANHAO')) {
+        camadaEfeito.className = 'vfx-flash-fogo';
+      } else if (ev.tipo === 'DEFESA') {
+        camadaEfeito.className = 'vfx-domo-escudo';
+      } else if (ev.tipo === 'SUPORTE') {
+        camadaEfeito.className = 'vfx-aura-cura';
+      } else if (isInimigo) {
+        camadaEfeito.className = 'vfx-vinheta-sangue';
+      } else {
+        camadaEfeito.className = 'vfx-slash-corte';
+      }
+      vfx.appendChild(camadaEfeito);
+      setTimeout(() => camadaEfeito.remove(), 1250);
+
+      // 2. Tremor de impacto em ataques
+      if (ev.tipo === 'ATAQUE' || isInimigo) {
         mesa.classList.remove('tremor-tela');
         void mesa.offsetWidth;
         mesa.classList.add('tremor-tela');
       }
-      if (mensagem) {
-        const txt = document.createElement('div');
-        txt.className = 'texto-flutuante';
-        txt.style.color = (tipo === 'INIMIGO') ? '#ff7675' : '#ffe082';
-        txt.textContent = mensagem;
-        vfx.appendChild(txt);
-        setTimeout(() => txt.remove(), 2100);
-      }
+
+      // 3. Palco Visual: [Atacante] ---> [Carta & Efeito] ---> [Alvo]
+      const palco = document.createElement('div');
+      palco.className = 'palco-confronto';
+
+      const blocoAutor = `
+        <div class="combatente-duelo">
+          ${ev.autorImg
+            ? `<img src="${ev.autorImg}" alt="${ev.autor}">`
+            : `<div class="icone-duelo">${isInimigo ? '☠️' : '👑'}</div>`}
+          <strong style="font-family:'Cinzel',serif; font-size:0.78rem; color:#fff; margin-top:5px; text-shadow:0 2px 4px #000;">
+            ${ev.autor.split('—')[0]}
+          </strong>
+        </div>
+      `;
+
+      const blocoCarta = `
+        <div class="carta-showdown ${isInimigo ? 'inimiga' : ''}">
+          <div style="font-family:'Cinzel',serif; font-size:0.65rem; color:${isInimigo ? '#fca5a5' : '#fde68a'}; text-transform:uppercase;">
+            ${isInimigo ? '🩸 AÇÃO DO INIMIGO' : (iconesTipo[ev.tipo] || '⚔️') + ' ' + ev.tipo}
+          </div>
+          <div style="font-family:'Cinzel Decorative',serif; font-size:1rem; font-weight:900; color:#fff; margin:4px 0;">
+            ${ev.cartaNome}
+          </div>
+          ${ev.cartaImg ? `<img src="${ev.cartaImg}" style="width:100%; height:64px; object-fit:cover; border-radius:6px; border:1px solid var(--ouro); margin:4px 0;">` : ''}
+          <div class="numero-dano-flutuante">${ev.valorDestaque || ''}</div>
+        </div>
+      `;
+
+      const blocoAlvo = ev.alvo ? `
+        <div class="combatente-duelo alvo">
+          ${ev.alvoImg
+            ? `<img src="${ev.alvoImg}" alt="${ev.alvo}">`
+            : `<div class="icone-duelo">🎯</div>`}
+          <strong style="font-family:'Cinzel',serif; font-size:0.78rem; color:#fca5a5; margin-top:5px; text-shadow:0 2px 4px #000;">
+            ${ev.alvo.split('—')[0]}
+          </strong>
+        </div>
+      ` : '';
+
+      palco.innerHTML = blocoAutor + blocoCarta + blocoAlvo;
+      vfx.appendChild(palco);
+      setTimeout(() => palco.remove(), 3200);
     }
 
     function toggleGaveta(id) {
@@ -937,56 +1220,94 @@
           localStorage.setItem(CHAVE_SAVE, novoJson);
         }
 
-        const turno = estadoAtual.turnoAtual || {};
-        if (turno.tipo === 'INIMIGO') {
-          inimigoSelecionadoId = turno.id;
-        } else if (!inimigoSelecionadoId || !estadoAtual.inimigos.some(i => i.id === inimigoSelecionadoId && i.pv > 0)) {
+        const ev = estadoAtual.ultimoEventoVisual;
+        if (ev && ev.id && ev.id > ultimoEventoIdExibido) {
+          if (ultimoEventoIdExibido !== 0) {
+            exibirConfrontoCinematografico(ev);
+          }
+          ultimoEventoIdExibido = ev.id;
+        }
+
+        if (!inimigoSelecionadoId || !estadoAtual.inimigos.some(i => i.id === inimigoSelecionadoId && i.pv > 0)) {
           const vivo = estadoAtual.inimigos.find(i => i.pv > 0);
           if (vivo) inimigoSelecionadoId = vivo.id;
         }
 
-        if (modoMestre) document.getElementById('aviso-modo-mestre').style.display = 'block';
-
-        if (document.getElementById('mesa-batalha').style.display === 'block') {
-          renderizarArena();
-        } else {
-          renderizarSelecao();
-        }
+        sincronizarCameraTurno();
+        renderizarTudo();
       } catch (e) { console.error(e); }
     }
 
-    function renderizarSelecao() {
+    function renderizarTudo() {
+      if (!estadoAtual) return;
+      const emCombate = estadoAtual.faseJogo === 'COMBATE';
+
+      document.getElementById('tela-exploracao').style.display = emCombate ? 'none' : 'block';
+      document.getElementById('mesa-batalha').style.display = emCombate ? 'block' : 'none';
+      document.getElementById('btn-painel-mestre').style.display = modoMestre ? 'inline-block' : 'none';
+      document.getElementById('btn-mestre-exp').style.display = modoMestre ? 'inline-block' : 'none';
+
+      const hAtivo = estadoAtual.herois.find(h => h.id === heroiSelecionadoId) || estadoAtual.herois[0];
+      document.getElementById('nome-pirata-taverna').textContent = hAtivo.nome;
+      document.getElementById('select-alvo-mestre').value = hAtivo.id;
+
+      if (emCombate) {
+        renderizarArena();
+      } else {
+        renderizarExploracao();
+      }
+    }
+
+    function renderizarExploracao() {
+      document.getElementById('exp-cenario-titulo').textContent = `🧭 Fase de Exploração — ${estadoAtual.cenarioTitulo}`;
+      const inimigosLista = estadoAtual.inimigos || [];
+      document.getElementById('exp-lista-inimigos').textContent = inimigosLista.length
+        ? inimigosLista.map(i => `${i.nome} (PV ${i.pv} | VLC ${i.vlc})`).join('  •  ')
+        : 'Nenhum oponente posicionado ainda';
+
       const container = document.getElementById('lista-herois-selecao');
-      container.innerHTML = estadoAtual.herois.map(h => `
-        <div class="card-heroi-selecao" onclick="selecionarHeroi('${h.id}')">
-          <div class="moldura-retrato">
-            <img src="${h.imagemUrl}" alt="${h.nome}">
-            <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
-          </div>
-          <div class="info-heroi-selecao">
-            <h3>${h.nome}</h3>
-            <div class="epitetos">"${h.titulo}"</div>
-            <div class="atributos-mini">
-              <span>❤️ ${h.pv}/${h.pvMax}</span>
-              <span>⚔️ ${h.atk}</span>
-              <span>💨 VLC ${h.vlc}</span>
-              <span>💰 ${h.ouro}g</span>
+      container.innerHTML = estadoAtual.herois.map(h => {
+        const focado = h.id === heroiSelecionadoId ? 'focado' : '';
+        return `
+          <div class="card-heroi-selecao ${focado}">
+            <div class="moldura-retrato" onclick="heroiSelecionadoId='${h.id}'; renderizarTudo();">
+              <img src="${h.imagemUrl}" alt="${h.nome}">
+              <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
             </div>
-            <button class="btn-pirata" style="width:100%;">Jogar com ${h.nome}</button>
+            <div class="info-heroi-selecao">
+              <h3>${h.nome}</h3>
+              <div class="epitetos">"${h.titulo}"</div>
+              <div class="atributos-mini">
+                <span>❤️ ${h.pv}/${h.pvMax}</span>
+                <span>⚔️ ${h.atk}</span>
+                <span>💨 VLC ${h.vlc}</span>
+                <span>💰 ${h.ouro}g</span>
+              </div>
+              <button class="btn-pirata" style="width:100%; background:#78350f;" onclick="iniciarCombateServidor('${h.id}')">
+                ⚡ Emboscar com ${h.nome} (1º Turno)
+              </button>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+
+      document.getElementById('lista-logs').innerHTML = (estadoAtual.logs || [])
+        .map(l => `<div class="log-item">${l}</div>`).join('');
     }
 
-    function selecionarHeroi(id) {
-      heroiSelecionadoId = id;
-      abrirArena();
+    async function iniciarCombateServidor(iniciadorId) {
+      if (iniciadorId) heroiSelecionadoId = iniciadorId;
+      await fetch('/api/jogo/iniciar-combate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ iniciadorId })
+      });
+      await carregarEstado(true);
     }
 
-    function voltarSelecao() {
-      document.getElementById('mesa-batalha').style.display = 'none';
-      document.getElementById('tela-selecao').style.display = 'block';
-      renderizarSelecao();
+    async function voltarExploracao() {
+      await fetch('/api/jogo/voltar-exploracao', { method: 'POST' });
+      await carregarEstado(true);
     }
 
     function selecionarInimigoNaArena(id) {
@@ -1000,7 +1321,7 @@
       const iniFocado = inimigosLista.find(i => i.id === inimigoSelecionadoId) || inimigosLista[0];
       const turno = estadoAtual.turnoAtual || { id: '', nome: '', tipo: 'HEROI' };
 
-      document.getElementById('badge-rodada').textContent = `Rodada ${estadoAtual.numeroRodada || 1}`;
+      document.getElementById('badge-rodada').textContent = `R${estadoAtual.numeroRodada || 1}`;
       document.getElementById('badge-cenario-lateral').textContent = estadoAtual.cenarioTitulo;
       document.getElementById('nome-turno-lateral').textContent = turno.nome;
 
@@ -1051,7 +1372,7 @@
       `;
 
       document.getElementById('fileira-inimiga').innerHTML = `
-        <span class="fileira-label">⚔️ Vanguarda Corsária (Toque para focar alvo/baralho)</span>
+        <span class="fileira-label">⚔️ Vanguarda Corsária</span>
         ${inimigosLista.map(ini => {
           const sel = ini.id === inimigoSelecionadoId ? 'selecionado' : '';
           const morto = ini.pv <= 0 ? 'derrotado' : '';
@@ -1079,30 +1400,44 @@
             `).join('')}
       `;
 
+      const mesaCartas = estadoAtual.cartasNaMesa || [];
       document.getElementById('fileira-aliada').innerHTML = `
-        <span class="fileira-label">⚓ Convés de Ação</span>
-        ${cartasJogadasNaMesa.slice(-4).map(c => `
-          <div class="carta-em-campo">
-            <span style="font-size:1.3rem;">${iconesTipo[c.tipo] || '🃏'}</span>
-            <strong style="font-family:'Cinzel',serif; font-size:0.62rem; color:var(--ouro-brilho);">${c.nome}</strong>
-            <span style="font-size:0.62rem;">Poder ${c.valorBase}</span>
+        <span class="fileira-label">⚓ Últimas Cartas Jogadas na Mesa</span>
+        ${mesaCartas.map(c => `
+          <div class="carta-em-campo ${c.tipo === 'INIMIGO' ? 'inimiga' : ''}">
+            <div style="font-family:'Cinzel',serif; font-size:0.56rem; color:${c.tipo === 'INIMIGO' ? '#fca5a5' : '#fde68a'};">
+              ${c.autor.split('—')[0]}
+            </div>
+            <strong style="font-family:'Cinzel',serif; font-size:0.64rem; color:#fff;">${c.nome}</strong>
+            <div style="font-size:0.58rem; color:#ffedd5;">${c.alvo ? '🎯 ' + c.alvo.split('—')[0] : ''}</div>
+            <div style="font-size:0.58rem; font-weight:700; color:#fbbf24;">${c.efeito}</div>
           </div>
         `).join('')}
       `;
 
+      const mostrandoMaoInimigo = modoMestre && (turno.tipo === 'INIMIGO');
       const podeAgir = modoMestre
         ? (turno.tipo === 'INIMIGO')
-        : (turno.id === h.id);
+        : (turno.tipo === 'HEROI' && turno.id === h.id);
 
       const avisoTrava = document.getElementById('aviso-trava-turno');
-      if (!podeAgir) {
+      if (turno.tipo === 'INIMIGO' && !modoMestre) {
         avisoTrava.style.display = 'block';
-        avisoTrava.textContent = `⏳ Aguardando turno de: ${turno.nome} (Encerre o turno no timão ☸️ para avançar)`;
+        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
+        avisoTrava.textContent = `☠️ TURNO DO INIMIGO: ${turno.nome} — Preparem-se para o ataque!`;
+      } else if (!podeAgir) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.style.background = 'rgba(30, 41, 59, 0.94)';
+        avisoTrava.textContent = `⏳ Aguardando turno de: ${turno.nome}`;
+      } else if (mostrandoMaoInimigo) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
+        avisoTrava.textContent = `👑 Turno do Inimigo: ${turno.nome} (Alvo selecionado: ${h.nome})`;
       } else {
         avisoTrava.style.display = 'none';
       }
 
-      const cartasMao = modoMestre
+      const cartasMao = mostrandoMaoInimigo
         ? (iniFocado ? iniFocado.baralho : [])
         : h.baralho;
 
@@ -1110,17 +1445,17 @@
       document.getElementById('container-cartas').innerHTML = cartasMao.map((c, idx) => {
         const angulo = (idx - (total - 1) / 2) * 3;
         const elevacao = Math.abs(idx - (total - 1) / 2) * 3;
-        const semEp = !modoMestre && (h.ep < c.custoEp);
+        const semEp = !mostrandoMaoInimigo && (h.ep < c.custoEp);
         const bloqueada = (!podeAgir || semEp) ? 'bloqueada' : '';
 
         return `
           <div class="carta-mao ${bloqueada}"
-               style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${modoMestre ? 'border-color:#dc2626;' : ''}"
-               onclick="aoClicarCarta('${c.id}', ${podeAgir})">
+               style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
+               onclick="aoClicarCarta('${c.id}', ${podeAgir}, ${mostrandoMaoInimigo})">
             <div>
               <div class="carta-mao-topo">
                 <span class="carta-mao-nome">${c.nome}</span>
-                <span class="carta-mao-custo" style="${modoMestre ? 'background:#7f1d1d;' : ''}">${c.custoEp}</span>
+                <span class="carta-mao-custo" style="${mostrandoMaoInimigo ? 'background:#7f1d1d;' : ''}">${c.custoEp}</span>
               </div>
               <div class="carta-mao-arte">
                 ${c.imagemUrl
@@ -1138,21 +1473,19 @@
         .map(l => `<div class="log-item">${l}</div>`).join('');
     }
 
-    async function aoClicarCarta(cartaId, podeAgir) {
-      if (!podeAgir) {
-        return dispararEfeitoVisual('INIMIGO', `⏳ Aguarde o turno de ${estadoAtual.turnoAtual.nome}!`);
-      }
+    async function aoClicarCarta(cartaId, podeAgir, isInimigoTurno) {
+      if (!podeAgir) return;
 
       const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
       const iniFocado = (estadoAtual.inimigos || []).find(i => i.id === inimigoSelecionadoId);
-      const listaCartas = modoMestre ? (iniFocado ? iniFocado.baralho : []) : h.baralho;
+      const listaCartas = isInimigoTurno ? (iniFocado ? iniFocado.baralho : []) : h.baralho;
       const cartaObj = listaCartas.find(c => c.id === cartaId);
       if (!cartaObj) return;
 
       const exigeDado = (cartaObj.descricao && cartaObj.descricao.includes('d20')) || cartaObj.tipo === 'ATAQUE';
       if (exigeDado) {
-        abrirModalDadoCarta(cartaObj, modoMestre);
-      } else if (modoMestre) {
+        abrirModalDadoCarta(cartaObj, isInimigoTurno);
+      } else if (isInimigoTurno) {
         await executarJogadaMestre(cartaObj, null);
       } else {
         await executarJogadaHeroi(cartaObj, null);
@@ -1171,9 +1504,7 @@
         })
       });
       const res = await resp.json();
-      if (res.erro) return dispararEfeitoVisual('INIMIGO', '⚠️ ' + res.erro);
-      cartasJogadasNaMesa.push(cartaObj);
-      dispararEfeitoVisual(cartaObj.tipo, res.mensagem);
+      if (res.erro) alert(res.erro);
       await carregarEstado(true);
     }
 
@@ -1189,19 +1520,12 @@
         })
       });
       const res = await resp.json();
-      if (res.erro) return dispararEfeitoVisual('INIMIGO', '⚠️ ' + res.erro);
-      cartasJogadasNaMesa.push(cartaObj);
-      dispararEfeitoVisual('INIMIGO', res.mensagem);
+      if (res.erro) alert(res.erro);
       await carregarEstado(true);
     }
 
     async function encerrarTurno() {
-      cartasJogadasNaMesa = [];
-      const resp = await fetch('/api/jogo/turno', { method: 'POST' });
-      const res = await resp.json();
-      if (res.turnoAtual) {
-        dispararEfeitoVisual('SUPORTE', `☸️ Turno de: ${res.turnoAtual.nome}`);
-      }
+      await fetch('/api/jogo/turno', { method: 'POST' });
       await carregarEstado(true);
     }
 
@@ -1212,8 +1536,22 @@
         body: JSON.stringify({ personagemId: heroiSelecionadoId, item })
       });
       const res = await resp.json();
-      if (res.erro) return dispararEfeitoVisual('INIMIGO', '⚠️ ' + res.erro);
-      dispararEfeitoVisual('SUPORTE', '💰 Item Adquirido!');
+      if (res.erro) alert(res.erro);
+      await carregarEstado(true);
+    }
+
+    async function ajustarPvManual(sinal) {
+      const qtd = Math.abs(parseInt(document.getElementById('mestre-valor-pv').value) || 0);
+      if (qtd <= 0) return;
+      await fetch('/api/jogo/mestre/heroi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          personagemId: heroiSelecionadoId,
+          acao: 'alterarPv',
+          valor: sinal * qtd
+        })
+      });
       await carregarEstado(true);
     }
 
@@ -1224,7 +1562,6 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ personagemId: heroiSelecionadoId, acao, frutaNome })
       });
-      dispararEfeitoVisual('SUPORTE', '👑 Alteração Aplicada!');
       await carregarEstado(true);
     }
 
@@ -1249,7 +1586,6 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, pv, atk, def: 2, vlc, arquetipo, limpar })
       });
-      dispararEfeitoVisual('INIMIGO', `💀 ${nome} entrou na iniciativa!`);
       await carregarEstado(true);
     }
 
@@ -1262,7 +1598,6 @@
       a.download = `cronica-pirata-${new Date().toISOString().slice(0,10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      dispararEfeitoVisual('SUPORTE', '💾 Save baixado!');
     }
 
     async function carregarArquivoSave(event) {
@@ -1275,22 +1610,19 @@
         headers: { 'Content-Type': 'application/json' },
         body: texto
       });
-      dispararEfeitoVisual('SUPORTE', '📖 Campanha Restaurada!');
       await carregarEstado(true);
     }
 
     async function resetarBatalha() {
-      cartasJogadasNaMesa = [];
       localStorage.removeItem(CHAVE_SAVE);
       await fetch('/api/jogo/mestre/resetar', { method: 'POST' });
-      dispararEfeitoVisual('SUPORTE', '🕊️ Batalha Reiniciada!');
       await carregarEstado(true);
     }
 
     montarBotoesDado();
     iniciarParticulasVivas();
     carregarEstado(true);
-    setInterval(() => carregarEstado(false), 2500);
+    setInterval(() => carregarEstado(false), 2000);
   </script>
 </body>
 </html>
