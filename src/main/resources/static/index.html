@@ -857,3 +857,989 @@
     <select id="select-entidade-mestre" class="select-pirata" onchange="aoMudarEntidadeMestre(this.value)"></select>
 
     <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(212,175,55,0.4); border-radius:8px; padding:8px; margin-bottom:10px;">
+      <div style="display:flex; gap:5px; align-items:center; margin-bottom:6px;">
+        <input id="mestre-valor-pv" type="number" min="1" value="5" class="input-pirata" style="width:62px; margin-bottom:0; text-align:center;">
+        <button class="btn-pirata" style="flex:1; background:#14532d; border-color:#4ade80;" onclick="ajustarEntidadeServidor('pv', 1)">💚 +Curar</button>
+        <button class="btn-pirata" style="flex:1; background:#7f1d1d; border-color:#f87171;" onclick="ajustarEntidadeServidor('pv', -1)">💔 -Dano</button>
+        <button class="btn-pirata" style="background:#0f4c81; border-color:#7dd3fc;" onclick="ajustarEntidadeServidor('pvMax', 1)">✨ Máx</button>
+      </div>
+
+      <label style="font-size:0.75rem; color:var(--pergaminho-escuro); display:block; margin-bottom:4px;">⚡ Buffs &amp; Debuffs Narrativos (Jogadores ou Inimigos):</label>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;">
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('atk', 2)">+2 ATK</button>
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('def', 2)">+2 DEF</button>
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('vlc', 2)">+2 VLC</button>
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('atk', -2)">-2 ATK</button>
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('def', -2)">-2 DEF</button>
+        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('vlc', -2)">-2 VLC</button>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
+      <button class="btn-pirata" onclick="acaoMestreHeroi('nivel')">⭐ +1 Nível Pirata</button>
+      <button class="btn-pirata" onclick="acaoMestreHeroi('ouro')">💰 +15 Ouro Pirata</button>
+      <button class="btn-pirata" onclick="acaoMestreHeroi('fruta')">🍎 Fruta (+2 ATK)</button>
+      <button class="btn-pirata" onclick="acaoMestreHeroi('bonusDado')">🎲 +3 Bônus Imp.</button>
+    </div>
+
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">💀 Adicionar Oponente na Fila:</label>
+    <input id="novo-ini-nome" class="input-pirata" placeholder="Nome (ex: Atirador do Cesto)">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:6px;">
+      <input id="novo-ini-pv" type="number" class="input-pirata" placeholder="PV (35)">
+      <input id="novo-ini-atk" type="number" class="input-pirata" placeholder="ATK (4)">
+      <input id="novo-ini-vlc" type="number" class="input-pirata" placeholder="VLC (4)">
+    </div>
+    <select id="novo-ini-arquetipo" class="select-pirata">
+      <option value="corsario">Baralho: Corsário / Espadachim</option>
+      <option value="atirador">Baralho: Atirador / Canhoneiro</option>
+      <option value="fera">Baralho: Fera / Monstro Marinho</option>
+      <option value="arcano">Baralho: Arcano / Feiticeiro</option>
+    </select>
+    <div style="display:flex; gap:6px; margin-bottom:12px;">
+      <button class="btn-pirata" style="flex:1;" onclick="invocarInimigo(false)">➕ Adicionar</button>
+      <button class="btn-pirata" style="background:#5c1116;" onclick="invocarInimigo(true)">🔄 Substituir</button>
+    </div>
+
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🗺️ Cenário:</label>
+    <select class="select-pirata" onchange="mudarCenario(this.value)">
+      <option value="porto">Porto Pirata — Docas da Alvorada</option>
+      <option value="conves">Convés do Galeão — Tempestade</option>
+      <option value="ruinas">Ilha das Ruínas — Santuário</option>
+      <option value="taverna">Taverna Subterrânea</option>
+    </select>
+
+    <label style="font-size:0.82rem; color:var(--ouro-brilho);">📖 Campanha:</label>
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+      <button class="btn-pirata" onclick="baixarSave()">💾 Baixar Save (.json)</button>
+      <label class="btn-pirata" style="text-align:center; display:block;">
+        📂 Carregar Save (.json)
+        <input type="file" accept=".json" style="display:none;" onchange="carregarArquivoSave(event)">
+      </label>
+      <button class="btn-pirata" style="background:#5c1116;" onclick="resetarBatalha()">🕊️ Reiniciar Campanha</button>
+    </div>
+  </div>
+
+  <!-- MOTOR CANVAS 2D PARA EFEITOS DE PARTÍCULAS E PROJÉTEIS EM 60FPS -->
+  <canvas id="canvas-vfx"></canvas>
+  <div id="camada-vfx-texto"></div>
+
+  <script>
+    const CHAVE_SAVE = "cronicas_sete_mares_save_v7";
+    let estadoAtual = null;
+    let ultimoEstadoJson = "";
+    let ultimoEventoIdExibido = 0;
+    let heroiSelecionadoId = "lua";
+    let inimigoSelecionadoId = "";
+    let entidadeMestreId = "lua";
+    let modoMestre = new URLSearchParams(window.location.search).get("mestre") === "1";
+    let autoTrocaTela = true;
+    let verificouRestauracaoInicial = false;
+    let cliquesBrasao = 0;
+    let ultimoAlvoAtingidoId = "";
+
+    const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨", INIMIGO: "🩸" };
+
+    /* =====================================================================
+       MOTOR DE PARTÍCULAS & PROJÉTEIS CANVAS 2D (60FPS)
+       ===================================================================== */
+    const canvasVfx = document.getElementById('canvas-vfx');
+    const ctxVfx = canvasVfx.getContext('2d');
+    let particulas = [];
+    let efeitosAtivos = [];
+
+    function redimensionarCanvas() {
+      canvasVfx.width = window.innerWidth;
+      canvasVfx.height = window.innerHeight;
+    }
+    window.addEventListener('resize', redimensionarCanvas);
+    redimensionarCanvas();
+
+    function obterCentroElemento(seletor, fallbackX, fallbackY) {
+      const el = document.querySelector(seletor);
+      if (el) {
+        const r = el.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) {
+          return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        }
+      }
+      return { x: fallbackX, y: fallbackY };
+    }
+
+    function criarParticulasExplosao(x, y, qtd, cores, velMin, velMax, tamMin, tamMax, vidaMax, gravidade = 0.08) {
+      for (let i = 0; i < qtd; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const vel = velMin + Math.random() * (velMax - velMin);
+        particulas.push({
+          x, y,
+          vx: Math.cos(ang) * vel,
+          vy: Math.sin(ang) * vel,
+          cor: cores[Math.floor(Math.random() * cores.length)],
+          tam: tamMin + Math.random() * (tamMax - tamMin),
+          vida: 0,
+          vidaMax: vidaMax * (0.65 + Math.random() * 0.5),
+          gravidade
+        });
+      }
+    }
+
+    function dispararEfeitoVisualCanvas(ev) {
+      if (!ev || !ev.mensagem) return;
+      const ef = (ev.efeitoEspecial || '').toUpperCase();
+      const tipo = (ev.tipo || '').toUpperCase();
+      const isInimigo = tipo === 'INIMIGO';
+
+      // Calcula origem e destino reais na tela
+      const posHeroi = obterCentroElemento('#card-comandante-heroi', window.innerWidth * 0.25, window.innerHeight * 0.65);
+      const posAlvoIni = obterCentroElemento(`[data-entidade-id="${ev.alvoId}"]`, window.innerWidth * 0.55, window.innerHeight * 0.32);
+      const posIniComandante = obterCentroElemento('#card-comandante-inimigo', window.innerWidth * 0.22, window.innerHeight * 0.30);
+
+      const origem = isInimigo ? posIniComandante : posHeroi;
+      const destino = isInimigo ? posHeroi : (tipo === 'DEFESA' || tipo === 'SUPORTE' ? posHeroi : posAlvoIni);
+
+      // 1. SOPRO DRACÔNICO / CHAMAS / QUEIMADURA
+      if (ef.includes('CHAMAS') || ef.includes('QUEIMADURA')) {
+        efeitosAtivos.push({
+          tipo: 'JATO_FOGO',
+          x1: origem.x, y1: origem.y,
+          x2: destino.x, y2: destino.y,
+          t: 0, duracao: 52
+        });
+      }
+      // 2. DISPARO DE PRECISÃO / TIRO / CANHÃO / PÓLVORA
+      else if (ef.includes('CRITICO') || ef.includes('TIRO') || ef.includes('CANHAO')) {
+        efeitosAtivos.push({
+          tipo: 'PROJETIL_BALA',
+          x1: origem.x, y1: origem.y,
+          x2: destino.x, y2: destino.y,
+          t: 0, duracao: 24
+        });
+      }
+      // 3. ESCUDO / DEFESA
+      else if (tipo === 'DEFESA') {
+        efeitosAtivos.push({
+          tipo: 'ESCUDO_HEXAGONAL',
+          x: destino.x, y: destino.y,
+          t: 0, duracao: 55
+        });
+        criarParticulasExplosao(destino.x, destino.y, 40, ['#38bdf8', '#7dd3fc', '#ffffff', '#0284c7'], 1.5, 5.5, 2, 5, 45, -0.04);
+      }
+      // 4. SUPORTE / CURA / IMPROVISO
+      else if (tipo === 'SUPORTE') {
+        efeitosAtivos.push({
+          tipo: 'ESPIRAL_CURA',
+          x: destino.x, y: destino.y,
+          t: 0, duracao: 55
+        });
+        criarParticulasExplosao(destino.x, destino.y, 45, ['#4ade80', '#fde047', '#ffffff', '#10b981'], 1, 4.5, 2.5, 5.5, 50, -0.09);
+      }
+      // 5. ATAQUE INIMIGO (GARRA CARMESIM)
+      else if (isInimigo) {
+        efeitosAtivos.push({
+          tipo: 'GOLPE_INIMIGO_GARRA',
+          x1: origem.x, y1: origem.y,
+          x2: destino.x, y2: destino.y,
+          t: 0, duracao: 32
+        });
+      }
+      // 6. CORTE DUPLO / SABRE / MARTELO (LÂMINAS CRUZADAS + FAÍSCAS)
+      else {
+        efeitosAtivos.push({
+          tipo: 'CORTE_CRUZADO',
+          x1: origem.x, y1: origem.y,
+          x2: destino.x, y2: destino.y,
+          t: 0, duracao: 34
+        });
+      }
+
+      // Número flutuante de dano/cura diretamente em cima do alvo atingido
+      if (ev.valorDestaque) {
+        const num = document.createElement('div');
+        num.className = 'dano-flutuante-alvo';
+        num.style.left = destino.x + 'px';
+        num.style.top = (destino.y - 18) + 'px';
+        num.style.color = (tipo === 'SUPORTE' || tipo === 'DEFESA') ? '#4ade80' : (isInimigo ? '#ff6b6b' : '#ffe082');
+        num.textContent = ev.valorDestaque;
+        document.getElementById('camada-vfx-texto').appendChild(num);
+        setTimeout(() => num.remove(), 1500);
+      }
+    }
+
+    function loopRenderCanvas() {
+      ctxVfx.clearRect(0, 0, canvasVfx.width, canvasVfx.height);
+
+      // Atualiza e desenha efeitos estruturados
+      for (let i = efeitosAtivos.length - 1; i >= 0; i--) {
+        const ef = efeitosAtivos[i];
+        ef.t++;
+        const p = ef.t / ef.duracao;
+
+        if (ef.tipo === 'JATO_FOGO') {
+          const prog = Math.min(1, p * 1.45);
+          const cx = ef.x1 + (ef.x2 - ef.x1) * prog;
+          const cy = ef.y1 + (ef.y2 - ef.y1) * prog;
+          // Emite labaredas contínuas ao longo do jato
+          criarParticulasExplosao(cx, cy, 12, ['#ffffff', '#fef08a', '#fb923c', '#ef4444', '#991b1b'], 1, 5, 4, 13, 28, -0.08);
+          if (ef.t === Math.floor(ef.duracao * 0.65)) {
+            criarParticulasExplosao(ef.x2, ef.y2, 65, ['#fef08a', '#f97316', '#dc2626'], 2, 11, 4, 14, 38, -0.05);
+          }
+        }
+        else if (ef.tipo === 'PROJETIL_BALA') {
+          const prog = Math.min(1, p);
+          const cx = ef.x1 + (ef.x2 - ef.x1) * prog;
+          const cy = ef.y1 + (ef.y2 - ef.y1) * prog;
+
+          // Linha de mira / rastro luminoso
+          ctxVfx.save();
+          const grad = ctxVfx.createLinearGradient(ef.x1, ef.y1, cx, cy);
+          grad.addColorStop(0, 'rgba(251, 191, 36, 0)');
+          grad.addColorStop(1, 'rgba(255, 251, 235, 0.95)');
+          ctxVfx.strokeStyle = grad;
+          ctxVfx.lineWidth = 6;
+          ctxVfx.beginPath();
+          ctxVfx.moveTo(ef.x1, ef.y1);
+          ctxVfx.lineTo(cx, cy);
+          ctxVfx.stroke();
+
+          // Núcleo incandescente da bala
+          ctxVfx.fillStyle = '#fffbeb';
+          ctxVfx.shadowColor = '#f59e0b';
+          ctxVfx.shadowBlur = 22;
+          ctxVfx.beginPath();
+          ctxVfx.arc(cx, cy, 8, 0, Math.PI * 2);
+          ctxVfx.fill();
+          ctxVfx.restore();
+
+          // Fumaça no trajeto
+          criarParticulasExplosao(cx, cy, 3, ['#cbd5e1', '#94a3b8', '#fbbf24'], 0.3, 1.8, 2, 5, 22, -0.03);
+
+          // Explosão no impacto
+          if (ef.t === ef.duracao) {
+            criarParticulasExplosao(ef.x2, ef.y2, 70, ['#ffffff', '#fde047', '#f97316', '#dc2626'], 3, 14, 2.5, 7, 34, 0.14);
+          }
+        }
+        else if (ef.tipo === 'CORTE_CRUZADO') {
+          const alpha = 1 - Math.pow(p, 1.8);
+          ctxVfx.save();
+          ctxVfx.translate(ef.x2, ef.y2);
+          ctxVfx.shadowColor = '#38bdf8';
+          ctxVfx.shadowBlur = 24;
+
+          // Lâmina 1
+          const len1 = Math.min(1, p * 2.5) * 95;
+          ctxVfx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctxVfx.lineWidth = 7 * alpha;
+          ctxVfx.beginPath();
+          ctxVfx.moveTo(-len1, -len1);
+          ctxVfx.lineTo(len1, len1);
+          ctxVfx.stroke();
+
+          // Lâmina 2 (com leve atraso)
+          if (p > 0.18) {
+            const len2 = Math.min(1, (p - 0.18) * 2.5) * 95;
+            ctxVfx.strokeStyle = `rgba(125, 211, 252, ${alpha})`;
+            ctxVfx.lineWidth = 7 * alpha;
+            ctxVfx.beginPath();
+            ctxVfx.moveTo(len2, -len2);
+            ctxVfx.lineTo(-len2, len2);
+            ctxVfx.stroke();
+          }
+          ctxVfx.restore();
+
+          if (ef.t === 4 || ef.t === 10) {
+            criarParticulasExplosao(ef.x2, ef.y2, 35, ['#ffffff', '#7dd3fc', '#fde047'], 3, 12, 2, 4.5, 28, 0.22);
+          }
+        }
+        else if (ef.tipo === 'ESCUDO_HEXAGONAL') {
+          const alpha = Math.sin(p * Math.PI);
+          const raio = 55 + p * 35;
+          ctxVfx.save();
+          ctxVfx.translate(ef.x, ef.y);
+          ctxVfx.rotate(p * 1.2);
+          ctxVfx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+          ctxVfx.fillStyle = `rgba(14, 165, 233, ${alpha * 0.22})`;
+          ctxVfx.lineWidth = 4;
+          ctxVfx.shadowColor = '#38bdf8';
+          ctxVfx.shadowBlur = 20;
+
+          ctxVfx.beginPath();
+          for (let k = 0; k < 6; k++) {
+            const a = (Math.PI / 3) * k;
+            const px = Math.cos(a) * raio;
+            const py = Math.sin(a) * raio;
+            if (k === 0) ctxVfx.moveTo(px, py);
+            else ctxVfx.lineTo(px, py);
+          }
+          ctxVfx.closePath();
+          ctxVfx.fill();
+          ctxVfx.stroke();
+          ctxVfx.restore();
+        }
+        else if (ef.tipo === 'ESPIRAL_CURA') {
+          const ang = p * Math.PI * 6;
+          const r = 45 * (1 - p * 0.5);
+          const px = ef.x + Math.cos(ang) * r;
+          const py = ef.y + 30 - p * 85;
+          criarParticulasExplosao(px, py, 3, ['#4ade80', '#fde047', '#ffffff'], 0.4, 1.5, 2.5, 5, 22, -0.05);
+        }
+        else if (ef.tipo === 'GOLPE_INIMIGO_GARRA') {
+          const alpha = 1 - p;
+          ctxVfx.save();
+          ctxVfx.translate(ef.x2, ef.y2);
+          ctxVfx.strokeStyle = `rgba(239, 68, 68, ${alpha})`;
+          ctxVfx.shadowColor = '#dc2626';
+          ctxVfx.shadowBlur = 24;
+          ctxVfx.lineWidth = 6 * alpha;
+          for (let g = -1; g <= 1; g++) {
+            ctxVfx.beginPath();
+            ctxVfx.moveTo(-65 + g * 18, -55);
+            ctxVfx.lineTo(65 + g * 18, 55);
+            ctxVfx.stroke();
+          }
+          ctxVfx.restore();
+          if (ef.t === 3) {
+            criarParticulasExplosao(ef.x2, ef.y2, 45, ['#ef4444', '#fca5a5', '#7f1d1d'], 3, 11, 2.5, 6, 30, 0.18);
+          }
+        }
+
+        if (ef.t >= ef.duracao) {
+          efeitosAtivos.splice(i, 1);
+        }
+      }
+
+      // Atualiza e desenha todas as partículas
+      for (let i = particulas.length - 1; i >= 0; i--) {
+        const pt = particulas[i];
+        pt.vida++;
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.vy += pt.gravidade;
+        pt.vx *= 0.97;
+
+        const alpha = Math.max(0, 1 - pt.vida / pt.vidaMax);
+        ctxVfx.save();
+        ctxVfx.globalAlpha = alpha;
+        ctxVfx.fillStyle = pt.cor;
+        ctxVfx.shadowColor = pt.cor;
+        ctxVfx.shadowBlur = 10;
+        ctxVfx.beginPath();
+        ctxVfx.arc(pt.x, pt.y, pt.tam * (0.5 + alpha * 0.5), 0, Math.PI * 2);
+        ctxVfx.fill();
+        ctxVfx.restore();
+
+        if (pt.vida >= pt.vidaMax) {
+          particulas.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(loopRenderCanvas);
+    }
+    requestAnimationFrame(loopRenderCanvas);
+
+    /* =====================================================================
+       LÓGICA DO JOGO & SINCRONIZAÇÃO
+       ===================================================================== */
+    function alternarAutoTrocaTela() {
+      autoTrocaTela = !autoTrocaTela;
+      const btn = document.getElementById('btn-auto-troca');
+      btn.textContent = autoTrocaTela ? "🖥️ Mesa: ON" : "📱 Meu Pirata";
+      sincronizarCameraTurno();
+      renderizarTudo();
+    }
+
+    function sincronizarCameraTurno() {
+      if (!estadoAtual || !estadoAtual.turnoAtual) return;
+      const turno = estadoAtual.turnoAtual;
+
+      if (turno.tipo === 'HEROI' && autoTrocaTela) {
+        heroiSelecionadoId = turno.id;
+      } else if (turno.tipo === 'INIMIGO') {
+        inimigoSelecionadoId = turno.id;
+      }
+    }
+
+    function cliqueBrasaoMestre() {
+      cliquesBrasao++;
+      if (cliquesBrasao >= 3) {
+        modoMestre = true;
+        document.getElementById('btn-mestre-exp').style.display = 'inline-block';
+        manifestarVfxNoTabuleiro({
+          tipo: 'SUPORTE', efeitoEspecial: 'FOCO', autor: 'Mestre', alvo: '',
+          cartaNome: 'Controle de Mestre', valorDestaque: 'Ativado',
+          mensagem: '👑 Controle de Mestre ativado neste dispositivo!'
+        });
+      }
+    }
+
+    function iniciarParticulasVivas() {
+      const camada = document.getElementById('camada-viva');
+      for (let i = 0; i < 14; i++) {
+        const brasa = document.createElement('div');
+        brasa.className = 'brasa';
+        brasa.style.left = Math.random() * 100 + 'vw';
+        brasa.style.animationDuration = (5 + Math.random() * 7) + 's';
+        brasa.style.animationDelay = (Math.random() * 5) + 's';
+        camada.appendChild(brasa);
+      }
+    }
+
+    function manifestarVfxNoTabuleiro(ev) {
+      if (!ev || !ev.mensagem) return;
+      const vfxTexto = document.getElementById('camada-vfx-texto');
+      const mesa = document.getElementById('mesa-batalha');
+      const isInimigo = ev.tipo === 'INIMIGO';
+
+      if (ev.alvoId) {
+        ultimoAlvoAtingidoId = ev.alvoId;
+        setTimeout(() => {
+          ultimoAlvoAtingidoId = "";
+          if (estadoAtual && estadoAtual.faseJogo === 'COMBATE') renderizarArena();
+        }, 1400);
+      }
+
+      // Dispara as partículas, projéteis e lâminas no Canvas 60fps
+      dispararEfeitoVisualCanvas(ev);
+
+      if (ev.tipo === 'ATAQUE' || isInimigo) {
+        mesa.classList.remove('tremor-tela');
+        void mesa.offsetWidth;
+        mesa.classList.add('tremor-tela');
+      }
+
+      const txt = document.createElement('div');
+      txt.className = 'texto-flutuante-vfx';
+      txt.style.borderColor = isInimigo ? '#ef4444' : 'var(--ouro-brilho)';
+      txt.style.color = isInimigo ? '#fca5a5' : '#ffe082';
+      txt.textContent = ev.mensagem;
+      vfxTexto.appendChild(txt);
+      setTimeout(() => txt.remove(), 2500);
+    }
+
+    function toggleGaveta(id) {
+      const el = document.getElementById(id);
+      const visivel = el.style.display === 'block';
+      document.querySelectorAll('.gaveta-modal').forEach(g => g.style.display = 'none');
+      el.style.display = visivel ? 'none' : 'block';
+    }
+
+    function ehEstadoInicialVirgem(estado) {
+      return estado.herois.every(h => h.nivel === 1 && h.ouro === 20 && h.pv === h.pvMax) &&
+             estado.logs && estado.logs.length <= 1;
+    }
+
+    async function carregarEstado(forcar = false) {
+      try {
+        const resp = await fetch('/api/jogo/estado');
+        const novoEstado = await resp.json();
+
+        if (!verificouRestauracaoInicial) {
+          verificouRestauracaoInicial = true;
+          const saveLocal = localStorage.getItem(CHAVE_SAVE);
+          if (saveLocal && ehEstadoInicialVirgem(novoEstado)) {
+            await fetch('/api/jogo/mestre/restaurar-save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: saveLocal
+            });
+            return carregarEstado(true);
+          }
+        }
+
+        const novoJson = JSON.stringify(novoEstado);
+        if (!forcar && novoJson === ultimoEstadoJson) return;
+
+        estadoAtual = novoEstado;
+        ultimoEstadoJson = novoJson;
+
+        if (!ehEstadoInicialVirgem(novoEstado)) {
+          localStorage.setItem(CHAVE_SAVE, novoJson);
+        }
+
+        if (!inimigoSelecionadoId || !estadoAtual.inimigos.some(i => i.id === inimigoSelecionadoId && i.pv > 0)) {
+          const vivo = estadoAtual.inimigos.find(i => i.pv > 0);
+          if (vivo) inimigoSelecionadoId = vivo.id;
+        }
+
+        sincronizarCameraTurno();
+        renderizarTudo();
+
+        const ev = estadoAtual.ultimoEventoVisual;
+        if (ev && ev.id && ev.id > ultimoEventoIdExibido) {
+          if (ultimoEventoIdExibido !== 0) {
+            manifestarVfxNoTabuleiro(ev);
+          }
+          ultimoEventoIdExibido = ev.id;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function renderizarTudo() {
+      if (!estadoAtual) return;
+      const emCombate = estadoAtual.faseJogo === 'COMBATE';
+
+      document.getElementById('tela-exploracao').style.display = emCombate ? 'none' : 'block';
+      document.getElementById('mesa-batalha').style.display = emCombate ? 'block' : 'none';
+      document.getElementById('btn-painel-mestre').style.display = modoMestre ? 'inline-block' : 'none';
+      document.getElementById('btn-mestre-exp').style.display = modoMestre ? 'inline-block' : 'none';
+
+      const hAtivo = estadoAtual.herois.find(h => h.id === heroiSelecionadoId) || estadoAtual.herois[0];
+      document.getElementById('nome-pirata-taverna').textContent = hAtivo.nome;
+
+      atualizarPainelMestre();
+
+      if (emCombate) {
+        renderizarArena();
+      } else {
+        renderizarExploracao();
+      }
+    }
+
+    function atualizarPainelMestre() {
+      const sel = document.getElementById('select-entidade-mestre');
+      const opcoesHerois = estadoAtual.herois.map(h =>
+        `<option value="${h.id}">⚓ Pirata: ${h.nome} (PV ${h.pv}/${h.pvMax} | VLC ${h.vlc})</option>`
+      ).join('');
+      const opcoesInimigos = (estadoAtual.inimigos || []).map(i =>
+        `<option value="${i.id}">💀 Inimigo: ${i.nome.split('—')[0]} (PV ${i.pv}/${i.pvMax} | VLC ${i.vlc})</option>`
+      ).join('');
+      sel.innerHTML = opcoesHerois + opcoesInimigos;
+
+      if ([...estadoAtual.herois, ...(estadoAtual.inimigos || [])].some(e => e.id === entidadeMestreId)) {
+        sel.value = entidadeMestreId;
+      } else {
+        entidadeMestreId = heroiSelecionadoId;
+        sel.value = entidadeMestreId;
+      }
+
+      const boxAlerta = document.getElementById('box-alerta-improviso-mestre');
+      const sol = estadoAtual.solicitacaoImprovisoAtiva;
+      if (sol) {
+        document.getElementById('mestre-imp-pirata').value = sol.personagemId;
+        boxAlerta.innerHTML = `
+          <div class="alerta-improviso-mestre">
+            <div style="font-family:'Cinzel',serif; font-size:0.76rem; color:var(--ouro-brilho);">🎭 PEDIDO DE IMPROVISO ATIVO!</div>
+            <div style="font-size:0.92rem; color:#fff; margin:3px 0;">
+              <strong>${sol.personagemNome}:</strong> "${sol.descricao}"
+            </div>
+            <div style="font-size:0.82rem; color:#4ade80; font-weight:700;">
+              ${sol.bonusAcumulado > 0
+                ? `✨ ALERTA: ${sol.personagemNome} possui +${sol.bonusAcumulado} de bônus de cartas para este teste!`
+                : 'Sem bônus extras de cartas acumulados.'}
+            </div>
+          </div>
+        `;
+      } else {
+        boxAlerta.innerHTML = '';
+      }
+    }
+
+    function aoMudarEntidadeMestre(id) {
+      entidadeMestreId = id;
+      if (estadoAtual.herois.some(h => h.id === id)) {
+        heroiSelecionadoId = id;
+        renderizarTudo();
+      }
+    }
+
+    function renderizarExploracao() {
+      document.getElementById('exp-cenario-titulo').textContent = `🧭 Fase de Exploração — ${estadoAtual.cenarioTitulo}`;
+      const inimigosLista = estadoAtual.inimigos || [];
+      document.getElementById('exp-lista-inimigos').textContent = inimigosLista.length
+        ? inimigosLista.map(i => `${i.nome} (PV ${i.pv} | VLC ${i.vlc})`).join('  •  ')
+        : 'Nenhum oponente posicionado ainda';
+
+      const container = document.getElementById('lista-herois-selecao');
+      container.innerHTML = estadoAtual.herois.map(h => {
+        const focado = h.id === heroiSelecionadoId ? 'focado' : '';
+        return `
+          <div class="card-heroi-selecao ${focado}">
+            <div class="moldura-retrato" onclick="heroiSelecionadoId='${h.id}'; renderizarTudo();">
+              <img src="${h.imagemUrl}" alt="${h.nome}">
+              <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
+            </div>
+            <div class="info-heroi-selecao">
+              <h3>${h.nome}</h3>
+              <div class="epitetos">"${h.titulo}"</div>
+              <div class="atributos-mini">
+                <span>❤️ ${h.pv}/${h.pvMax}</span>
+                <span>⚔️ ${h.atk}</span>
+                <span>💨 VLC ${h.vlc}</span>
+                <span>💰 ${h.ouro}g</span>
+              </div>
+              <button class="btn-pirata" style="width:100%; background:#78350f;" onclick="iniciarCombateServidor('${h.id}')">
+                ⚡ Emboscar com ${h.nome} (1º Turno)
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('lista-logs').innerHTML = (estadoAtual.logs || [])
+        .map(l => `<div class="log-item">${l}</div>`).join('');
+    }
+
+    async function iniciarCombateServidor(iniciadorId) {
+      if (iniciadorId) heroiSelecionadoId = iniciadorId;
+      await fetch('/api/jogo/iniciar-combate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ iniciadorId })
+      });
+      await carregarEstado(true);
+    }
+
+    async function voltarExploracao() {
+      await fetch('/api/jogo/voltar-exploracao', { method: 'POST' });
+      await carregarEstado(true);
+    }
+
+    function selecionarInimigoNaArena(id) {
+      inimigoSelecionadoId = id;
+      renderizarArena();
+    }
+
+    function renderizarArena() {
+      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
+      const inimigosLista = estadoAtual.inimigos || [];
+      const iniFocado = inimigosLista.find(i => i.id === inimigoSelecionadoId) || inimigosLista[0];
+      const turno = estadoAtual.turnoAtual || { id: '', nome: '', tipo: 'HEROI' };
+
+      document.getElementById('badge-rodada').textContent = `R${estadoAtual.numeroRodada || 1}`;
+      document.getElementById('badge-cenario-lateral').textContent = estadoAtual.cenarioTitulo;
+      document.getElementById('nome-turno-lateral').textContent = turno.nome;
+
+      const jaUsouImp = (estadoAtual.improvisosUsadosBatalha || []).includes(h.id);
+      const btnImp = document.getElementById('btn-improviso-batalha');
+      btnImp.disabled = jaUsouImp;
+      btnImp.textContent = jaUsouImp ? "🎭 Usado (0/1)" : `🎭 Improviso (1/1)${h.bonusImproviso > 0 ? ' +'+h.bonusImproviso : ''}`;
+
+      document.getElementById('barra-iniciativa').innerHTML = (estadoAtual.ordemTurnos || []).map(item => {
+        const ativo = item.id === turno.id ? 'ativo' : '';
+        const classeTipo = item.tipo === 'INIMIGO' ? 'inimigo' : '';
+        return `<span class="pill-turno ${classeTipo} ${ativo}">${item.tipo === 'INIMIGO' ? '💀' : '⚓'} ${item.nome.split('—')[0]} (VLC ${item.vlc})</span>`;
+      }).join('');
+
+      if (iniFocado) {
+        const pctIni = Math.max(0, Math.min(100, (iniFocado.pv / iniFocado.pvMax) * 100));
+        const atingidoIni = ultimoAlvoAtingidoId === iniFocado.id ? 'alvo-atingido' : '';
+        document.getElementById('card-comandante-inimigo').innerHTML = `
+          <div class="comandante-card inimigo ${atingidoIni}">
+            <div class="comandante-topo">
+              <div class="avatar-inimigo-icone">☠️</div>
+              <div style="min-width:0;">
+                <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.8rem; color:#ff8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${iniFocado.nome}</div>
+                <div style="font-size:0.72rem; color:#f5b7b1;">⚔️ ${iniFocado.atk} • 🛡️ ${iniFocado.def} • 💨 ${iniFocado.vlc}</div>
+              </div>
+            </div>
+            <div class="barra-hp">
+              <div class="barra-hp-fill" style="width:${pctIni}%; background:linear-gradient(90deg,#7f1d1d,#dc2626);"></div>
+              <div class="barra-hp-texto">🩸 ${iniFocado.pv}/${iniFocado.pvMax} ${iniFocado.escudo ? '(+🛡️'+iniFocado.escudo+')' : ''}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      const pctHeroi = Math.max(0, Math.min(100, (h.pv / h.pvMax) * 100));
+      const atingidoHeroi = ultimoAlvoAtingidoId === h.id ? 'alvo-atingido' : '';
+      let gemas = '';
+      for (let i = 0; i < h.epMax; i++) gemas += `<span class="gema-ep ${i < h.ep ? '' : 'vazia'}"></span>`;
+
+      document.getElementById('card-comandante-heroi').innerHTML = `
+        <div class="comandante-card ${atingidoHeroi}" data-entidade-id="${h.id}">
+          <div class="comandante-topo">
+            <img class="avatar-arena" src="${h.imagemUrl}" alt="${h.nome}">
+            <div style="min-width:0;">
+              <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.88rem; color:var(--ouro-brilho);">${h.nome} (Nv.${h.nivel})</div>
+              <div style="font-size:0.72rem; color:var(--pergaminho-escuro);">⚔️ ${h.atk}${h.atkTemp ? (h.atkTemp > 0 ? '+'+h.atkTemp : h.atkTemp) : ''} • 🛡️ ${h.def}${h.defTemp ? (h.defTemp > 0 ? '+'+h.defTemp : h.defTemp) : ''} • 💨 ${h.vlc}</div>
+            </div>
+          </div>
+          <div class="barra-hp">
+            <div class="barra-hp-fill" style="width:${pctHeroi}%; background:linear-gradient(90deg,#14532d,#16a34a);"></div>
+            <div class="barra-hp-texto">❤️ ${h.pv}/${h.pvMax} ${h.escudo > 0 ? '(+🛡️' + h.escudo + ')' : ''}</div>
+          </div>
+          <div class="cristais-linha"><span style="font-family:'Cinzel',serif; font-size:0.68rem;">EP:</span>${gemas}</div>
+        </div>
+      `;
+
+      document.getElementById('fileira-inimiga').innerHTML = `
+        <span class="fileira-label">⚔️ Vanguarda Corsária (Toque para mirar alvo)</span>
+        ${inimigosLista.map(ini => {
+          const sel = ini.id === inimigoSelecionadoId ? 'selecionado' : '';
+          const atingido = ultimoAlvoAtingidoId === ini.id ? 'alvo-atingido' : '';
+          const morto = ini.pv <= 0 ? 'derrotado' : '';
+          return `
+            <div class="card-inimigo-vanguarda ${sel} ${atingido} ${morto}" data-entidade-id="${ini.id}" onclick="selecionarInimigoNaArena('${ini.id}')">
+              <div style="font-family:'Cinzel',serif; font-size:0.66rem; font-weight:700; color:#fca5a5;">${ini.nome.split('—')[0]}</div>
+              <div style="font-size:0.68rem;">🩸 ${ini.pv}/${ini.pvMax} • 💨 ${ini.vlc}</div>
+              <div style="font-size:0.62rem; background:#7f1d1d; padding:2px 5px; border-radius:4px;">ATK ${ini.atk} • DEF ${ini.def}</div>
+            </div>
+          `;
+        }).join('')}
+      `;
+
+      const traps = estadoAtual.armadilhasAtivas || [];
+      document.getElementById('fileira-armadilhas').innerHTML = `
+        <span class="fileira-label">🪤 Emboscadas (${traps.length})</span>
+        ${traps.length === 0
+          ? '<span style="font-size:0.76rem; color:rgba(244,230,200,0.35); font-style:italic;">Nenhuma armadilha oculta</span>'
+          : traps.map(t => `
+              <div class="carta-armadilha-mesa">
+                <span style="font-size:1.3rem;">🪤</span>
+                <strong style="font-family:'Cinzel',serif; font-size:0.62rem; color:#e9d5ff;">Oculta</strong>
+                <span style="font-size:0.6rem; color:#d8b4fe;">(${t.donoNome})</span>
+              </div>
+            `).join('')}
+      `;
+
+      const mesaCartas = estadoAtual.cartasNaMesa || [];
+      document.getElementById('fileira-aliada').innerHTML = `
+        <span class="fileira-label">⚓ Ações Manifestadas em Campo</span>
+        ${mesaCartas.map(c => `
+          <div class="carta-em-campo ${c.tipo === 'INIMIGO' ? 'inimiga' : ''}">
+            <div style="font-family:'Cinzel',serif; font-size:0.56rem; color:${c.tipo === 'INIMIGO' ? '#fca5a5' : '#fde68a'};">
+              ${c.autor.split('—')[0]} ➔ ${c.alvo ? c.alvo.split('—')[0] : ''}
+            </div>
+            <strong style="font-family:'Cinzel',serif; font-size:0.64rem; color:#fff;">${c.nome}</strong>
+            <div style="font-size:0.6rem; font-weight:700; color:#fbbf24;">${c.efeito}</div>
+          </div>
+        `).join('')}
+      `;
+
+      const mostrandoMaoInimigo = modoMestre && (turno.tipo === 'INIMIGO');
+      const podeAgir = modoMestre
+        ? (turno.tipo === 'INIMIGO')
+        : (turno.tipo === 'HEROI' && turno.id === h.id);
+
+      const avisoTrava = document.getElementById('aviso-trava-turno');
+      if (turno.tipo === 'INIMIGO' && !modoMestre) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
+        avisoTrava.textContent = `☠️ TURNO DO INIMIGO: ${turno.nome} — Preparem-se!`;
+      } else if (!podeAgir) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.style.background = 'rgba(30, 41, 59, 0.94)';
+        avisoTrava.textContent = `⏳ Aguardando turno de: ${turno.nome}`;
+      } else if (mostrandoMaoInimigo) {
+        avisoTrava.style.display = 'block';
+        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
+        avisoTrava.textContent = `👑 Turno do Inimigo: ${turno.nome} (Alvo no painel Mestre: ${h.nome})`;
+      } else {
+        avisoTrava.style.display = 'none';
+      }
+
+      const cartasMao = mostrandoMaoInimigo
+        ? (iniFocado ? iniFocado.baralho : [])
+        : h.baralho;
+
+      const total = cartasMao.length;
+      document.getElementById('container-cartas').innerHTML = cartasMao.map((c, idx) => {
+        const angulo = (idx - (total - 1) / 2) * 3;
+        const elevacao = Math.abs(idx - (total - 1) / 2) * 3;
+        const semEp = !mostrandoMaoInimigo && (h.ep < c.custoEp);
+        const bloqueada = (!podeAgir || semEp) ? 'bloqueada' : '';
+
+        return `
+          <div class="carta-mao ${bloqueada}"
+               style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
+               onclick="aoClicarCarta('${c.id}', ${podeAgir}, ${mostrandoMaoInimigo})">
+            <div>
+              <div class="carta-mao-topo">
+                <span class="carta-mao-nome">${c.nome}</span>
+                <span class="carta-mao-custo" style="${mostrandoMaoInimigo ? 'background:#7f1d1d;' : ''}">${c.custoEp}</span>
+              </div>
+              <div class="carta-mao-arte">
+                ${c.imagemUrl
+                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.8rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
+                  : `<span style="font-size:1.8rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
+              </div>
+              <span class="badge-tipo bg-${c.tipo}">${c.tipo}</span>
+            </div>
+            <p class="carta-mao-desc">${c.descricao}</p>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('lista-logs').innerHTML = (estadoAtual.logs || [])
+        .map(l => `<div class="log-item">${l}</div>`).join('');
+    }
+
+    async function aoClicarCarta(cartaId, podeAgir, isInimigoTurno) {
+      if (!podeAgir) return;
+
+      if (isInimigoTurno) {
+        const resp = await fetch('/api/jogo/mestre/jogar-carta-inimigo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            inimigoId: inimigoSelecionadoId,
+            cartaId: cartaId,
+            alvoId: heroiSelecionadoId
+          })
+        });
+        const res = await resp.json();
+        if (res.erro) alert(res.erro);
+      } else {
+        const resp = await fetch('/api/jogo/jogar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            personagemId: heroiSelecionadoId,
+            cartaId: cartaId,
+            inimigoAlvoId: inimigoSelecionadoId
+          })
+        });
+        const res = await resp.json();
+        if (res.erro) alert(res.erro);
+      }
+      await carregarEstado(true);
+    }
+
+    function abrirModalSolicitarImproviso() {
+      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
+      document.getElementById('nome-pirata-improviso').textContent = h.nome;
+      document.getElementById('aviso-bonus-improviso-jogador').textContent = h.bonusImproviso > 0
+        ? `✨ Você possui +${h.bonusImproviso} de bônus acumulado de cartas para este improviso!`
+        : '';
+      document.getElementById('texto-pedido-improviso').value = '';
+      document.getElementById('modal-solicitar-improviso').style.display = 'flex';
+    }
+
+    function fecharModalImproviso() {
+      document.getElementById('modal-solicitar-improviso').style.display = 'none';
+    }
+
+    async function enviarSolicitacaoImproviso() {
+      const descricao = document.getElementById('texto-pedido-improviso').value || "Ação Criativa";
+      fecharModalImproviso();
+      const resp = await fetch('/api/jogo/solicitar-improviso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personagemId: heroiSelecionadoId, descricao })
+      });
+      const res = await resp.json();
+      if (res.erro) alert(res.erro);
+      await carregarEstado(true);
+    }
+
+    async function resolverImprovisoMestre() {
+      const dado = parseInt(document.getElementById('mestre-imp-d20').value) || 10;
+      const pirataId = document.getElementById('mestre-imp-pirata').value;
+      const atributo = document.getElementById('mestre-imp-atributo').value;
+      const sol = estadoAtual.solicitacaoImprovisoAtiva;
+      const desc = sol ? sol.descricao : "Improviso Narrativo";
+
+      await fetch('/api/jogo/mestre/improviso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          personagemId: pirataId,
+          dadoFisico: dado,
+          atributo: atributo,
+          descricao: desc
+        })
+      });
+      document.getElementById('mestre-imp-d20').value = '';
+      await carregarEstado(true);
+    }
+
+    async function ajustarEntidadeServidor(tipoAjuste, sinal) {
+      const qtd = Math.abs(parseInt(document.getElementById('mestre-valor-pv').value) || 0);
+      const valorFinal = (tipoAjuste === 'pv') ? (sinal * qtd) : sinal;
+
+      await fetch('/api/jogo/mestre/ajustar-entidade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          alvoId: entidadeMestreId,
+          tipoAjuste: tipoAjuste,
+          valor: valorFinal
+        })
+      });
+      await carregarEstado(true);
+    }
+
+    async function encerrarTurno() {
+      await fetch('/api/jogo/turno', { method: 'POST' });
+      await carregarEstado(true);
+    }
+
+    async function comprarLoja(item) {
+      const resp = await fetch('/api/jogo/loja', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personagemId: heroiSelecionadoId, item })
+      });
+      const res = await resp.json();
+      if (res.erro) alert(res.erro);
+      await carregarEstado(true);
+    }
+
+    async function acaoMestreHeroi(acao) {
+      const frutaNome = acao === 'fruta' ? (prompt("Nome da Fruta do Poder:") || "Fruta Mística") : "";
+      await fetch('/api/jogo/mestre/heroi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personagemId: heroiSelecionadoId, acao, frutaNome })
+      });
+      await carregarEstado(true);
+    }
+
+    async function mudarCenario(cenario) {
+      await fetch('/api/jogo/mestre/cenario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cenario })
+      });
+      await carregarEstado(true);
+    }
+
+    async function invocarInimigo(limpar) {
+      const nome = document.getElementById('novo-ini-nome').value || "Corsário Sombrio";
+      const pv = document.getElementById('novo-ini-pv').value || 35;
+      const atk = document.getElementById('novo-ini-atk').value || 4;
+      const vlc = document.getElementById('novo-ini-vlc').value || 4;
+      const arquetipo = document.getElementById('novo-ini-arquetipo').value;
+
+      await fetch('/api/jogo/mestre/novo-inimigo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, pv, atk, def: 2, vlc, arquetipo, limpar })
+      });
+      await carregarEstado(true);
+    }
+
+    function baixarSave() {
+      if (!estadoAtual) return;
+      const blob = new Blob([JSON.stringify(estadoAtual, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cronica-pirata-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function carregarArquivoSave(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const texto = await file.text();
+      localStorage.setItem(CHAVE_SAVE, texto);
+      await fetch('/api/jogo/mestre/restaurar-save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: texto
+      });
+      await carregarEstado(true);
+    }
+
+    async function resetarBatalha() {
+      localStorage.removeItem(CHAVE_SAVE);
+      await fetch('/api/jogo/mestre/resetar', { method: 'POST' });
+      await carregarEstado(true);
+    }
+
+    iniciarParticulasVivas();
+    carregarEstado(true);
+    setInterval(() => carregarEstado(false), 2000);
+  </script>
+</body>
+</html>
