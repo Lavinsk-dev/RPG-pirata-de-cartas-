@@ -24,6 +24,7 @@ public class JogoController {
     private final List cartasNaMesa = new ArrayList();
     private final Set improvisosUsadosBatalha = new HashSet();
     private Map solicitacaoImprovisoAtiva = null;
+    private Map eventoExploracaoAtivo = new LinkedHashMap();
     private Map ultimoEventoVisual = new LinkedHashMap();
     private long contadorEventos = 0;
 
@@ -50,33 +51,51 @@ public class JogoController {
         faseJogo = "EXPLORACAO";
 
         Personagem lua = new Personagem("lua", "Lua", "Olhos de Águia", "Atiradora", "/imagens/lua.jpg", 18, 4, 1, 5);
-        lua.getBaralho().add(new Carta("c1", "Disparo de Precisão", "ATAQUE", 2, 4, "CRITICO_VELOZ", "Tiro certeiro de longa distância com chance de dano crítico.", "/imagens/carta_lua.jpg"));
-        lua.getBaralho().add(new Carta("c2", "Rajada de Pólvora", "ATAQUE", 3, 6, "QUEIMADURA", "Disparo explosivo que atravessa parte da defesa inimiga.", ""));
+        lua.getBaralho().add(new Carta("c1", "Disparo de Precisão", "ATAQUE", 2, 4, "CRITICO_VELOZ", "Tiro certeiro com chance de dano crítico.", "/imagens/carta_lua.jpg"));
+        lua.getBaralho().add(new Carta("c2", "Rajada de Pólvora", "ATAQUE", 3, 6, "QUEIMADURA", "Disparo explosivo que atravessa parte da defesa.", ""));
         lua.getBaralho().add(new Carta("c3", "Cortina de Fumaça", "DEFESA", 1, 3, "ESQUIVA", "Concede +3 de Escudo e +1 VLC no turno.", ""));
-        lua.getBaralho().add(new Carta("c4", "Fio Invisível de Pólvora", "ARMADILHA", 2, 5, "EXPLOSAO_OCULTA", "Carta oculta: detona quando um inimigo atacar, causando 5 de dano.", ""));
-        lua.getBaralho().add(new Carta("c5", "Olhar do Horizonte", "SUPORTE", 1, 2, "FOCO", "Cura 2 PV, dá +2 ATK no turno e +2 de bônus para Improviso.", ""));
+        lua.getBaralho().add(new Carta("c4", "Fio Invisível de Pólvora", "ARMADILHA", 2, 5, "EXPLOSAO_OCULTA", "Carta oculta: detona quando um inimigo atacar.", ""));
+        lua.getBaralho().add(new Carta("c5", "Olhar do Horizonte", "SUPORTE", 1, 2, "FOCO", "Cura 2 PV, +2 ATK no turno e +2 para Improviso.", ""));
+        lua.getBaralho().add(new Carta("c6", "Gazua & Luneta", "EXPLORACAO", 0, 3, "DESTRANCAR", "Ferramenta de exploração: abre fechaduras ou revela segredos.", ""));
 
         Personagem kyan = new Personagem("kyan", "Kyan", "O Lobo Branco", "Carpinteiro", "/imagens/kyan.jpg", 20, 3, 2, 3);
         kyan.getBaralho().add(new Carta("k1", "Corte Duplo dos Machados", "ATAQUE", 2, 3, "GOLPE_DUPLO", "Investida dupla veloz com chance de segundo corte (+3 dano).", "/imagens/carta_kyan.jpg"));
         kyan.getBaralho().add(new Carta("k2", "Martelo & Cinzel", "ATAQUE", 1, 2, "QUEBRA_DEFESA", "Impacto de construtor que abala a guarda inimiga.", ""));
-        kyan.getBaralho().add(new Carta("k3", "Barricada de Carpinteiro", "DEFESA", 2, 4, "FORTIFICAR", "Ergue vigas reforçadas: ganha +4 Escudo e +1 DEF no turno.", ""));
-        kyan.getBaralho().add(new Carta("k4", "Estrepes e Vigas Ocultas", "ARMADILHA", 2, 4, "CONTRA_ATAQUE", "Carta oculta: estrutura desaba no atacante, bloqueando e causando 4 de dano.", ""));
-        kyan.getBaralho().add(new Carta("k5", "Pulso Rúnico Latente", "SUPORTE", 2, 3, "CURA_RUNICA", "As runas aquecem: cura 3 PV, +2 ATK e +2 de bônus para Improviso.", ""));
+        kyan.getBaralho().add(new Carta("k3", "Barricada de Carpinteiro", "DEFESA", 2, 4, "FORTIFICAR", "Ergue vigas reforçadas: ganha +4 Escudo e +1 DEF.", ""));
+        kyan.getBaralho().add(new Carta("k4", "Estrepes e Vigas Ocultas", "ARMADILHA", 2, 4, "CONTRA_ATAQUE", "Carta oculta: estrutura desaba no atacante.", ""));
+        kyan.getBaralho().add(new Carta("k5", "Pulso Rúnico Latente", "SUPORTE", 2, 3, "CURA_RUNICA", "As runas aquecem: cura 3 PV, +2 ATK e +2 para Improviso.", ""));
+        kyan.getBaralho().add(new Carta("k6", "Pé de Cabra Naval", "EXPLORACAO", 0, 3, "ARROMBAR", "Ferramenta de exploração: força correntes, tampas e estruturas.", ""));
 
         Personagem zafira = new Personagem("zafira", "Zafira", "Chama Escarlate", "Combatente", "/imagens/zafira.jpg", 22, 4, 2, 2);
-        zafira.getBaralho().add(new Carta("z1", "Sopro Dracônico", "ATAQUE", 3, 6, "CHAMAS", "Labaredas ancestrais que incineram o oponente (+3 dano em crítico).", "/imagens/carta_zafira.jpg"));
+        zafira.getBaralho().add(new Carta("z1", "Sopro Dracônico", "ATAQUE", 3, 6, "CHAMAS", "Labaredas ancestrais que incineram o oponente.", "/imagens/carta_zafira.jpg"));
         zafira.getBaralho().add(new Carta("z2", "Garra Rubra", "ATAQUE", 1, 3, "SANGRAMENTO", "Investida feroz corpo-a-corpo.", ""));
         zafira.getBaralho().add(new Carta("z3", "Escamas de Obsidiana", "DEFESA", 2, 4, "BLOQUEIO_TOTAL", "Endurece a postura e recebe +4 de Escudo.", ""));
         zafira.getBaralho().add(new Carta("z4", "Rastro de Brasas", "ARMADILHA", 2, 5, "CHAMAS_OCULTAS", "Carta oculta: incendeia o oponente ao atacar.", ""));
-        zafira.getBaralho().add(new Carta("z5", "Fúria Ancestral", "SUPORTE", 2, 3, "FURIA", "Desperta o sangue dracônico: cura 3 PV, +3 ATK e +2 para Improviso.", ""));
+        zafira.getBaralho().add(new Carta("z5", "Fúria Ancestral", "SUPORTE", 2, 3, "FURIA", "Desperta o sangue dracônico: cura 3 PV, +3 ATK e +2 Improviso.", ""));
+        zafira.getBaralho().add(new Carta("z6", "Chama Guia", "EXPLORACAO", 0, 3, "QUEIMAR_OBSTACULO", "Ferramenta de exploração: derrete cadeados ou ilumina ruínas.", ""));
 
         herois.put("lua", lua);
         herois.put("kyan", kyan);
         herois.put("zafira", zafira);
 
+        definirEventoExploracaoInterno("bau_trancado", "Baú Corsário Acorrentado", "Um baú reforçado com correntes de ferro enferrujadas repousa no convés.", "🔒", 6, 15);
         adicionarInimigoInterno("Capitão Morgano — Corsário", 45, 5, 2, 4, "corsario");
         recalcularOrdemTurnos();
         registrarLog("🧭 Tripulação desembarcou em " + cenarioTitulo + ". Fase de Exploração ativa!");
+    }
+
+    private void definirEventoExploracaoInterno(String tipo, String titulo, String descricao, String icone, int resistencia, int recompensaOuro) {
+        Map ev = new LinkedHashMap();
+        ev.put("ativo", true);
+        ev.put("resolvido", false);
+        ev.put("tipo", tipo);
+        ev.put("titulo", titulo);
+        ev.put("descricao", descricao);
+        ev.put("icone", icone);
+        ev.put("resistencia", resistencia);
+        ev.put("resistenciaMax", resistencia);
+        ev.put("recompensaOuro", recompensaOuro);
+        this.eventoExploracaoAtivo = ev;
     }
 
     private void registrarEventoVisual(String tipo, String efeitoEspecial, String autorId, String autorNome,
@@ -151,6 +170,7 @@ public class JogoController {
         ini.put("vlc", vlc);
         ini.put("escudo", 0);
         ini.put("arquetipo", arquetipo);
+        ini.put("intencaoTexto", "⚔️ " + atk);
         ini.put("baralho", gerarBaralhoInimigo(arquetipo, atk));
         inimigos.add(ini);
     }
@@ -240,9 +260,63 @@ public class JogoController {
         res.put("cartasNaMesa", cartasNaMesa);
         res.put("improvisosUsadosBatalha", new ArrayList(improvisosUsadosBatalha));
         res.put("solicitacaoImprovisoAtiva", solicitacaoImprovisoAtiva);
+        res.put("eventoExploracaoAtivo", eventoExploracaoAtivo);
         res.put("ultimoEventoVisual", ultimoEventoVisual);
         res.put("logs", logs);
         return res;
+    }
+
+    // INTERAÇÃO COM CARTA DE EXPLORAÇÃO SOBRE O OBJETO DE CENA
+    @PostMapping("/explorar/usar-carta")
+    public Map usarCartaExploracao(@RequestBody Map payload) {
+        String personagemId = payload.get("personagemId").toString();
+        String cartaId = payload.get("cartaId").toString();
+
+        Personagem p = (Personagem) herois.get(personagemId);
+        if (p == null) return Map.of("erro", "Pirata inválido.");
+
+        Carta carta = p.getBaralho().stream().filter(c -> c.getId().equals(cartaId)).findFirst().orElse(null);
+        if (carta == null) return Map.of("erro", "Carta não encontrada.");
+
+        if (eventoExploracaoAtivo == null || !(boolean) eventoExploracaoAtivo.getOrDefault("ativo", false)
+                || (boolean) eventoExploracaoAtivo.getOrDefault("resolvido", false)) {
+            return Map.of("erro", "Nenhum obstáculo ativo na cena atual!");
+        }
+
+        int progresso = "EXPLORACAO".equals(carta.getTipo()) ? carta.getValorBase() + 2 : Math.max(1, carta.getValorBase());
+        int resAtual = (int) eventoExploracaoAtivo.get("resistencia");
+        int novaRes = Math.max(0, resAtual - progresso);
+        eventoExploracaoAtivo.put("resistencia", novaRes);
+
+        String tituloObj = eventoExploracaoAtivo.get("titulo").toString();
+        String msg;
+        if (novaRes == 0) {
+            eventoExploracaoAtivo.put("resolvido", true);
+            int ouroGanho = (int) eventoExploracaoAtivo.getOrDefault("recompensaOuro", 15);
+            p.setOuro(p.getOuro() + ouroGanho);
+            p.setBonusImproviso(p.getBonusImproviso() + 2);
+            msg = "🔓 " + p.getNome() + " usou [" + carta.getNome() + "] e superou [" + tituloObj + "]! (+" + ouroGanho + "g e +2 Bônus de Improviso!)";
+        } else {
+            msg = "🗝️ " + p.getNome() + " aplicou [" + carta.getNome() + "] em [" + tituloObj + "] (" + novaRes + "/" + eventoExploracaoAtivo.get("resistenciaMax") + " restante).";
+        }
+
+        registrarEventoVisual("SUPORTE", carta.getEfeitoEspecial(), p.getId(), p.getNome(), "obj_exploracao", tituloObj, carta.getNome(),
+                              novaRes == 0 ? "ABERTO! +" + eventoExploracaoAtivo.get("recompensaOuro") + "g" : "-" + progresso + " Trava", msg);
+        registrarLog(msg);
+        return Map.of("ok", true, "mensagem", msg);
+    }
+
+    @PostMapping("/mestre/evento-exploracao")
+    public Map mestreCriarEventoExploracao(@RequestBody Map payload) {
+        String titulo = payload.getOrDefault("titulo", "Baú Corsário Acorrentado").toString();
+        String descricao = payload.getOrDefault("descricao", "Um mecanismo antigo bloqueia a passagem.").toString();
+        String icone = payload.getOrDefault("icone", "🔒").toString();
+        int resistencia = Integer.parseInt(payload.getOrDefault("resistencia", 6).toString());
+        int ouro = Integer.parseInt(payload.getOrDefault("ouro", 15).toString());
+
+        definirEventoExploracaoInterno("custom", titulo, descricao, icone, resistencia, ouro);
+        registrarLog("🧭 Novo desafio de exploração na cena: " + titulo + " (Resistência " + resistencia + ")");
+        return Map.of("ok", true);
     }
 
     @PostMapping("/iniciar-combate")
@@ -458,14 +532,17 @@ public class JogoController {
         if ("DEFESA".equals(carta.getTipo())) {
             int esc = (int) iniAtivo.getOrDefault("escudo", 0) + carta.getValorBase();
             iniAtivo.put("escudo", esc);
+            iniAtivo.put("intencaoTexto", "🛡️ +" + carta.getValorBase());
             alvoFinalId = inimigoId;
             alvoFinalNome = autorNome;
             efeitoTexto = "+" + carta.getValorBase() + " Escudo";
             msg = "🛡️ INIMIGO: " + autorNome + " usou [" + carta.getNome() + "] (" + efeitoTexto + ")!";
         } else if ("SUPORTE".equals(carta.getTipo())) {
             int novoPv = Math.min((int) iniAtivo.get("pvMax"), (int) iniAtivo.get("pv") + 5);
+            int novoAtk = (int) iniAtivo.get("atk") + 2;
             iniAtivo.put("pv", novoPv);
-            iniAtivo.put("atk", (int) iniAtivo.get("atk") + 2);
+            iniAtivo.put("atk", novoAtk);
+            iniAtivo.put("intencaoTexto", "⚔️ " + novoAtk);
             alvoFinalId = inimigoId;
             alvoFinalNome = autorNome;
             efeitoTexto = "+5 PV, +2 ATK";
@@ -487,6 +564,7 @@ public class JogoController {
                     dano -= absorvido;
                 }
                 alvo.setPv(Math.max(0, alvo.getPv() - dano));
+                iniAtivo.put("intencaoTexto", "⚔️ " + iniAtivo.get("atk"));
                 alvoFinalId = alvo.getId();
                 alvoFinalNome = alvo.getNome();
                 efeitoTexto = "-" + dano + " PV";
@@ -502,7 +580,6 @@ public class JogoController {
         return Map.of("ok", true, "mensagem", msg);
     }
 
-    // JOGADOR SOLICITA IMPROVISO NARRATIVO (1 VEZ POR BATALHA)
     @PostMapping("/solicitar-improviso")
     public Map solicitarImproviso(@RequestBody Map payload) {
         String personagemId = payload.get("personagemId").toString();
@@ -531,7 +608,6 @@ public class JogoController {
         return Map.of("ok", true, "solicitacao", req);
     }
 
-    // MESTRE RESOLVE O IMPROVISO COM O VALOR DO D20 FÍSICO + BÔNUS DE CARTAS
     @PostMapping("/mestre/improviso")
     public Map calcularImproviso(@RequestBody Map payload) {
         String personagemId = payload.get("personagemId").toString();
@@ -564,14 +640,12 @@ public class JogoController {
         return Map.of("ok", true, "mensagem", msg, "total", total);
     }
 
-    // MESTRE AJUSTA PV OU ATRIBUTOS (BUFFS/DEBUFFS) DE JOGADORES OU INIMIGOS
     @PostMapping("/mestre/ajustar-entidade")
     public Map ajustarEntidade(@RequestBody Map payload) {
         String alvoId = payload.get("alvoId").toString();
-        String tipoAjuste = payload.get("tipoAjuste").toString(); // pv, pvMax, atk, def, vlc
+        String tipoAjuste = payload.get("tipoAjuste").toString();
         int valor = Integer.parseInt(payload.getOrDefault("valor", 0).toString());
 
-        // 1. Verifica se é um Herói
         if (herois.containsKey(alvoId)) {
             Personagem p = (Personagem) herois.get(alvoId);
             String msg;
@@ -607,7 +681,6 @@ public class JogoController {
             return Map.of("ok", true);
         }
 
-        // 2. Verifica se é um Inimigo
         for (Object obj : inimigos) {
             Map ini = (Map) obj;
             if (alvoId.equals(ini.get("id"))) {
@@ -628,6 +701,7 @@ public class JogoController {
                     case "atk" -> {
                         int novoAtk = Math.max(1, (int) ini.get("atk") + valor);
                         ini.put("atk", novoAtk);
+                        ini.put("intencaoTexto", "⚔️ " + novoAtk);
                         msg = (valor >= 0 ? "⚔️ Buff em " : "🔻 Debuff em ") + nomeIni + ": " + (valor >= 0 ? "+" : "") + valor + " ATK (Atual: " + novoAtk + ")!";
                     }
                     case "def" -> {
