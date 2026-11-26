@@ -3,26 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Crônicas dos Sete Mares — Exploração &amp; Arena</title>
+  <title>Crônicas dos Sete Mares — Mesa Pirata &amp; Fantasia</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --ouro: #d4af37;
-      --ouro-brilho: #ffe082;
-      --pergaminho: #f4e6c8;
-      --pergaminho-escuro: #cfb382;
+      --ouro-brilho: #ffe48f;
+      --ouro-escuro: #8a641c;
+      --pergaminho: #f3e4c3;
+      --pergaminho-medio: #dec493;
+      --pergaminho-escuro: #bfa06a;
+      --madeira-escura: #1a0f09;
+      --madeira-media: #2d1a10;
+      --tinta-preta: #140c07;
       --carmesim: #991b1b;
       --azul-arcano: #1d4ed8;
       --esmeralda: #15803d;
       --roxo-armadilha: #6b21a8;
       --ambar-exploracao: #b45309;
-      --texto-claro: #f8efd4;
-      --texto-escuro: #24150a;
+      --texto-claro: #fbf2da;
+      --texto-escuro: #211207;
     }
 
-    html, body, div, span, h1, h2, h3, h4, p, button, input, select, section, main, aside {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -32,204 +37,341 @@
 
     body {
       font-family: 'Crimson Text', Georgia, serif;
-      background: #070b10;
+      background: #06090e;
       color: var(--texto-claro);
       height: 100dvh;
       overflow: hidden;
+      user-select: none;
     }
 
-    h1, h2, h3, h4, .fonte-titulo { font-family: 'Cinzel', serif; letter-spacing: 0.04em; }
+    h1, h2, h3, h4, .fonte-titulo { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
 
     .titulo-epico {
       font-family: 'Cinzel Decorative', serif;
-      color: var(--ouro-brilho);
-      text-shadow: 0 3px 14px rgba(0, 0, 0, 0.95), 0 0 22px rgba(212, 175, 55, 0.5);
+      background: linear-gradient(180deg, #fff5cc 0%, #f3c65f 55%, #b88328 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.95));
     }
 
+    /* BOTÕES FORJADOS EM BRONZE & OURO */
     .btn-pirata {
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      background: linear-gradient(180deg, #4f311a, #231409);
+      background: linear-gradient(180deg, #5c391e 0%, #331d0e 55%, #1f1108 100%);
       color: var(--ouro-brilho);
-      border: 1px solid var(--ouro);
-      padding: 8px 12px;
+      border: 1.5px solid var(--ouro);
+      box-shadow: inset 0 1px 0 rgba(255, 232, 163, 0.35), 0 4px 10px rgba(0, 0, 0, 0.75);
+      padding: 8px 13px;
       min-height: 38px;
-      border-radius: 7px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 0.78rem;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
+      transition: transform 0.14s ease, filter 0.14s ease;
     }
 
-    .btn-pirata:active { transform: scale(0.96); background: #6e4525; }
-    .btn-pirata:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-pirata:hover:not(:disabled) { filter: brightness(1.14); }
+    .btn-pirata:active:not(:disabled) { transform: scale3d(0.95, 0.95, 1); }
+    .btn-pirata:disabled { opacity: 0.42; cursor: not-allowed; }
 
-    /* ==================== TELA 1: EXPLORAÇÃO & INTERAÇÃO COM CARTAS ==================== */
+    /* ==================== TELA 1: EXPLORAÇÃO & CARTA NÁUTICA ==================== */
     #tela-exploracao {
+      position: relative;
       height: 100dvh;
       overflow-y: auto;
-      padding: 16px 16px 40px;
+      padding: 16px 16px 46px;
       text-align: center;
       background:
-        radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.2), rgba(8, 12, 18, 0.96) 75%),
-        repeating-linear-gradient(45deg, rgba(212,175,55,0.03) 0px, rgba(212,175,55,0.03) 2px, transparent 2px, transparent 28px);
+        radial-gradient(circle at 50% 18%, rgba(212, 175, 55, 0.16), transparent 55%),
+        radial-gradient(circle at 15% 85%, rgba(14, 116, 144, 0.18), transparent 50%),
+        /* Linhas de grade cartográfica */
+        linear-gradient(90deg, rgba(212, 175, 55, 0.045) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(212, 175, 55, 0.045) 1px, transparent 1px),
+        radial-gradient(ellipse at center, #161c24 0%, #0a0d12 72%, #05070a 100%);
+      background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px, 100% 100%;
+    }
+
+    /* ROSA DOS VENTOS MONUMENTAL GIRANDO NO FUNDO */
+    .rosa-ventos-fundo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: min(760px, 120vw);
+      height: min(760px, 120vw);
+      transform: translate(-50%, -50%);
+      opacity: 0.085;
+      pointer-events: none;
+      z-index: 0;
+      animation: girarRosaVentos 140s linear infinite;
+    }
+
+    @keyframes girarRosaVentos {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .conteudo-exploracao {
+      position: relative;
+      z-index: 2;
+      max-width: 1140px;
+      margin: 0 auto;
     }
 
     .barra-topo-exploracao {
-      max-width: 1120px;
-      margin: 0 auto 12px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      background: rgba(16, 10, 6, 0.9);
-      border: 1px solid var(--ouro);
-      padding: 10px 14px;
-      border-radius: 12px;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(38, 22, 12, 0.94), rgba(18, 10, 6, 0.96));
+      border: 2px solid var(--ouro);
+      box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.85), 0 10px 28px rgba(0, 0, 0, 0.85);
+      padding: 12px 16px;
+      border-radius: 14px;
+      margin-bottom: 14px;
     }
 
-    /* PALCO DE EXPLORAÇÃO INTERATIVO (BAÚS, PORTÕES, SEGREDOS) */
+    /* PALCO DO BAÚ / ENIGMA DE EXPLORAÇÃO (ESTILO GRAVURA) */
     .palco-objeto-exploracao {
-      max-width: 1120px;
-      margin: 0 auto 14px;
-      background: radial-gradient(circle at 50% 45%, rgba(120, 53, 15, 0.45), rgba(20, 12, 7, 0.96));
+      margin-bottom: 14px;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(217, 119, 6, 0.25), transparent 55%),
+        linear-gradient(180deg, rgba(44, 24, 12, 0.95), rgba(20, 11, 6, 0.97));
       border: 2px solid #d97706;
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 14px 18px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.85);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.85), 0 12px 30px rgba(0, 0, 0, 0.85);
+      position: relative;
+      overflow: hidden;
     }
 
     .objeto-cena-visual {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
       text-align: left;
       flex: 1;
-      min-width: 250px;
+      min-width: 260px;
     }
 
     .emblema-objeto {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
-      background: radial-gradient(circle, #78350f, #271306);
-      border: 2px solid #fbbf24;
+      width: 84px;
+      height: 84px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 35% 30%, #78350f, #1c0d04 80%);
+      border: 2.5px solid #fbbf24;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.3rem;
-      box-shadow: 0 0 22px rgba(251, 191, 36, 0.4);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.9), inset 0 0 14px rgba(251, 191, 36, 0.35);
       flex-shrink: 0;
     }
 
     .painel-acao-combate {
-      max-width: 1120px;
-      margin: 12px auto 0;
-      background: linear-gradient(180deg, rgba(45, 16, 18, 0.92), rgba(18, 10, 8, 0.95));
+      margin-bottom: 16px;
+      background:
+        radial-gradient(circle at 80% 50%, rgba(185, 28, 28, 0.28), transparent 60%),
+        linear-gradient(180deg, rgba(48, 15, 17, 0.94), rgba(20, 9, 9, 0.96));
       border: 2px solid #dc2626;
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 14px;
+      padding: 12px 16px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.8);
     }
 
+    /* CARDS ORNAMENTADOS DE SELEÇÃO DE PERSONAGEM */
     .grid-herois {
-      max-width: 1120px;
-      margin: 16px auto 0;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+      gap: 18px;
     }
 
     .card-heroi-selecao {
-      background: linear-gradient(180deg, #27190f 0%, #110a06 100%);
-      border: 2px solid var(--ouro);
-      border-radius: 14px;
+      position: relative;
+      background: linear-gradient(180deg, #2d1b10 0%, #160d07 65%, #0e0804 100%);
+      border: 2px solid var(--ouro-escuro);
+      border-radius: 16px;
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.88);
+    }
+
+    .card-heroi-selecao:hover {
+      transform: translate3d(0, -4px, 0);
+      border-color: var(--ouro);
     }
 
     .card-heroi-selecao.focado {
-      border-color: var(--ouro-brilho);
-      box-shadow: 0 0 24px rgba(255, 224, 130, 0.45);
+      border: 2.5px solid var(--ouro-brilho);
+      box-shadow: 0 0 28px rgba(255, 228, 143, 0.42), 0 18px 36px rgba(0, 0, 0, 0.92);
     }
+
+    .canto-ornamento {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    .canto-tl { top: 6px; left: 6px; }
+    .canto-tr { top: 6px; right: 6px; transform: scaleX(-1); }
 
     .moldura-retrato {
       position: relative;
-      height: 225px;
-      background: #0c0805;
+      height: 235px;
+      background: radial-gradient(circle at 50% 35%, #2a1b12, #090604);
       border-bottom: 2px solid var(--ouro);
       overflow: hidden;
       cursor: pointer;
     }
 
-    .moldura-retrato img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .moldura-retrato::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(12, 7, 4, 0.92) 100%);
+      pointer-events: none;
+    }
+
+    .moldura-retrato img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.35s ease;
+    }
+
+    .card-heroi-selecao:hover .moldura-retrato img {
+      transform: scale3d(1.04, 1.04, 1);
+    }
 
     .tag-profissao {
       position: absolute;
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(16, 10, 6, 0.94);
-      border: 1px solid var(--ouro);
+      z-index: 4;
+      background: linear-gradient(180deg, #2d1b10, #120a05);
+      border: 1.5px solid var(--ouro);
       color: var(--ouro-brilho);
-      padding: 4px 14px;
+      padding: 4px 16px;
       border-radius: 20px;
       font-family: 'Cinzel', serif;
-      font-size: 0.78rem;
+      font-weight: 700;
+      font-size: 0.76rem;
       white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
     }
 
-    .info-heroi-selecao { padding: 12px; }
-    .info-heroi-selecao h3 { font-size: 1.35rem; color: var(--ouro-brilho); }
-    .epitetos { color: var(--pergaminho-escuro); font-style: italic; margin-bottom: 8px; }
+    .info-heroi-selecao { padding: 14px; }
+    .info-heroi-selecao h3 { font-size: 1.42rem; color: var(--ouro-brilho); }
+    .epitetos { color: var(--pergaminho-escuro); font-style: italic; font-size: 0.98rem; margin-bottom: 10px; }
 
     .atributos-mini {
-      display: flex;
-      justify-content: space-around;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      border-radius: 8px;
-      padding: 7px;
-      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: rgba(8, 5, 3, 0.75);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 10px;
+      padding: 8px 6px;
+      margin-bottom: 12px;
       font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
+      font-weight: 700;
+      font-size: 0.8rem;
     }
 
-    /* ==================== TELA 2: ARENA DE BATALHA COM INIMIGOS EM PÉ ==================== */
+    /* ==================== TELA 2: MESA DE BATALHA TEMÁTICA ==================== */
     #mesa-batalha {
       display: none;
       position: relative;
       width: 100vw;
       height: 100dvh;
       overflow: hidden;
-      background:
-        radial-gradient(ellipse at 50% 35%, rgba(212, 175, 55, 0.16) 0%, rgba(12, 16, 22, 0.78) 72%, #05070a 100%),
-        repeating-linear-gradient(90deg, rgba(46, 28, 15, 0.55) 0px, rgba(46, 28, 15, 0.55) 95px, rgba(22, 13, 7, 0.85) 96px, rgba(22, 13, 7, 0.85) 100px),
-        linear-gradient(180deg, #102536 0%, #24170e 24%, #2f1d11 50%, #22140b 78%, #120b06 100%);
+      background-color: #0b0f14;
     }
 
-    .cenario-camada-viva { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+    /* TEMA 1: PORTO PIRATA (DOCAS AO CREPÚSCULO) */
+    #mesa-batalha.tema-porto {
+      background:
+        radial-gradient(ellipse at 50% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 85%, rgba(14, 116, 144, 0.22) 0%, transparent 60%),
+        repeating-linear-gradient(90deg, rgba(42, 25, 14, 0.5) 0px, rgba(42, 25, 14, 0.5) 90px, rgba(16, 9, 5, 0.85) 91px, rgba(16, 9, 5, 0.85) 95px),
+        linear-gradient(180deg, #0c1f33 0%, #1c2430 28%, #28180e 52%, #1b1009 82%, #0c0704 100%);
+    }
+
+    /* TEMA 2: CONVÉS DO GALEÃO (TEMPESTADE EM ALTO-MAR) */
+    #mesa-batalha.tema-conves {
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(56, 189, 248, 0.22) 0%, transparent 55%),
+        repeating-linear-gradient(0deg, rgba(58, 35, 18, 0.55) 0px, rgba(58, 35, 18, 0.55) 44px, rgba(20, 11, 5, 0.9) 45px, rgba(20, 11, 5, 0.9) 48px),
+        linear-gradient(180deg, #071926 0%, #0f2c3d 32%, #331e10 48%, #221309 85%, #0f0804 100%);
+    }
+
+    /* TEMA 3: ILHA DAS RUÍNAS (SANTUÁRIO ARCANO) */
+    #mesa-batalha.tema-ruinas {
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(16, 185, 129, 0.22) 0%, transparent 58%),
+        radial-gradient(circle at 20% 65%, rgba(139, 92, 246, 0.16) 0%, transparent 45%),
+        repeating-linear-gradient(90deg, rgba(28, 37, 34, 0.45) 0px, rgba(28, 37, 34, 0.45) 110px, rgba(12, 18, 16, 0.85) 111px, rgba(12, 18, 16, 0.85) 115px),
+        linear-gradient(180deg, #091c18 0%, #132b24 35%, #19211e 65%, #090e0c 100%);
+    }
+
+    /* TEMA 4: TAVERNA SUBTERRÂNEA */
+    #mesa-batalha.tema-taverna {
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(234, 88, 12, 0.25) 0%, transparent 60%),
+        repeating-linear-gradient(90deg, rgba(60, 32, 16, 0.55) 0px, rgba(60, 32, 16, 0.55) 82px, rgba(24, 12, 6, 0.9) 83px, rgba(24, 12, 6, 0.9) 87px),
+        linear-gradient(180deg, #1f1109 0%, #361c0e 35%, #261309 75%, #0e0704 100%);
+    }
+
+    /* SILHUETA DE HORIZONTE NAUTICO / RUINAS NO FUNDO DA ARENA */
+    .cenografia-svg-fundo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.26;
+    }
+
+    /* MOLDURA DE MADEIRA ESCULPIDA NAS BORDAS DA MESA */
+    #mesa-batalha::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 6px solid #2b180c;
+      box-shadow: inset 0 0 55px rgba(0, 0, 0, 0.92), inset 0 0 0 2px rgba(212, 175, 55, 0.35);
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .cenario-camada-viva { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
     .luz-tocha {
       position: absolute;
-      width: 280px;
-      height: 280px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 166, 43, 0.22) 0%, transparent 70%);
-      animation: pulsarTocha 3.2s infinite alternate ease-in-out;
+      background: radial-gradient(circle, rgba(255, 174, 52, 0.2) 0%, transparent 70%);
+      animation: pulsarTocha 3.6s infinite alternate ease-in-out;
     }
-    .luz-tocha.esq { top: 10%; left: -40px; }
-    .luz-tocha.dir { bottom: 18%; right: -40px; animation-delay: 1.4s; }
-    @keyframes pulsarTocha { 0% { transform: scale(0.92); opacity: 0.65; } 100% { transform: scale(1.12); opacity: 1; } }
+    .luz-tocha.esq { top: 8%; left: -30px; }
+    .luz-tocha.dir { bottom: 20%; right: -30px; animation-delay: 1.6s; }
+    @keyframes pulsarTocha {
+      0% { transform: scale3d(0.92, 0.92, 1); opacity: 0.65; }
+      100% { transform: scale3d(1.1, 1.1, 1); opacity: 1; }
+    }
 
     .brasa {
       position: absolute;
@@ -237,14 +379,13 @@
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: #ffbe55;
-      box-shadow: 0 0 8px #ff7b00;
+      background: #ffd166;
       animation: subirBrasa linear infinite;
     }
     @keyframes subirBrasa {
-      0% { transform: translateY(0) translateX(0); opacity: 0; }
-      20% { opacity: 0.9; }
-      100% { transform: translateY(-100vh) translateX(40px); opacity: 0; }
+      0% { transform: translate3d(0, 0, 0); opacity: 0; }
+      20% { opacity: 0.85; }
+      100% { transform: translate3d(35px, -100vh, 0); opacity: 0; }
     }
 
     /* GRADE DESKTOP */
@@ -254,10 +395,10 @@
       width: 100%;
       height: 100%;
       display: grid;
-      grid-template-columns: 235px 1fr 205px;
-      grid-template-rows: 76px 1fr 222px;
-      padding: 8px 12px;
-      gap: 6px;
+      grid-template-columns: 240px 1fr 205px;
+      grid-template-rows: 74px 1fr 224px;
+      padding: 10px 14px;
+      gap: 8px;
     }
 
     .zona-topo-inimigo {
@@ -272,10 +413,11 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(12, 8, 5, 0.85);
-      border: 1px solid rgba(212, 175, 55, 0.45);
-      padding: 5px 10px;
-      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(26, 15, 9, 0.92), rgba(12, 7, 4, 0.95));
+      border: 1.5px solid rgba(212, 175, 55, 0.55);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+      padding: 5px 12px;
+      border-radius: 22px;
       overflow-x: auto;
       max-width: 48vw;
     }
@@ -296,16 +438,16 @@
     }
 
     .pill-turno.ativo {
-      background: linear-gradient(90deg, #78350f, #b45309);
+      background: linear-gradient(90deg, #92400e, #d97706);
       border: 2px solid var(--ouro-brilho);
       color: #fff;
       font-weight: 700;
       box-shadow: 0 0 14px rgba(255, 224, 130, 0.65);
-      transform: scale(1.05);
+      transform: scale3d(1.04, 1.04, 1);
     }
 
     .pill-turno.inimigo.ativo {
-      background: linear-gradient(90deg, #7f1d1d, #b91c1c);
+      background: linear-gradient(90deg, #7f1d1d, #dc2626);
       border-color: #fca5a5;
     }
 
@@ -320,161 +462,165 @@
     }
 
     .comandante-card {
-      background: rgba(18, 11, 7, 0.93);
+      background: linear-gradient(180deg, rgba(34, 20, 11, 0.95), rgba(15, 9, 5, 0.97));
       border: 2px solid var(--ouro);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8), 0 10px 24px rgba(0, 0, 0, 0.85);
     }
 
     .comandante-card.inimigo {
-      border-color: #c0392b;
-      background: linear-gradient(180deg, rgba(48, 13, 17, 0.95), rgba(18, 10, 10, 0.95));
+      border-color: #dc2626;
+      background: linear-gradient(180deg, rgba(52, 14, 18, 0.95), rgba(18, 8, 8, 0.97));
     }
 
     .comandante-card.alvo-atingido {
-      box-shadow: 0 0 36px #ef4444, inset 0 0 22px rgba(239, 68, 68, 0.65);
       border-color: #fca5a5;
-      animation: pulsoAlvoAtingido 0.55s ease-in-out 2;
+      animation: pulsoAlvoAtingido 0.45s ease-in-out 2;
     }
 
     .comandante-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .avatar-arena { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--ouro); object-fit: cover; object-position: top; flex-shrink: 0; }
+    .avatar-arena { width: 56px; height: 56px; border-radius: 50%; border: 2.5px solid var(--ouro); object-fit: cover; object-position: top; flex-shrink: 0; }
     .avatar-inimigo-icone {
-      width: 56px; height: 56px; border-radius: 50%; border: 2px solid #e74c3c;
+      width: 56px; height: 56px; border-radius: 50%; border: 2.5px solid #ef4444;
       background: radial-gradient(circle, #641e16, #1b0808);
-      display: flex; align-items: center; justify-content: center; font-size: 1.7rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
     }
 
-    .barra-hp { height: 16px; background: #090604; border: 1px solid rgba(212, 175, 55, 0.45); border-radius: 6px; overflow: hidden; position: relative; margin: 4px 0; }
-    .barra-hp-fill { height: 100%; transition: width 0.3s ease; }
+    .barra-hp { height: 16px; background: #090604; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 6px; overflow: hidden; position: relative; margin: 4px 0; }
+    .barra-hp-fill { height: 100%; transition: width 0.25s ease; }
     .barra-hp-texto { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 0.68rem; font-weight: 700; text-shadow: 0 1px 2px #000; }
 
     .cristais-linha { display: flex; gap: 4px; align-items: center; margin-top: 5px; }
-    .gema-ep { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #bae6fd, #0284c7); border: 1px solid #7dd3fc; box-shadow: 0 0 8px #38bdf8; }
-    .gema-ep.vazia { background: #1e293b; border-color: #475569; box-shadow: none; }
+    .gema-ep { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #e0f2fe, #0284c7); border: 1px solid #7dd3fc; }
+    .gema-ep.vazia { background: #1e293b; border-color: #475569; }
 
-    /* PALCO CENTRAL COM INIMIGOS EM PÉ E PROFUNDIDADE */
+    /* PALCO CENTRAL COM INIMIGOS ILUSTRADOS EM PÉ */
     .campo-central {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 6px;
-      padding: 4px 10px;
+      gap: 7px;
+      padding: 2px 8px;
     }
 
     .palco-inimigos-vivos {
-      flex: 1.45;
-      border-radius: 14px;
+      flex: 1.5;
+      border-radius: 16px;
       background:
-        radial-gradient(ellipse at 50% 75%, rgba(212, 175, 55, 0.14), rgba(10, 6, 4, 0.72) 75%),
-        repeating-linear-gradient(180deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 18px);
-      border: 1px solid rgba(212, 175, 55, 0.25);
+        radial-gradient(ellipse at 50% 82%, rgba(212, 175, 55, 0.16), rgba(10, 6, 4, 0.72) 74%),
+        repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 20px);
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
+      box-shadow: inset 0 -18px 34px rgba(0, 0, 0, 0.85);
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      gap: 22px;
+      gap: 24px;
       padding: 12px 16px 10px;
       position: relative;
       overflow-x: auto;
     }
 
-    /* PERSONAGEM INIMIGO EM PÉ COM INTENÇÃO FLUTUANTE E CORAÇÃO */
     .inimigo-palco-actor {
       display: flex;
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      transition: transform 0.2s ease, filter 0.2s ease;
+      transition: transform 0.18s ease;
       position: relative;
       flex-shrink: 0;
-      padding: 4px 8px;
+      padding: 2px 8px;
     }
 
-    .inimigo-palco-actor:hover { transform: translateY(-4px) scale(1.04); }
+    .inimigo-palco-actor:hover { transform: translate3d(0, -4px, 0) scale3d(1.04, 1.04, 1); }
 
     .inimigo-palco-actor.selecionado .silhueta-inimigo {
-      filter: drop-shadow(0 0 14px rgba(255, 224, 130, 0.95));
-      transform: scale(1.06);
+      border-color: var(--ouro-brilho);
+      box-shadow: 0 0 22px rgba(255, 224, 130, 0.75), inset 0 -12px 18px rgba(0,0,0,0.8);
+      transform: scale3d(1.06, 1.06, 1);
     }
 
     .inimigo-palco-actor.alvo-atingido {
-      animation: pulsoAlvoAtingido 0.55s ease-in-out 2;
-      filter: drop-shadow(0 0 22px #ef4444) brightness(1.5);
+      animation: pulsoAlvoAtingido 0.45s ease-in-out 2;
     }
 
-    .inimigo-palco-actor.derrotado { opacity: 0.28; filter: grayscale(1); pointer-events: none; }
+    .inimigo-palco-actor.derrotado { opacity: 0.25; filter: grayscale(1); pointer-events: none; }
 
-    /* BALÃO ESCURO DE INTENÇÃO ACIMA DO INIMIGO (ESTILO REFERÊNCIA) */
+    /* BALÃO ESCURO DE INTENÇÃO ACIMA DO INIMIGO */
     .balao-intencao {
-      background: #0c0908;
-      border: 2px solid #dc2626;
-      color: #fca5a5;
+      background: linear-gradient(180deg, #1c0b0b, #090404);
+      border: 2px solid #ef4444;
+      color: #fecaca;
       font-family: 'Cinzel', serif;
       font-weight: 900;
       font-size: 0.78rem;
-      padding: 2px 10px;
+      padding: 2px 11px;
       border-radius: 14px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
-      animation: flutuarSuave 2.4s infinite ease-in-out;
+      animation: flutuarSuave 2.6s infinite ease-in-out;
     }
 
     @keyframes flutuarSuave {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -4px, 0); }
     }
 
     .silhueta-inimigo {
-      width: 86px;
-      height: 86px;
-      border-radius: 50% 50% 42% 42%;
-      background: radial-gradient(circle at 35% 30%, #5c2b1e, #24100a 75%);
-      border: 3px solid #d4af37;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.85), inset 0 -10px 18px rgba(0,0,0,0.7);
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      background: radial-gradient(circle at 40% 30%, #4a2316, #190b06 78%);
+      border: 3px solid #b88328;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.88), inset 0 -10px 18px rgba(0,0,0,0.75);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
-      transition: transform 0.2s ease, filter 0.2s ease;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+      animation: respirarInimigo 3.2s infinite ease-in-out;
+    }
+
+    @keyframes respirarInimigo {
+      0%, 100% { transform: scale3d(1, 1, 1); }
+      50% { transform: scale3d(1.03, 0.98, 1); }
     }
 
     .mira-alvo-tag {
       position: absolute;
-      top: -6px;
+      top: -8px;
       right: -8px;
-      background: #b91c1c;
+      background: #dc2626;
       color: #fff;
-      border: 1px solid #ffe082;
+      border: 1.5px solid #ffe082;
       border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 0.7rem;
+      width: 24px;
+      height: 24px;
+      font-size: 0.74rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 2px 8px #000;
     }
 
     .status-pes-inimigo {
-      margin-top: 5px;
-      background: rgba(10, 7, 5, 0.92);
-      border: 1px solid rgba(212, 175, 55, 0.45);
+      margin-top: 6px;
+      background: linear-gradient(180deg, rgba(22, 13, 8, 0.95), rgba(10, 6, 4, 0.98));
+      border: 1px solid rgba(212, 175, 55, 0.5);
       border-radius: 10px;
-      padding: 3px 9px;
+      padding: 4px 10px;
       text-align: center;
-      min-width: 96px;
+      min-width: 104px;
     }
 
     .fileira-tabuleiro {
-      flex: 0.85;
-      border: 1px solid rgba(212, 175, 55, 0.28);
-      border-radius: 10px;
-      background: rgba(14, 9, 6, 0.56);
-      box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.75);
+      flex: 0.82;
+      border: 1px solid rgba(212, 175, 55, 0.32);
+      border-radius: 12px;
+      background: rgba(14, 9, 6, 0.62);
+      box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -490,41 +636,40 @@
       top: 3px;
       font-family: 'Cinzel', serif;
       font-size: 0.6rem;
-      color: rgba(244, 230, 200, 0.5);
+      color: rgba(244, 230, 200, 0.55);
       text-transform: uppercase;
     }
 
     @keyframes pulsoAlvoAtingido {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      0%, 100% { transform: scale3d(1, 1, 1); }
+      50% { transform: scale3d(1.08, 1.08, 1); }
     }
 
     .carta-em-campo {
-      min-width: 126px;
-      max-width: 150px;
-      height: 82px;
+      min-width: 128px;
+      max-width: 152px;
+      height: 80px;
       flex-shrink: 0;
-      border-radius: 8px;
+      border-radius: 9px;
       border: 2px solid var(--ouro);
-      background: linear-gradient(180deg, #2b1b10, #140c07);
+      background: linear-gradient(180deg, #332012, #140c07);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       padding: 4px;
       text-align: center;
-      animation: manifestarCartaMesa 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: manifestarCartaMesa 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .carta-em-campo.inimiga {
       border-color: #f87171;
       background: linear-gradient(180deg, #4c0519, #1c0505);
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.65);
     }
 
     @keyframes manifestarCartaMesa {
-      0% { transform: scale(1.4) translateY(15px); opacity: 0; }
-      100% { transform: scale(1) translateY(0); opacity: 1; }
+      0% { transform: scale3d(1.3, 1.3, 1) translate3d(0, 12px, 0); opacity: 0; }
+      100% { transform: scale3d(1, 1, 1) translate3d(0, 0, 0); opacity: 1; }
     }
 
     .carta-armadilha-mesa {
@@ -545,21 +690,23 @@
     }
 
     .placar-poder {
-      background: rgba(16, 10, 6, 0.92);
+      background: linear-gradient(180deg, rgba(28, 17, 10, 0.94), rgba(14, 8, 5, 0.97));
       border: 2px solid var(--ouro);
-      border-radius: 10px;
-      padding: 6px 10px;
+      border-radius: 12px;
+      padding: 7px 10px;
       text-align: center;
       width: 100%;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.8);
     }
 
+    /* TIMÃO / MEDALHÃO DE PASSAR TURNO */
     .medalhao-turno {
-      width: 108px;
-      height: 108px;
+      width: 112px;
+      height: 112px;
       border-radius: 50%;
       border: 4px solid var(--ouro);
-      background: radial-gradient(circle at 35% 35%, #5c3a1d, #1c1008 75%);
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.55);
+      background: radial-gradient(circle at 35% 35%, #6e4422, #1c1008 75%);
+      box-shadow: 0 0 24px rgba(212, 175, 55, 0.5), inset 0 0 14px rgba(0, 0, 0, 0.85);
       color: var(--ouro-brilho);
       font-family: 'Cinzel', serif;
       font-weight: 900;
@@ -571,10 +718,12 @@
       justify-content: center;
       text-align: center;
       gap: 2px;
+      transition: transform 0.16s ease;
     }
-    .medalhao-turno:active { transform: scale(0.93); }
+    .medalhao-turno:hover { transform: scale3d(1.05, 1.05, 1); }
+    .medalhao-turno:active { transform: scale3d(0.93, 0.93, 1); }
 
-    /* MÃO DE CARTAS */
+    /* MÃO DE CARTAS ESTILIZADAS EM PERGAMINHO & TINTA */
     .zona-mao-jogador {
       grid-column: 2 / 3;
       grid-row: 3 / 4;
@@ -589,7 +738,7 @@
 
     .aviso-trava-turno {
       background: rgba(127, 29, 29, 0.95);
-      border: 1px solid #fca5a5;
+      border: 1.5px solid #fca5a5;
       color: #fef2f2;
       font-family: 'Cinzel', serif;
       font-size: 0.76rem;
@@ -603,43 +752,55 @@
     .leque-cartas { display: flex; justify-content: center; align-items: flex-end; }
 
     .carta-mao {
-      width: 152px;
-      height: 198px;
+      width: 154px;
+      height: 202px;
       margin: 0 -6px;
-      background: linear-gradient(180deg, var(--pergaminho) 0%, var(--pergaminho-escuro) 100%);
+      background:
+        radial-gradient(circle at 50% 25%, rgba(255, 250, 235, 0.75), transparent 70%),
+        linear-gradient(180deg, var(--pergaminho) 0%, var(--pergaminho-medio) 60%, var(--pergaminho-escuro) 100%);
       color: var(--texto-escuro);
-      border: 3px solid #5c3d22;
-      border-radius: 11px;
-      padding: 7px;
+      border: 3px solid #4a2e16;
+      outline: 1.5px solid rgba(212, 175, 55, 0.7);
+      outline-offset: -5px;
+      border-radius: 12px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.88);
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.16s ease, border-color 0.16s ease;
       position: relative;
       flex-shrink: 0;
     }
 
-    .carta-mao:hover { transform: translateY(-28px) scale(1.1) rotate(0deg) !important; z-index: 50; border-color: var(--ouro-brilho); }
+    .carta-mao:hover:not(.bloqueada) {
+      transform: translate3d(0, -28px, 0) scale3d(1.09, 1.09, 1) !important;
+      z-index: 50;
+      border-color: var(--ouro-brilho);
+    }
     .carta-mao.bloqueada { filter: grayscale(0.85) brightness(0.65); cursor: not-allowed; }
 
     .carta-mao-topo { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
-    .carta-mao-nome { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.7rem; line-height: 1.1; color: #211207; }
+    .carta-mao-nome { font-family: 'Cinzel', serif; font-weight: 900; font-size: 0.69rem; line-height: 1.1; color: #1c0e05; }
 
     .carta-mao-custo {
-      width: 22px; height: 22px; border-radius: 50%; background: #0f4c81; color: #fff;
-      border: 1px solid var(--ouro); font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.72rem;
+      width: 23px; height: 23px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #38bdf8, #0f4c81 75%);
+      color: #fff;
+      border: 1.5px solid var(--ouro-brilho);
+      font-family: 'Cinzel', serif; font-weight: 900; font-size: 0.74rem;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
     .carta-mao-arte {
-      height: 64px; border-radius: 6px; border: 1px solid #6e4e2e; background: #24160c;
+      height: 66px; border-radius: 7px; border: 1.5px solid #5c3d22;
+      background: radial-gradient(circle, #382212, #170d06);
       overflow: hidden; display: flex; align-items: center; justify-content: center; margin: 3px 0;
     }
     .carta-mao-arte img { width: 100%; height: 100%; object-fit: cover; }
 
-    .badge-tipo { font-family: 'Cinzel', serif; font-size: 0.56rem; font-weight: 700; color: #fff; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+    .badge-tipo { font-family: 'Cinzel', serif; font-size: 0.56rem; font-weight: 700; color: #fff; padding: 2px 7px; border-radius: 4px; display: inline-block; letter-spacing: 0.04em; }
     .bg-ATAQUE { background: var(--carmesim); }
     .bg-DEFESA { background: var(--azul-arcano); }
     .bg-ARMADILHA { background: var(--roxo-armadilha); }
@@ -647,7 +808,7 @@
     .bg-EXPLORACAO { background: var(--ambar-exploracao); }
 
     .carta-mao-desc {
-      font-size: 0.69rem; line-height: 1.15; color: #2b1a0e; overflow: hidden;
+      font-size: 0.7rem; line-height: 1.15; color: #241409; font-weight: 600; overflow: hidden;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
     }
 
@@ -671,10 +832,10 @@
       }
       .coluna-comandantes > div { flex: 1; min-width: 0; }
       .comandante-card { padding: 6px; }
-      .avatar-arena, .avatar-inimigo-icone { width: 40px; height: 40px; font-size: 1.2rem; }
+      .avatar-arena, .avatar-inimigo-icone { width: 40px; height: 40px; }
 
       .campo-central { grid-column: 1 / 3; grid-row: 3 / 4; padding: 0; gap: 4px; }
-      .silhueta-inimigo { width: 64px; height: 64px; }
+      .silhueta-inimigo { width: 68px; height: 68px; }
 
       .coluna-direita { position: fixed; right: 10px; bottom: 226px; flex-direction: row; gap: 6px; padding: 0; z-index: 40; }
       .placar-poder { display: none; }
@@ -685,11 +846,10 @@
         align-items: flex-start; overflow-x: auto; padding: 4px 6px 8px;
       }
       .leque-cartas { justify-content: flex-start; gap: 10px; }
-      .carta-mao { margin: 0; width: 146px; height: 184px; transform: none !important; }
-      .carta-mao:active { transform: scale(0.95) !important; }
+      .carta-mao { margin: 0; width: 146px; height: 186px; transform: none !important; }
     }
 
-    /* ==================== CANVAS 2D VFX (60FPS) + HUD FLUTUANTE ==================== */
+    /* ==================== CANVAS 2D OTIMIZADO + HUD FLUTUANTE ==================== */
     #canvas-vfx {
       position: fixed;
       inset: 0;
@@ -700,32 +860,37 @@
     }
 
     #camada-vfx-texto { position: fixed; inset: 0; pointer-events: none; z-index: 170; overflow: hidden; }
-    .tremor-tela { animation: tremerImpacto 0.45s ease-in-out; }
-    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-9px, 5px); } 50% { transform: translate(9px, -5px); } 75% { transform: translate(-5px, -2px); } }
+    .tremor-tela { animation: tremerImpacto 0.36s ease-out; }
+    @keyframes tremerImpacto {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      25% { transform: translate3d(-7px, 4px, 0); }
+      50% { transform: translate3d(7px, -4px, 0); }
+      75% { transform: translate3d(-4px, -2px, 0); }
+    }
 
     .texto-flutuante-vfx {
       position: fixed;
       left: 50%;
       top: 13%;
-      transform: translateX(-50%);
+      transform: translate3d(-50%, 0, 0);
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 900;
       text-align: center;
       max-width: 92vw;
-      background: rgba(12, 8, 5, 0.94);
+      background: rgba(14, 9, 5, 0.95);
       border: 2px solid var(--ouro);
       padding: 7px 16px;
       border-radius: 12px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.92);
-      animation: flutuarAvisoTabuleiro 2.5s ease-out forwards;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.92);
+      animation: flutuarAvisoTabuleiro 2.4s ease-out forwards;
     }
 
     @keyframes flutuarAvisoTabuleiro {
-      0% { transform: translate(-50%, 12px) scale(0.92); opacity: 0; }
-      14% { transform: translate(-50%, 0) scale(1); opacity: 1; }
-      85% { transform: translate(-50%, -12px) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -26px); opacity: 0; }
+      0% { transform: translate3d(-50%, 10px, 0) scale3d(0.92, 0.92, 1); opacity: 0; }
+      14% { transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1); opacity: 1; }
+      85% { transform: translate3d(-50%, -10px, 0) scale3d(1, 1, 1); opacity: 1; }
+      100% { transform: translate3d(-50%, -22px, 0); opacity: 0; }
     }
 
     .dano-flutuante-alvo {
@@ -733,23 +898,23 @@
       font-family: 'Cinzel Decorative', serif;
       font-size: 1.75rem;
       font-weight: 900;
-      text-shadow: 0 0 12px #000, 0 3px 8px #000;
-      transform: translate(-50%, -50%);
-      animation: subirNumeroDano 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      text-shadow: 0 2px 4px #000, 0 0 10px #000;
+      transform: translate3d(-50%, -50%, 0);
+      animation: subirNumeroDano 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes subirNumeroDano {
-      0% { transform: translate(-50%, -20%) scale(0.5); opacity: 0; }
-      20% { transform: translate(-50%, -60%) scale(1.25); opacity: 1; }
-      100% { transform: translate(-50%, -165%) scale(1); opacity: 0; }
+      0% { transform: translate3d(-50%, -20%, 0) scale3d(0.6, 0.6, 1); opacity: 0; }
+      20% { transform: translate3d(-50%, -60%, 0) scale3d(1.2, 1.2, 1); opacity: 1; }
+      100% { transform: translate3d(-50%, -160%, 0) scale3d(1, 1, 1); opacity: 0; }
     }
 
-    /* MODAL SOLICITAÇÃO DE IMPROVISO DO JOGADOR */
+    /* MODAIS & GAVETAS */
     .modal-dado-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.84);
       z-index: 150;
       align-items: center;
       justify-content: center;
@@ -757,7 +922,7 @@
     }
 
     .modal-dado-box {
-      background: linear-gradient(180deg, #27190f, #120b07);
+      background: linear-gradient(180deg, #2b1a0f, #120b07);
       border: 2px solid var(--ouro-brilho);
       border-radius: 14px;
       padding: 20px;
@@ -785,11 +950,6 @@
       border-radius: 10px;
       padding: 10px;
       margin-bottom: 10px;
-      animation: pulsarAlertaMestre 1.5s infinite alternate;
-    }
-    @keyframes pulsarAlertaMestre {
-      0% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
-      100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.95); }
     }
 
     .log-item { padding: 6px 8px; margin-bottom: 6px; background: rgba(0, 0, 0, 0.45); border-left: 3px solid var(--ouro); font-size: 0.9rem; }
@@ -797,49 +957,74 @@
 </head>
 <body>
 
-  <!-- TELA 1: EXPLORAÇÃO & INTERAÇÃO COM OBJETOS DO MUNDO -->
+  <!-- TELA 1: EXPLORAÇÃO & CARTA NÁUTICA -->
   <section id="tela-exploracao">
-    <div class="barra-topo-exploracao">
-      <div style="text-align:left;">
-        <h1 class="titulo-epico" style="font-size: 1.5rem;">
-          <span onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
-        </h1>
-        <div style="font-size:0.95rem; color:var(--pergaminho-escuro);" id="exp-cenario-titulo">
-          🧭 Fase de Exploração — Porto Pirata
+    <!-- ROSA DOS VENTOS DECORATIVA NO FUNDO -->
+    <svg class="rosa-ventos-fundo" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="185" stroke="#d4af37" stroke-width="2" stroke-dasharray="6 6"/>
+      <circle cx="200" cy="200" r="150" stroke="#d4af37" stroke-width="1.5"/>
+      <circle cx="200" cy="200" r="42" stroke="#d4af37" stroke-width="2"/>
+      <polygon points="200,10 222,178 390,200 222,222 200,390 178,222 10,200 178,178" fill="#d4af37" fill-opacity="0.35" stroke="#ffe48f" stroke-width="1.5"/>
+      <polygon points="75,75 190,185 325,75 215,190 325,325 210,215 75,325 185,210" fill="#d4af37" fill-opacity="0.2" stroke="#d4af37" stroke-width="1"/>
+    </svg>
+
+    <div class="conteudo-exploracao">
+      <div class="barra-topo-exploracao">
+        <div style="text-align:left;">
+          <h1 class="titulo-epico" style="font-size: 1.55rem;">
+            <span onclick="cliqueBrasaoMestre()" style="cursor:pointer;">☠️</span> Crônicas dos Sete Mares
+          </h1>
+          <div style="font-size:0.96rem; color:var(--pergaminho-medio);" id="exp-cenario-titulo">
+            🧭 Fase de Exploração — Porto Pirata
+          </div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <button class="btn-pirata" onclick="abrirModalSolicitarImproviso()">🎭 Solicitar Improviso</button>
+          <button class="btn-pirata" onclick="toggleGaveta('gaveta-taverna')">⚖️ Taverna</button>
+          <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜 Diário</button>
+          <button class="btn-pirata" id="btn-mestre-exp" style="display:none; background:#7f1d1d; border-color:#f87171;" onclick="toggleGaveta('gaveta-mestre')">👑 Mestre</button>
         </div>
       </div>
 
-      <div style="display:flex; flex-wrap:wrap; gap:6px;">
-        <button class="btn-pirata" onclick="abrirModalSolicitarImproviso()">🎭 Solicitar Improviso</button>
-        <button class="btn-pirata" onclick="toggleGaveta('gaveta-taverna')">⚖️ Taverna</button>
-        <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜 Diário</button>
-        <button class="btn-pirata" id="btn-mestre-exp" style="display:none; background:#7f1d1d; border-color:#f87171;" onclick="toggleGaveta('gaveta-mestre')">👑 Mestre</button>
-      </div>
-    </div>
+      <!-- PALCO DO BAÚ / ENIGMA INTERATIVO -->
+      <div id="box-evento-exploracao"></div>
 
-    <!-- PALCO DE EXPLORAÇÃO COM CARTAS (ESTILO CHAVE / FECHADURA) -->
-    <div id="box-evento-exploracao"></div>
+      <div class="painel-acao-combate">
+        <div style="text-align:left;">
+          <strong style="font-family:'Cinzel',serif; color:#fca5a5; font-size:1rem;">⚔️ Oponentes à Espreita:</strong>
+          <div id="exp-lista-inimigos" style="font-size:0.95rem; color:var(--pergaminho); margin-top:3px;">
+            Capitão Morgano — Corsário (VLC 4)
+          </div>
+        </div>
 
-    <div class="painel-acao-combate">
-      <div style="text-align:left;">
-        <strong style="font-family:'Cinzel',serif; color:#fca5a5; font-size:1rem;">⚔️ Oponentes à Espreita:</strong>
-        <div id="exp-lista-inimigos" style="font-size:0.95rem; color:var(--pergaminho); margin-top:3px;">
-          Capitão Morgano — Corsário (VLC 4)
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <button class="btn-pirata" style="background:linear-gradient(180deg, #b91c1c, #7f1d1d); border-color:#fca5a5; font-size:0.86rem;" onclick="iniciarCombateServidor('')">
+            ⚔️ Iniciar Combate (Ordem por VLC)
+          </button>
         </div>
       </div>
 
-      <div style="display:flex; flex-wrap:wrap; gap:8px;">
-        <button class="btn-pirata" style="background:#991b1b; border-color:#fca5a5; font-size:0.86rem;" onclick="iniciarCombateServidor('')">
-          ⚔️ Iniciar Combate (Ordem por VLC)
-        </button>
-      </div>
+      <div class="grid-herois" id="lista-herois-selecao"></div>
     </div>
-
-    <div class="grid-herois" id="lista-herois-selecao"></div>
   </section>
 
-  <!-- TELA 2: ARENA DE BATALHA -->
-  <div id="mesa-batalha">
+  <!-- TELA 2: MESA DE BATALHA -->
+  <div id="mesa-batalha" class="tema-porto">
+    <!-- CENOGRAFIA VETORIAL DE HORIZONTE PIRATA / FANTASIA -->
+    <svg class="cenografia-svg-fundo" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Lua / Sol místico no horizonte -->
+      <circle cx="600" cy="175" r="95" fill="#d4af37" fill-opacity="0.22" stroke="#ffe48f" stroke-width="1.5"/>
+      <!-- Silhueta de Galeão ao fundo -->
+      <path d="M130 290 L270 290 L250 335 L150 335 Z" fill="#05070a"/>
+      <rect x="196" y="165" width="6" height="125" fill="#05070a"/>
+      <path d="M202 175 Q255 215 202 260 Z" fill="#080b10" stroke="#d4af37" stroke-opacity="0.35"/>
+      <!-- Ilha / Rochedos à direita -->
+      <path d="M880 340 L940 235 L985 275 L1045 200 L1130 340 Z" fill="#05070a"/>
+      <!-- Ondas estilizadas -->
+      <path d="M0 340 Q150 325 300 340 T600 340 T900 340 T1200 340 L1200 375 L0 375 Z" fill="#07111a"/>
+    </svg>
+
     <div class="cenario-camada-viva" id="camada-viva">
       <div class="luz-tocha esq"></div>
       <div class="luz-tocha dir"></div>
@@ -852,7 +1037,7 @@
           <button class="btn-pirata" id="btn-auto-troca" onclick="alternarAutoTrocaTela()" title="Alterna automaticamente entre os jogadores">
             🖥️ Mesa: ON
           </button>
-          <span id="badge-rodada" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.75); padding:5px 9px; border-radius:14px; border:1px solid var(--ouro); font-size:0.74rem;">
+          <span id="badge-rodada" style="font-family:'Cinzel',serif; color:var(--ouro-brilho); background:rgba(0,0,0,0.8); padding:5px 10px; border-radius:14px; border:1px solid var(--ouro); font-size:0.74rem;">
             R1
           </span>
         </div>
@@ -872,7 +1057,6 @@
       </aside>
 
       <main class="campo-central">
-        <!-- INIMIGOS EM PÉ NO PALCO COM INTENÇÃO FLUTUANTE -->
         <div class="palco-inimigos-vivos" id="fileira-inimiga"></div>
         <div class="fileira-tabuleiro" id="fileira-armadilhas"></div>
         <div class="fileira-tabuleiro" id="fileira-aliada"></div>
@@ -885,7 +1069,7 @@
         </div>
 
         <button class="medalhao-turno" onclick="encerrarTurno()">
-          <span style="font-size:1.5rem;">☸️</span>
+          <span style="font-size:1.65rem;">☸️</span>
           <span>PASSAR<br>TURNO</span>
         </button>
 
@@ -1000,7 +1184,6 @@
       <button class="btn-pirata" onclick="acaoMestreHeroi('bonusDado')">🎲 +3 Bônus Imp.</button>
     </div>
 
-    <!-- NOVO OBSTÁCULO DE EXPLORAÇÃO -->
     <label style="font-size:0.82rem; color:#fbbf24;">🔒 Gerar Obstáculo de Exploração:</label>
     <div style="display:flex; gap:5px; margin-bottom:10px;">
       <input id="exp-novo-titulo" class="input-pirata" style="margin-bottom:0;" placeholder="Ex: Portão Selado / Baú">
@@ -1044,12 +1227,12 @@
     </div>
   </div>
 
-  <!-- MOTOR CANVAS 2D PARA EFEITOS DE PARTÍCULAS, PROJÉTEIS E LINHA TRACEJADA DE ALVO -->
+  <!-- MOTOR CANVAS 2D LEVE (SEM SHADOWBLUR, LOOP SOB DEMANDA) -->
   <canvas id="canvas-vfx"></canvas>
   <div id="camada-vfx-texto"></div>
 
   <script>
-    const CHAVE_SAVE = "cronicas_sete_mares_save_v8";
+    const CHAVE_SAVE = "cronicas_sete_mares_save_v9";
     let estadoAtual = null;
     let ultimoEstadoJson = "";
     let ultimoEventoIdExibido = 0;
@@ -1062,17 +1245,68 @@
     let cliquesBrasao = 0;
     let ultimoAlvoAtingidoId = "";
     let cartaEmHoverEl = null;
+    let assinaturaEntidadesMestre = "";
 
     const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨", INIMIGO: "🩸", EXPLORACAO: "🗝️" };
-    const iconesArquetipo = { corsario: "🏴‍☠️", atirador: "🔫", fera: "🐙", arcano: "🔮" };
+
+    /* ILUSTRAÇÕES VETORIAIS ESTILO GRAVURA PARA INIMIGOS E OBJETOS */
+    const svgsArquetipo = {
+      corsario: `<svg viewBox="0 0 80 80" width="66" height="66" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 34 Q40 12 68 34 L62 42 Q40 28 18 42 Z" fill="#1c0d06" stroke="#f3c65f" stroke-width="2.5"/>
+        <circle cx="40" cy="48" r="16" fill="#d9a066" stroke="#1c0d06" stroke-width="2.5"/>
+        <path d="M26 44 L44 48" stroke="#1c0d06" stroke-width="2.5"/>
+        <circle cx="33" cy="46" r="4" fill="#1c0d06"/>
+        <circle cx="47" cy="47" r="2.2" fill="#1c0d06"/>
+        <path d="M33 56 Q40 53 47 57" stroke="#1c0d06" stroke-width="2.5" fill="none"/>
+        <path d="M58 58 L72 22" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M54 53 L64 57" stroke="#d4af37" stroke-width="3"/>
+      </svg>`,
+      atirador: `<svg viewBox="0 0 80 80" width="66" height="66" xmlns="http://www.w3.org/2000/svg">
+        <rect x="24" y="16" width="32" height="16" rx="4" fill="#29170c" stroke="#f3c65f" stroke-width="2"/>
+        <ellipse cx="40" cy="32" rx="24" ry="5" fill="#1c0d06" stroke="#f3c65f" stroke-width="2"/>
+        <circle cx="40" cy="46" r="15" fill="#cfa072" stroke="#1c0d06" stroke-width="2.5"/>
+        <circle cx="34" cy="44" r="2.5" fill="#1c0d06"/>
+        <circle cx="47" cy="44" r="4.5" fill="#38bdf8" stroke="#d4af37" stroke-width="2"/>
+        <rect x="14" y="56" width="52" height="8" rx="3" fill="#475569" stroke="#1c0d06" stroke-width="2"/>
+        <circle cx="67" cy="60" r="4" fill="#fb923c"/>
+      </svg>`,
+      fera: `<svg viewBox="0 0 80 80" width="66" height="66" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 44 C20 18, 60 18, 58 44 C64 56, 54 66, 40 62 C26 66, 16 56, 22 44 Z" fill="#0f766e" stroke="#1c0d06" stroke-width="2.5"/>
+        <circle cx="33" cy="38" r="4" fill="#fef08a" stroke="#1c0d06" stroke-width="2"/>
+        <circle cx="47" cy="38" r="4" fill="#fef08a" stroke="#1c0d06" stroke-width="2"/>
+        <path d="M20 56 Q10 66 18 72 M32 60 Q28 72 36 74 M48 60 Q52 72 44 74 M60 56 Q70 66 62 72" stroke="#14b8a6" stroke-width="4" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      arcano: `<svg viewBox="0 0 80 80" width="66" height="66" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 62 L40 16 L62 62 Z" fill="#311042" stroke="#c084fc" stroke-width="2.5"/>
+        <circle cx="40" cy="44" r="12" fill="#12071a" stroke="#a855f7" stroke-width="2"/>
+        <circle cx="36" cy="43" r="2.5" fill="#38bdf8"/>
+        <circle cx="44" cy="43" r="2.5" fill="#38bdf8"/>
+        <circle cx="62" cy="32" r="7" fill="#38bdf8" stroke="#ffe48f" stroke-width="2"/>
+      </svg>`
+    };
+
+    const svgBauTesouro = `<svg viewBox="0 0 80 80" width="58" height="58" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="26" width="52" height="38" rx="6" fill="#78350f" stroke="#1c0d06" stroke-width="3"/>
+      <path d="M14 38 L66 38" stroke="#fbbf24" stroke-width="4"/>
+      <path d="M22 26 L22 64 M58 26 L58 64" stroke="#d97706" stroke-width="4"/>
+      <rect x="33" y="33" width="14" height="16" rx="3" fill="#fde047" stroke="#1c0d06" stroke-width="2.5"/>
+      <circle cx="40" cy="40" r="2.5" fill="#1c0d06"/>
+    </svg>`;
+
+    const svgOrnamentoCanto = `<svg class="canto-ornamento canto-tl" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 30 L2 6 Q2 2 6 2 L30 2" stroke="#ffe48f" stroke-width="2.5"/>
+      <circle cx="7" cy="7" r="3" fill="#d4af37"/>
+    </svg>`;
 
     /* =====================================================================
-       MOTOR DE PARTÍCULAS, PROJÉTEIS & MIRA TRACEJADA (CANVAS 2D 60FPS)
+       MOTOR CANVAS 2D OTIMIZADO (ZERO SHADOWBLUR + LOOP SOB DEMANDA)
        ===================================================================== */
     const canvasVfx = document.getElementById('canvas-vfx');
-    const ctxVfx = canvasVfx.getContext('2d');
+    const ctxVfx = canvasVfx.getContext('2d', { alpha: true });
+    const MAX_PARTICULAS = 140;
     let particulas = [];
     let efeitosAtivos = [];
+    let loopAtivo = false;
 
     function redimensionarCanvas() {
       canvasVfx.width = window.innerWidth;
@@ -1081,32 +1315,42 @@
     window.addEventListener('resize', redimensionarCanvas);
     redimensionarCanvas();
 
+    function iniciarLoopCanvas() {
+      if (!loopAtivo) {
+        loopAtivo = true;
+        requestAnimationFrame(loopRenderCanvas);
+      }
+    }
+
     function obterCentroElemento(seletor, fallbackX, fallbackY) {
       const el = document.querySelector(seletor);
       if (el) {
         const r = el.getBoundingClientRect();
         if (r.width > 0 && r.height > 0) {
-          return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 };
         }
       }
       return { x: fallbackX, y: fallbackY };
     }
 
     function criarParticulasExplosao(x, y, qtd, cores, velMin, velMax, tamMin, tamMax, vidaMax, gravidade = 0.08) {
-      for (let i = 0; i < qtd; i++) {
-        const ang = Math.random() * Math.PI * 2;
+      if (particulas.length >= MAX_PARTICULAS) return;
+      const disponivel = Math.min(qtd, MAX_PARTICULAS - particulas.length);
+      for (let i = 0; i < disponivel; i++) {
+        const ang = Math.random() * 6.28318;
         const vel = velMin + Math.random() * (velMax - velMin);
         particulas.push({
           x, y,
           vx: Math.cos(ang) * vel,
           vy: Math.sin(ang) * vel,
-          cor: cores[Math.floor(Math.random() * cores.length)],
+          cor: cores[(Math.random() * cores.length) | 0],
           tam: tamMin + Math.random() * (tamMax - tamMin),
           vida: 0,
-          vidaMax: vidaMax * (0.65 + Math.random() * 0.5),
+          vidaMax: vidaMax * (0.7 + Math.random() * 0.4),
           gravidade
         });
       }
+      iniciarLoopCanvas();
     }
 
     function dispararEfeitoVisualCanvas(ev) {
@@ -1122,75 +1366,77 @@
       const origem = isInimigo ? posIniComandante : posHeroi;
       const destino = isInimigo ? posHeroi : (tipo === 'DEFESA' || tipo === 'SUPORTE' ? posHeroi : posAlvoIni);
 
-      // Linha tracejada de disparo / conexão
       efeitosAtivos.push({
         tipo: 'LINHA_TRACEJADA',
         x1: origem.x, y1: origem.y,
         x2: destino.x, y2: destino.y,
-        cor: isInimigo ? '#ef4444' : '#ffe082',
-        t: 0, duracao: 32
+        cor: isInimigo ? '#ef4444' : '#ffe48f',
+        t: 0, duracao: 24
       });
 
       if (ef.includes('CHAMAS') || ef.includes('QUEIMADURA') || ef.includes('QUEIMAR')) {
-        efeitosAtivos.push({ tipo: 'JATO_FOGO', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 52 });
+        efeitosAtivos.push({ tipo: 'JATO_FOGO', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 34 });
       }
       else if (ef.includes('CRITICO') || ef.includes('TIRO') || ef.includes('CANHAO')) {
-        efeitosAtivos.push({ tipo: 'PROJETIL_BALA', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 24 });
+        efeitosAtivos.push({ tipo: 'PROJETIL_BALA', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 18 });
       }
       else if (tipo === 'DEFESA') {
-        efeitosAtivos.push({ tipo: 'ESCUDO_HEXAGONAL', x: destino.x, y: destino.y, t: 0, duracao: 55 });
-        criarParticulasExplosao(destino.x, destino.y, 40, ['#38bdf8', '#7dd3fc', '#ffffff', '#0284c7'], 1.5, 5.5, 2, 5, 45, -0.04);
+        efeitosAtivos.push({ tipo: 'ESCUDO_HEXAGONAL', x: destino.x, y: destino.y, t: 0, duracao: 36 });
+        criarParticulasExplosao(destino.x, destino.y, 26, ['#38bdf8', '#7dd3fc', '#ffffff'], 1.5, 5, 2.5, 5, 30, -0.04);
       }
       else if (tipo === 'SUPORTE') {
-        efeitosAtivos.push({ tipo: 'ESPIRAL_CURA', x: destino.x, y: destino.y, t: 0, duracao: 55 });
-        criarParticulasExplosao(destino.x, destino.y, 45, ['#4ade80', '#fde047', '#ffffff', '#10b981'], 1, 4.5, 2.5, 5.5, 50, -0.09);
+        efeitosAtivos.push({ tipo: 'ESPIRAL_CURA', x: destino.x, y: destino.y, t: 0, duracao: 36 });
+        criarParticulasExplosao(destino.x, destino.y, 28, ['#4ade80', '#fde047', '#ffffff'], 1, 4.2, 2.5, 5, 34, -0.08);
       }
       else if (isInimigo) {
-        efeitosAtivos.push({ tipo: 'GOLPE_INIMIGO_GARRA', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 32 });
+        efeitosAtivos.push({ tipo: 'GOLPE_INIMIGO_GARRA', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 24 });
       }
       else {
-        efeitosAtivos.push({ tipo: 'CORTE_CRUZADO', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 34 });
+        efeitosAtivos.push({ tipo: 'CORTE_CRUZADO', x1: origem.x, y1: origem.y, x2: destino.x, y2: destino.y, t: 0, duracao: 24 });
       }
+
+      iniciarLoopCanvas();
 
       if (ev.valorDestaque) {
         const num = document.createElement('div');
         num.className = 'dano-flutuante-alvo';
         num.style.left = destino.x + 'px';
         num.style.top = (destino.y - 18) + 'px';
-        num.style.color = (tipo === 'SUPORTE' || tipo === 'DEFESA') ? '#4ade80' : (isInimigo ? '#ff6b6b' : '#ffe082');
+        num.style.color = (tipo === 'SUPORTE' || tipo === 'DEFESA') ? '#4ade80' : (isInimigo ? '#ff6b6b' : '#ffe48f');
         num.textContent = ev.valorDestaque;
         document.getElementById('camada-vfx-texto').appendChild(num);
-        setTimeout(() => num.remove(), 1500);
+        setTimeout(() => num.remove(), 1400);
       }
     }
 
     function loopRenderCanvas() {
       ctxVfx.clearRect(0, 0, canvasVfx.width, canvasVfx.height);
 
-      // Desenha linha tracejada de mira em tempo real ao passar o dedo/mouse numa carta de ataque
+      // Linha tracejada de mira ao passar o dedo/mouse numa carta de ataque
       if (cartaEmHoverEl && inimigoSelecionadoId && estadoAtual && estadoAtual.faseJogo === 'COMBATE') {
         const rCarta = cartaEmHoverEl.getBoundingClientRect();
         const posAlvo = obterCentroElemento(`[data-entidade-id="${inimigoSelecionadoId}"]`, 0, 0);
         if (rCarta.width > 0 && posAlvo.x > 0) {
           ctxVfx.save();
           ctxVfx.setLineDash([10, 8]);
-          ctxVfx.lineDashOffset = -(performance.now() / 22) % 36;
-          ctxVfx.strokeStyle = 'rgba(255, 248, 220, 0.9)';
-          ctxVfx.shadowColor = '#fbbf24';
-          ctxVfx.shadowBlur = 12;
+          ctxVfx.lineDashOffset = -(performance.now() * 0.045) % 36;
+          ctxVfx.strokeStyle = 'rgba(255, 236, 179, 0.92)';
           ctxVfx.lineWidth = 3.5;
           ctxVfx.beginPath();
-          ctxVfx.moveTo(rCarta.left + rCarta.width / 2, rCarta.top + 12);
+          ctxVfx.moveTo(rCarta.left + rCarta.width * 0.5, rCarta.top + 10);
           ctxVfx.lineTo(posAlvo.x, posAlvo.y);
           ctxVfx.stroke();
 
-          ctxVfx.fillStyle = '#ffe082';
+          ctxVfx.fillStyle = '#ffe48f';
           ctxVfx.beginPath();
-          ctxVfx.arc(posAlvo.x, posAlvo.y, 6, 0, Math.PI * 2);
+          ctxVfx.arc(posAlvo.x, posAlvo.y, 6, 0, 6.28318);
           ctxVfx.fill();
           ctxVfx.restore();
         }
       }
+
+      ctxVfx.save();
+      ctxVfx.globalCompositeOperation = 'lighter';
 
       for (let i = efeitosAtivos.length - 1; i >= 0; i--) {
         const ef = efeitosAtivos[i];
@@ -1198,11 +1444,10 @@
         const p = ef.t / ef.duracao;
 
         if (ef.tipo === 'LINHA_TRACEJADA') {
-          const alpha = 1 - p;
           ctxVfx.save();
           ctxVfx.setLineDash([12, 8]);
           ctxVfx.strokeStyle = ef.cor;
-          ctxVfx.globalAlpha = alpha;
+          ctxVfx.globalAlpha = 1 - p;
           ctxVfx.lineWidth = 4;
           ctxVfx.beginPath();
           ctxVfx.moveTo(ef.x1, ef.y1);
@@ -1211,12 +1456,12 @@
           ctxVfx.restore();
         }
         else if (ef.tipo === 'JATO_FOGO') {
-          const prog = Math.min(1, p * 1.45);
+          const prog = Math.min(1, p * 1.4);
           const cx = ef.x1 + (ef.x2 - ef.x1) * prog;
           const cy = ef.y1 + (ef.y2 - ef.y1) * prog;
-          criarParticulasExplosao(cx, cy, 12, ['#ffffff', '#fef08a', '#fb923c', '#ef4444', '#991b1b'], 1, 5, 4, 13, 28, -0.08);
+          criarParticulasExplosao(cx, cy, 6, ['#fef08a', '#fb923c', '#ef4444'], 1, 4.5, 4, 11, 20, -0.07);
           if (ef.t === Math.floor(ef.duracao * 0.65)) {
-            criarParticulasExplosao(ef.x2, ef.y2, 65, ['#fef08a', '#f97316', '#dc2626'], 2, 11, 4, 14, 38, -0.05);
+            criarParticulasExplosao(ef.x2, ef.y2, 32, ['#fef08a', '#f97316', '#dc2626'], 2, 9.5, 4, 12, 26, -0.04);
           }
         }
         else if (ef.tipo === 'PROJETIL_BALA') {
@@ -1224,49 +1469,38 @@
           const cx = ef.x1 + (ef.x2 - ef.x1) * prog;
           const cy = ef.y1 + (ef.y2 - ef.y1) * prog;
 
-          ctxVfx.save();
-          const grad = ctxVfx.createLinearGradient(ef.x1, ef.y1, cx, cy);
-          grad.addColorStop(0, 'rgba(251, 191, 36, 0)');
-          grad.addColorStop(1, 'rgba(255, 251, 235, 0.95)');
-          ctxVfx.strokeStyle = grad;
-          ctxVfx.lineWidth = 6;
+          ctxVfx.strokeStyle = 'rgba(255, 243, 196, 0.85)';
+          ctxVfx.lineWidth = 5;
           ctxVfx.beginPath();
-          ctxVfx.moveTo(ef.x1, ef.y1);
+          ctxVfx.moveTo(ef.x1 + (cx - ef.x1) * 0.35, ef.y1 + (cy - ef.y1) * 0.35);
           ctxVfx.lineTo(cx, cy);
           ctxVfx.stroke();
 
           ctxVfx.fillStyle = '#fffbeb';
-          ctxVfx.shadowColor = '#f59e0b';
-          ctxVfx.shadowBlur = 22;
           ctxVfx.beginPath();
-          ctxVfx.arc(cx, cy, 8, 0, Math.PI * 2);
+          ctxVfx.arc(cx, cy, 7, 0, 6.28318);
           ctxVfx.fill();
-          ctxVfx.restore();
 
-          criarParticulasExplosao(cx, cy, 3, ['#cbd5e1', '#94a3b8', '#fbbf24'], 0.3, 1.8, 2, 5, 22, -0.03);
           if (ef.t === ef.duracao) {
-            criarParticulasExplosao(ef.x2, ef.y2, 70, ['#ffffff', '#fde047', '#f97316', '#dc2626'], 3, 14, 2.5, 7, 34, 0.14);
+            criarParticulasExplosao(ef.x2, ef.y2, 34, ['#ffffff', '#fde047', '#f97316'], 3, 11, 2.5, 6.5, 24, 0.12);
           }
         }
         else if (ef.tipo === 'CORTE_CRUZADO') {
-          const alpha = 1 - Math.pow(p, 1.8);
+          const alpha = 1 - p * p;
           ctxVfx.save();
           ctxVfx.translate(ef.x2, ef.y2);
-          ctxVfx.shadowColor = '#38bdf8';
-          ctxVfx.shadowBlur = 24;
-
-          const len1 = Math.min(1, p * 2.5) * 95;
-          ctxVfx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-          ctxVfx.lineWidth = 7 * alpha;
+          const len1 = Math.min(1, p * 2.4) * 85;
+          ctxVfx.strokeStyle = `rgba(224, 242, 254, ${alpha})`;
+          ctxVfx.lineWidth = 6 * alpha;
           ctxVfx.beginPath();
           ctxVfx.moveTo(-len1, -len1);
           ctxVfx.lineTo(len1, len1);
           ctxVfx.stroke();
 
           if (p > 0.18) {
-            const len2 = Math.min(1, (p - 0.18) * 2.5) * 95;
+            const len2 = Math.min(1, (p - 0.18) * 2.4) * 85;
             ctxVfx.strokeStyle = `rgba(125, 211, 252, ${alpha})`;
-            ctxVfx.lineWidth = 7 * alpha;
+            ctxVfx.lineWidth = 6 * alpha;
             ctxVfx.beginPath();
             ctxVfx.moveTo(len2, -len2);
             ctxVfx.lineTo(-len2, len2);
@@ -1274,25 +1508,22 @@
           }
           ctxVfx.restore();
 
-          if (ef.t === 4 || ef.t === 10) {
-            criarParticulasExplosao(ef.x2, ef.y2, 35, ['#ffffff', '#7dd3fc', '#fde047'], 3, 12, 2, 4.5, 28, 0.22);
+          if (ef.t === 4) {
+            criarParticulasExplosao(ef.x2, ef.y2, 22, ['#ffffff', '#7dd3fc', '#fde047'], 2.5, 9, 2, 4.5, 20, 0.18);
           }
         }
         else if (ef.tipo === 'ESCUDO_HEXAGONAL') {
-          const alpha = Math.sin(p * Math.PI);
-          const raio = 55 + p * 35;
+          const alpha = Math.sin(p * 3.14159);
+          const raio = 50 + p * 30;
           ctxVfx.save();
           ctxVfx.translate(ef.x, ef.y);
-          ctxVfx.rotate(p * 1.2);
+          ctxVfx.rotate(p);
           ctxVfx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
-          ctxVfx.fillStyle = `rgba(14, 165, 233, ${alpha * 0.22})`;
-          ctxVfx.lineWidth = 4;
-          ctxVfx.shadowColor = '#38bdf8';
-          ctxVfx.shadowBlur = 20;
-
+          ctxVfx.fillStyle = `rgba(14, 165, 233, ${alpha * 0.2})`;
+          ctxVfx.lineWidth = 3.5;
           ctxVfx.beginPath();
           for (let k = 0; k < 6; k++) {
-            const a = (Math.PI / 3) * k;
+            const a = 1.04719 * k;
             const px = Math.cos(a) * raio;
             const py = Math.sin(a) * raio;
             if (k === 0) ctxVfx.moveTo(px, py);
@@ -1304,29 +1535,25 @@
           ctxVfx.restore();
         }
         else if (ef.tipo === 'ESPIRAL_CURA') {
-          const ang = p * Math.PI * 6;
-          const r = 45 * (1 - p * 0.5);
-          const px = ef.x + Math.cos(ang) * r;
-          const py = ef.y + 30 - p * 85;
-          criarParticulasExplosao(px, py, 3, ['#4ade80', '#fde047', '#ffffff'], 0.4, 1.5, 2.5, 5, 22, -0.05);
+          const ang = p * 16;
+          const r = 40 * (1 - p * 0.5);
+          criarParticulasExplosao(ef.x + Math.cos(ang) * r, ef.y + 24 - p * 70, 2, ['#4ade80', '#fde047'], 0.4, 1.4, 2.5, 4.5, 18, -0.05);
         }
         else if (ef.tipo === 'GOLPE_INIMIGO_GARRA') {
           const alpha = 1 - p;
           ctxVfx.save();
           ctxVfx.translate(ef.x2, ef.y2);
-          ctxVfx.strokeStyle = `rgba(239, 68, 68, ${alpha})`;
-          ctxVfx.shadowColor = '#dc2626';
-          ctxVfx.shadowBlur = 24;
-          ctxVfx.lineWidth = 6 * alpha;
+          ctxVfx.strokeStyle = `rgba(248, 113, 113, ${alpha})`;
+          ctxVfx.lineWidth = 5.5 * alpha;
           for (let g = -1; g <= 1; g++) {
             ctxVfx.beginPath();
-            ctxVfx.moveTo(-65 + g * 18, -55);
-            ctxVfx.lineTo(65 + g * 18, 55);
+            ctxVfx.moveTo(-58 + g * 16, -48);
+            ctxVfx.lineTo(58 + g * 16, 48);
             ctxVfx.stroke();
           }
           ctxVfx.restore();
           if (ef.t === 3) {
-            criarParticulasExplosao(ef.x2, ef.y2, 45, ['#ef4444', '#fca5a5', '#7f1d1d'], 3, 11, 2.5, 6, 30, 0.18);
+            criarParticulasExplosao(ef.x2, ef.y2, 24, ['#ef4444', '#fca5a5'], 2.5, 9, 2.5, 5.5, 22, 0.16);
           }
         }
 
@@ -1341,27 +1568,28 @@
         pt.x += pt.vx;
         pt.y += pt.vy;
         pt.vy += pt.gravidade;
-        pt.vx *= 0.97;
+        pt.vx *= 0.96;
 
-        const alpha = Math.max(0, 1 - pt.vida / pt.vidaMax);
-        ctxVfx.save();
+        const alpha = 1 - pt.vida / pt.vidaMax;
+        if (alpha <= 0) {
+          particulas.splice(i, 1);
+          continue;
+        }
         ctxVfx.globalAlpha = alpha;
         ctxVfx.fillStyle = pt.cor;
-        ctxVfx.shadowColor = pt.cor;
-        ctxVfx.shadowBlur = 10;
         ctxVfx.beginPath();
-        ctxVfx.arc(pt.x, pt.y, pt.tam * (0.5 + alpha * 0.5), 0, Math.PI * 2);
+        ctxVfx.arc(pt.x, pt.y, pt.tam, 0, 6.28318);
         ctxVfx.fill();
-        ctxVfx.restore();
-
-        if (pt.vida >= pt.vidaMax) {
-          particulas.splice(i, 1);
-        }
       }
 
-      requestAnimationFrame(loopRenderCanvas);
+      ctxVfx.restore();
+
+      if (particulas.length > 0 || efeitosAtivos.length > 0 || cartaEmHoverEl) {
+        requestAnimationFrame(loopRenderCanvas);
+      } else {
+        loopAtivo = false;
+      }
     }
-    requestAnimationFrame(loopRenderCanvas);
 
     /* =====================================================================
        LÓGICA DO JOGO & SINCRONIZAÇÃO
@@ -1400,11 +1628,11 @@
 
     function iniciarParticulasVivas() {
       const camada = document.getElementById('camada-viva');
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 8; i++) {
         const brasa = document.createElement('div');
         brasa.className = 'brasa';
-        brasa.style.left = Math.random() * 100 + 'vw';
-        brasa.style.animationDuration = (5 + Math.random() * 7) + 's';
+        brasa.style.left = (10 + Math.random() * 80) + 'vw';
+        brasa.style.animationDuration = (6 + Math.random() * 6) + 's';
         brasa.style.animationDelay = (Math.random() * 5) + 's';
         camada.appendChild(brasa);
       }
@@ -1421,24 +1649,23 @@
         setTimeout(() => {
           ultimoAlvoAtingidoId = "";
           if (estadoAtual && estadoAtual.faseJogo === 'COMBATE') renderizarArena();
-        }, 1400);
+        }, 1200);
       }
 
       dispararEfeitoVisualCanvas(ev);
 
       if (ev.tipo === 'ATAQUE' || isInimigo) {
         mesa.classList.remove('tremor-tela');
-        void mesa.offsetWidth;
-        mesa.classList.add('tremor-tela');
+        requestAnimationFrame(() => mesa.classList.add('tremor-tela'));
       }
 
       const txt = document.createElement('div');
       txt.className = 'texto-flutuante-vfx';
       txt.style.borderColor = isInimigo ? '#ef4444' : 'var(--ouro-brilho)';
-      txt.style.color = isInimigo ? '#fca5a5' : '#ffe082';
+      txt.style.color = isInimigo ? '#fca5a5' : '#ffe48f';
       txt.textContent = ev.mensagem;
       vfxTexto.appendChild(txt);
-      setTimeout(() => txt.remove(), 2500);
+      setTimeout(() => txt.remove(), 2400);
     }
 
     function toggleGaveta(id) {
@@ -1504,7 +1731,10 @@
       const emCombate = estadoAtual.faseJogo === 'COMBATE';
 
       document.getElementById('tela-exploracao').style.display = emCombate ? 'none' : 'block';
-      document.getElementById('mesa-batalha').style.display = emCombate ? 'block' : 'none';
+      const mesaEl = document.getElementById('mesa-batalha');
+      mesaEl.style.display = emCombate ? 'block' : 'none';
+      mesaEl.className = `tema-${estadoAtual.cenario || 'porto'}`;
+
       document.getElementById('btn-painel-mestre').style.display = modoMestre ? 'inline-block' : 'none';
       document.getElementById('btn-mestre-exp').style.display = modoMestre ? 'inline-block' : 'none';
 
@@ -1522,13 +1752,21 @@
 
     function atualizarPainelMestre() {
       const sel = document.getElementById('select-entidade-mestre');
-      const opcoesHerois = estadoAtual.herois.map(h =>
-        `<option value="${h.id}">⚓ Pirata: ${h.nome} (PV ${h.pv}/${h.pvMax} | VLC ${h.vlc})</option>`
-      ).join('');
-      const opcoesInimigos = (estadoAtual.inimigos || []).map(i =>
-        `<option value="${i.id}">💀 Inimigo: ${i.nome.split('—')[0]} (PV ${i.pv}/${i.pvMax} | VLC ${i.vlc})</option>`
-      ).join('');
-      sel.innerHTML = opcoesHerois + opcoesInimigos;
+      const novaAssinatura = [
+        ...estadoAtual.herois.map(h => `${h.id}:${h.pv}/${h.pvMax}:${h.vlc}`),
+        ...(estadoAtual.inimigos || []).map(i => `${i.id}:${i.pv}/${i.pvMax}:${i.vlc}`)
+      ].join('|');
+
+      if (novaAssinatura !== assinaturaEntidadesMestre) {
+        assinaturaEntidadesMestre = novaAssinatura;
+        const opcoesHerois = estadoAtual.herois.map(h =>
+          `<option value="${h.id}">⚓ Pirata: ${h.nome} (PV ${h.pv}/${h.pvMax} | VLC ${h.vlc})</option>`
+        ).join('');
+        const opcoesInimigos = (estadoAtual.inimigos || []).map(i =>
+          `<option value="${i.id}">💀 Inimigo: ${i.nome.split('—')[0]} (PV ${i.pv}/${i.pvMax} | VLC ${i.vlc})</option>`
+        ).join('');
+        sel.innerHTML = opcoesHerois + opcoesInimigos;
+      }
 
       if ([...estadoAtual.herois, ...(estadoAtual.inimigos || [])].some(e => e.id === entidadeMestreId)) {
         sel.value = entidadeMestreId;
@@ -1574,7 +1812,6 @@
         ? inimigosLista.map(i => `${i.nome} (PV ${i.pv} | VLC ${i.vlc})`).join('  •  ')
         : 'Nenhum oponente posicionado ainda';
 
-      // Renderiza o Obstáculo Interativo de Exploração
       const evExp = estadoAtual.eventoExploracaoAtivo;
       const hAtivo = estadoAtual.herois.find(h => h.id === heroiSelecionadoId) || estadoAtual.herois[0];
       const boxExp = document.getElementById('box-evento-exploracao');
@@ -1586,14 +1823,14 @@
         boxExp.innerHTML = `
           <div class="palco-objeto-exploracao">
             <div class="objeto-cena-visual">
-              <div class="emblema-objeto">${evExp.resolvido ? '✨' : evExp.icone}</div>
+              <div class="emblema-objeto">${evExp.resolvido ? '<span style="font-size:2.3rem;">✨</span>' : svgBauTesouro}</div>
               <div style="flex:1;">
-                <div style="font-family:'Cinzel',serif; font-size:0.75rem; color:#fbbf24;">
+                <div style="font-family:'Cinzel',serif; font-size:0.76rem; color:#fbbf24; font-weight:700;">
                   ${evExp.resolvido ? '✅ OBSTÁCULO SUPERADO!' : `🧭 INTERAÇÃO COM CARTAS (${hAtivo.nome})`}
                 </div>
-                <h3 style="color:#fff; font-size:1.15rem;">${evExp.titulo}</h3>
-                <p style="font-size:0.9rem; color:var(--pergaminho-escuro);">${evExp.descricao}</p>
-                <div class="barra-hp" style="max-width:260px; margin-top:6px;">
+                <h3 style="color:#fff; font-size:1.2rem;">${evExp.titulo}</h3>
+                <p style="font-size:0.95rem; color:var(--pergaminho-medio);">${evExp.descricao}</p>
+                <div class="barra-hp" style="max-width:270px; margin-top:6px;">
                   <div class="barra-hp-fill" style="width:${pctRes}%; background:linear-gradient(90deg,#92400e,#f59e0b);"></div>
                   <div class="barra-hp-texto">🔒 Trava: ${evExp.resistencia}/${evExp.resistenciaMax}</div>
                 </div>
@@ -1602,9 +1839,9 @@
 
             <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
               ${evExp.resolvido
-                ? `<span style="font-family:'Cinzel',serif; color:#4ade80; font-size:0.85rem;">💰 Recompensa coletada!</span>`
+                ? `<span style="font-family:'Cinzel',serif; color:#4ade80; font-size:0.88rem; font-weight:700;">💰 Recompensa coletada!</span>`
                 : cartasExp.map(c => `
-                    <button class="btn-pirata" style="background:${c.tipo === 'EXPLORACAO' ? '#78350f' : '#2b1b10'}; border-color:#fbbf24;"
+                    <button class="btn-pirata" style="background:${c.tipo === 'EXPLORACAO' ? 'linear-gradient(180deg,#92400e,#451a03)' : ''}; border-color:#fbbf24;"
                             onclick="usarCartaExploracao('${hAtivo.id}', '${c.id}')">
                       ${iconesTipo[c.tipo] || '🃏'} Usar [${c.nome}]
                     </button>
@@ -1621,6 +1858,11 @@
         const focado = h.id === heroiSelecionadoId ? 'focado' : '';
         return `
           <div class="card-heroi-selecao ${focado}">
+            ${svgOrnamentoCanto}
+            <svg class="canto-ornamento canto-tr" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 30 L2 6 Q2 2 6 2 L30 2" stroke="#ffe48f" stroke-width="2.5"/>
+              <circle cx="7" cy="7" r="3" fill="#d4af37"/>
+            </svg>
             <div class="moldura-retrato" onclick="heroiSelecionadoId='${h.id}'; renderizarTudo();">
               <img src="${h.imagemUrl}" alt="${h.nome}">
               <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
@@ -1631,10 +1873,10 @@
               <div class="atributos-mini">
                 <span>❤️ ${h.pv}/${h.pvMax}</span>
                 <span>⚔️ ${h.atk}</span>
-                <span>💨 VLC ${h.vlc}</span>
+                <span>💨 ${h.vlc}</span>
                 <span>💰 ${h.ouro}g</span>
               </div>
-              <button class="btn-pirata" style="width:100%; background:#78350f;" onclick="iniciarCombateServidor('${h.id}')">
+              <button class="btn-pirata" style="width:100%; background:linear-gradient(180deg, #92400e, #451a03);" onclick="iniciarCombateServidor('${h.id}')">
                 ⚡ Emboscar com ${h.nome} (1º Turno)
               </button>
             </div>
@@ -1712,10 +1954,11 @@
       if (iniFocado) {
         const pctIni = Math.max(0, Math.min(100, (iniFocado.pv / iniFocado.pvMax) * 100));
         const atingidoIni = ultimoAlvoAtingidoId === iniFocado.id ? 'alvo-atingido' : '';
+        const svgIniMini = svgsArquetipo[iniFocado.arquetipo] || svgsArquetipo.corsario;
         document.getElementById('card-comandante-inimigo').innerHTML = `
           <div class="comandante-card inimigo ${atingidoIni}">
             <div class="comandante-topo">
-              <div class="avatar-inimigo-icone">${iconesArquetipo[iniFocado.arquetipo] || '☠️'}</div>
+              <div class="avatar-inimigo-icone">${svgIniMini}</div>
               <div style="min-width:0;">
                 <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.8rem; color:#ff8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${iniFocado.nome}</div>
                 <div style="font-size:0.72rem; color:#f5b7b1;">⚔️ ${iniFocado.atk} • 🛡️ ${iniFocado.def} • 💨 ${iniFocado.vlc}</div>
@@ -1751,24 +1994,24 @@
         </div>
       `;
 
-      // INIMIGOS EM PÉ NO PALCO COM INTENÇÃO DE ATAQUE E CORAÇÃO ABAIXO
+      // INIMIGOS EM PÉ NO PALCO COM ILUSTRAÇÃO SVG EM ESTILO GRAVURA
       document.getElementById('fileira-inimiga').innerHTML = `
         <span class="fileira-label">⚔️ Oponentes em Campo (Toque para mirar)</span>
         ${inimigosLista.map(ini => {
           const sel = ini.id === inimigoSelecionadoId ? 'selecionado' : '';
           const atingido = ultimoAlvoAtingidoId === ini.id ? 'alvo-atingido' : '';
           const morto = ini.pv <= 0 ? 'derrotado' : '';
-          const icone = iconesArquetipo[ini.arquetipo] || '🏴‍☠️';
+          const svgActor = svgsArquetipo[ini.arquetipo] || svgsArquetipo.corsario;
           return `
             <div class="inimigo-palco-actor ${sel} ${atingido} ${morto}" data-entidade-id="${ini.id}" onclick="selecionarInimigoNaArena('${ini.id}')">
               <div class="balao-intencao">${ini.intencaoTexto || ('⚔️ ' + ini.atk)}</div>
               <div class="silhueta-inimigo">
                 ${sel ? '<span class="mira-alvo-tag">🎯</span>' : ''}
-                <span style="font-size:2.3rem;">${icone}</span>
+                ${svgActor}
               </div>
               <div class="status-pes-inimigo">
-                <div style="font-family:'Cinzel',serif; font-size:0.66rem; font-weight:700; color:#fde68a;">${ini.nome.split('—')[0]}</div>
-                <div style="font-size:0.72rem; font-weight:700; color:#fca5a5;">
+                <div style="font-family:'Cinzel',serif; font-size:0.68rem; font-weight:700; color:#fde68a;">${ini.nome.split('—')[0]}</div>
+                <div style="font-size:0.74rem; font-weight:700; color:#fca5a5;">
                   ❤️ ${ini.pv}/${ini.pvMax} ${ini.escudo ? `<span style="color:#38bdf8;">🛡️${ini.escudo}</span>` : ''}
                 </div>
                 <div style="font-size:0.62rem; color:#cbd5e1;">DEF ${ini.def} • VLC ${ini.vlc}</div>
@@ -1782,7 +2025,7 @@
       document.getElementById('fileira-armadilhas').innerHTML = `
         <span class="fileira-label">🪤 Emboscadas (${traps.length})</span>
         ${traps.length === 0
-          ? '<span style="font-size:0.76rem; color:rgba(244,230,200,0.35); font-style:italic;">Nenhuma armadilha oculta</span>'
+          ? '<span style="font-size:0.76rem; color:rgba(244,230,200,0.38); font-style:italic;">Nenhuma armadilha oculta</span>'
           : traps.map(t => `
               <div class="carta-armadilha-mesa">
                 <span>🪤</span>
@@ -1828,7 +2071,6 @@
         avisoTrava.style.display = 'none';
       }
 
-      // Em combate, filtra para exibir as cartas de batalha (ou todas exceto EXPLORACAO pura)
       const baralhoHeroiCombate = h.baralho.filter(c => c.tipo !== 'EXPLORACAO');
       const cartasMao = mostrandoMaoInimigo
         ? (iniFocado ? iniFocado.baralho : [])
@@ -1843,19 +2085,19 @@
 
         return `
           <div class="carta-mao ${bloqueada}"
-               style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
-               onmouseenter="if('${c.tipo}'==='ATAQUE') cartaEmHoverEl = this;"
+               style="transform: rotate(${angulo}deg) translate3d(0, ${elevacao}px, 0); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
+               onmouseenter="if('${c.tipo}'==='ATAQUE') { cartaEmHoverEl = this; iniciarLoopCanvas(); }"
                onmouseleave="cartaEmHoverEl = null;"
                onclick="cartaEmHoverEl = null; aoClicarCarta('${c.id}', ${podeAgir}, ${mostrandoMaoInimigo})">
             <div>
               <div class="carta-mao-topo">
                 <span class="carta-mao-nome">${c.nome}</span>
-                <span class="carta-mao-custo" style="${mostrandoMaoInimigo ? 'background:#7f1d1d;' : ''}">${c.custoEp}</span>
+                <span class="carta-mao-custo" style="${mostrandoMaoInimigo ? 'background:radial-gradient(circle,#ef4444,#7f1d1d);' : ''}">${c.custoEp}</span>
               </div>
               <div class="carta-mao-arte">
                 ${c.imagemUrl
-                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.8rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
-                  : `<span style="font-size:1.8rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
+                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.85rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
+                  : `<span style="font-size:1.85rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
               </div>
               <span class="badge-tipo bg-${c.tipo}">${c.tipo}</span>
             </div>
