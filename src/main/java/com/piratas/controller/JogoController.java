@@ -17,9 +17,14 @@ public class JogoController {
     private final List ordemTurnos = new ArrayList();
     private int indiceTurnoAtual = 0;
     private int numeroRodada = 1;
+    private String faseJogo = "EXPLORACAO";
 
     private final List logs = new ArrayList();
     private final List armadilhasAtivas = new ArrayList();
+    private final List cartasNaMesa = new ArrayList();
+    private Map ultimoEventoVisual = new LinkedHashMap();
+    private long contadorEventos = 0;
+
     private String cenarioAtual = "porto";
     private String cenarioTitulo = "Porto Pirata — Docas da Alvorada";
     private final Random random = new Random();
@@ -34,8 +39,11 @@ public class JogoController {
         ordemTurnos.clear();
         logs.clear();
         armadilhasAtivas.clear();
+        cartasNaMesa.clear();
+        ultimoEventoVisual.clear();
         indiceTurnoAtual = 0;
         numeroRodada = 1;
+        faseJogo = "EXPLORACAO";
 
         Personagem lua = new Personagem("lua", "Lua", "Olhos de Águia", "Atiradora", "/imagens/lua.jpg", 18, 4, 1, 5);
         lua.getBaralho().add(new Carta("c1", "Disparo de Precisão", "ATAQUE", 2, 4, "CRITICO_VELOZ", "Tiro certeiro (Teste d20). Se resultado >= 14, +2 de dano.", "/imagens/carta_lua.jpg"));
@@ -64,7 +72,37 @@ public class JogoController {
 
         adicionarInimigoInterno("Capitão Morgano — Corsário", 45, 5, 2, 4, "corsario");
         recalcularOrdemTurnos();
-        registrarLog("⚓ Rodada 1 iniciada em " + cenarioTitulo + "! Turno de: " + getNomeTurnoAtual());
+        registrarLog("🧭 Tripulação desembarcou em " + cenarioTitulo + ". Fase de Exploração ativa!");
+    }
+
+    private void registrarEventoVisual(String tipo, String efeitoEspecial, String autor, String autorImg,
+                                       String alvo, String alvoImg, String cartaNome, String cartaImg,
+                                       String valorDestaque, String mensagem) {
+        contadorEventos++;
+        Map ev = new LinkedHashMap();
+        ev.put("id", contadorEventos);
+        ev.put("tipo", tipo);
+        ev.put("efeitoEspecial", efeitoEspecial);
+        ev.put("autor", autor);
+        ev.put("autorImg", autorImg != null ? autorImg : "");
+        ev.put("alvo", alvo);
+        ev.put("alvoImg", alvoImg != null ? alvoImg : "");
+        ev.put("cartaNome", cartaNome);
+        ev.put("cartaImg", cartaImg != null ? cartaImg : "");
+        ev.put("valorDestaque", valorDestaque);
+        ev.put("mensagem", mensagem);
+        this.ultimoEventoVisual = ev;
+    }
+
+    private void adicionarCartaMesa(String autor, String alvo, String cartaNome, String tipo, String efeito) {
+        Map c = new LinkedHashMap();
+        c.put("autor", autor);
+        c.put("alvo", alvo);
+        c.put("nome", cartaNome);
+        c.put("tipo", tipo);
+        c.put("efeito", efeito);
+        cartasNaMesa.add(c);
+        if (cartasNaMesa.size() > 5) cartasNaMesa.remove(0);
     }
 
     private List gerarBaralhoInimigo(String arquetipo, int atk) {
@@ -187,6 +225,7 @@ public class JogoController {
     public Map getEstado() {
         recalcularOrdemTurnos();
         Map res = new LinkedHashMap();
+        res.put("faseJogo", faseJogo);
         res.put("cenario", cenarioAtual);
         res.put("cenarioTitulo", cenarioTitulo);
         res.put("numeroRodada", numeroRodada);
@@ -195,8 +234,63 @@ public class JogoController {
         res.put("herois", new ArrayList(herois.values()));
         res.put("inimigos", inimigos);
         res.put("armadilhasAtivas", armadilhasAtivas);
+        res.put("cartasNaMesa", cartasNaMesa);
+        res.put("ultimoEventoVisual", ultimoEventoVisual);
         res.put("logs", logs);
         return res;
+    }
+
+    @PostMapping("/iniciar-combate")
+    public Map iniciarCombate(@RequestBody(required = false) Map payload) {
+        if (inimigos.isEmpty()) {
+            adicionarInimigoInterno("Capitão Morgano — Corsário", 45, 5, 2, 4, "corsario");
+        }
+        recalcularOrdemTurnos();
+        cartasNaMesa.clear();
+        this.faseJogo = "COMBATE";
+        this.numeroRodada = 1;
+        this.indiceTurnoAtual = 0;
+
+        String iniciadorId = (payload != null && payload.get("iniciadorId") != null)
+                ? payload.get("iniciadorId").toString()
+                : "";
+
+        if (!iniciadorId.isEmpty() && herois.containsKey(iniciadorId)) {
+            for (int i = 0; i < ordemTurnos.size(); i++) {
+                Map item = (Map) ordemTurnos.get(i);
+                if (iniciadorId.equals(item.get("id"))) {
+                    Map primeiro = (Map) ordemTurnos.remove(i);
+                    ordemTurnos.add(0, primeiro);
+                    indiceTurnoAtual = 0;
+                    break;
+                }
+            }
+            Personagem iniP = (Personagem) herois.get(iniciadorId);
+            String msg = "⚔️ EMBOSCADA! " + iniP.getNome() + " puxou o combate e age primeiro!";
+            registrarLog(msg);
+            registrarEventoVisual("SUPORTE", "FOCO", iniP.getNome(), iniP.getImagemUrl(), "", "", "Emboscada Surpresa", "", "1º Turno!", msg);
+        } else {
+            String msg = "⚔️ COMBATE INICIADO! Ordem por VLC. Turno de: " + getNomeTurnoAtual();
+            registrarLog(msg);
+            registrarEventoVisual("SUPORTE", "FOCO", getNomeTurnoAtual(), "", "", "", "Batalha Iniciada", "", "Iniciativa VLC", msg);
+        }
+
+        return Map.of("ok", true, "turnoAtual", getTurnoAtualObj());
+    }
+
+    @PostMapping("/voltar-exploracao")
+    public Map voltarExploracao() {
+        this.faseJogo = "EXPLORACAO";
+        cartasNaMesa.clear();
+        for (Object obj : herois.values()) {
+            Personagem p = (Personagem) obj;
+            p.setEp(p.getEpMax());
+            p.setAtkTemp(0);
+            p.setDefTemp(0);
+            p.setEscudo(0);
+        }
+        registrarLog("🧭 Combate encerrado! Tripulação retornou à Fase de Exploração.");
+        return Map.of("ok", true);
     }
 
     @PostMapping("/jogar")
@@ -226,6 +320,10 @@ public class JogoController {
         p.setEp(p.getEp() - carta.getCustoEp());
 
         String resumo;
+        String alvoNome = "";
+        String alvoImg = "";
+        String efeitoTexto = "";
+
         switch (carta.getTipo()) {
             case "ATAQUE" -> {
                 Map alvoIni = null;
@@ -248,6 +346,7 @@ public class JogoController {
 
                 if (alvoIni == null) return Map.of("erro", "Não há inimigos vivos na arena!");
 
+                alvoNome = alvoIni.get("nome").toString();
                 int defInimigo = (int) alvoIni.get("def");
                 int escudoIni = (int) alvoIni.getOrDefault("escudo", 0);
                 int poder = carta.getPoderTotal() + p.getAtk() + p.getAtkTemp();
@@ -266,17 +365,18 @@ public class JogoController {
                 int pvRestante = Math.max(0, (int) alvoIni.get("pv") - danoTotal);
                 alvoIni.put("pv", pvRestante);
 
-                resumo = "⚔️ " + p.getNome() + " usou [" + carta.getNome() + "] em " + alvoIni.get("nome") +
-                         " (Dado: " + totalDado + ") e causou " + danoTotal + " de dano!";
-                if (pvRestante == 0) {
-                    resumo += " 💀 " + alvoIni.get("nome") + " foi derrotado!";
-                }
+                efeitoTexto = "-" + danoTotal + " PV (d20: " + totalDado + ")";
+                resumo = "⚔️ " + p.getNome() + " usou [" + carta.getNome() + "] em " + alvoNome + " (" + efeitoTexto + ")!";
+                if (pvRestante == 0) resumo += " 💀 Derrotado!";
             }
             case "DEFESA" -> {
                 int ganhoEscudo = carta.getPoderTotal();
                 p.setEscudo(p.getEscudo() + ganhoEscudo);
                 p.setDefTemp(p.getDefTemp() + 1);
-                resumo = "🛡️ " + p.getNome() + " ativou [" + carta.getNome() + "] (+" + ganhoEscudo + " Escudo)!";
+                alvoNome = p.getNome();
+                alvoImg = p.getImagemUrl();
+                efeitoTexto = "+" + ganhoEscudo + " Escudo";
+                resumo = "🛡️ " + p.getNome() + " ativou [" + carta.getNome() + "] (" + efeitoTexto + ")!";
             }
             case "ARMADILHA" -> {
                 Map trap = new LinkedHashMap();
@@ -285,16 +385,24 @@ public class JogoController {
                 trap.put("cartaNome", carta.getNome());
                 trap.put("poder", carta.getPoderTotal());
                 armadilhasAtivas.add(trap);
+                alvoNome = "Emboscada Oculta";
+                efeitoTexto = carta.getPoderTotal() + " Dano Oculto";
                 resumo = "🪤 " + p.getNome() + " armou uma Carta Oculta na mesa!";
             }
             default -> {
                 int cura = carta.getPoderTotal();
                 p.setPv(Math.min(p.getPvMax(), p.getPv() + cura));
                 p.setAtkTemp(p.getAtkTemp() + 2);
-                resumo = "✨ " + p.getNome() + " usou [" + carta.getNome() + "], curou " + cura + " PV e ganhou +2 ATK!";
+                alvoNome = p.getNome();
+                alvoImg = p.getImagemUrl();
+                efeitoTexto = "+" + cura + " PV, +2 ATK";
+                resumo = "✨ " + p.getNome() + " usou [" + carta.getNome() + "] (" + efeitoTexto + ")!";
             }
         }
 
+        adicionarCartaMesa(p.getNome(), alvoNome, carta.getNome(), carta.getTipo(), efeitoTexto);
+        registrarEventoVisual(carta.getTipo(), carta.getEfeitoEspecial(), p.getNome(), p.getImagemUrl(),
+                              alvoNome, alvoImg, carta.getNome(), carta.getImagemUrl(), efeitoTexto, resumo);
         recalcularOrdemTurnos();
         registrarLog(resumo);
         return Map.of("ok", true, "mensagem", resumo);
@@ -339,22 +447,33 @@ public class JogoController {
                 ? Integer.parseInt(payload.get("dadoFisico").toString())
                 : (random.nextInt(20) + 1);
 
+        String autorNome = iniAtivo.get("nome").toString();
         String msg;
+        String alvoFinalNome;
+        String alvoFinalImg = "";
+        String efeitoTexto;
+
         if ("DEFESA".equals(carta.getTipo())) {
             int esc = (int) iniAtivo.getOrDefault("escudo", 0) + carta.getValorBase();
             iniAtivo.put("escudo", esc);
-            msg = "🛡️ " + iniAtivo.get("nome") + " usou [" + carta.getNome() + "] (+" + carta.getValorBase() + " Escudo)!";
+            alvoFinalNome = autorNome;
+            efeitoTexto = "+" + carta.getValorBase() + " Escudo";
+            msg = "🛡️ INIMIGO: " + autorNome + " usou [" + carta.getNome() + "] (" + efeitoTexto + ")!";
         } else if ("SUPORTE".equals(carta.getTipo())) {
             int novoPv = Math.min((int) iniAtivo.get("pvMax"), (int) iniAtivo.get("pv") + 5);
             iniAtivo.put("pv", novoPv);
             iniAtivo.put("atk", (int) iniAtivo.get("atk") + 2);
-            msg = "💀 " + iniAtivo.get("nome") + " usou [" + carta.getNome() + "] (+5 PV, +2 ATK)!";
+            alvoFinalNome = autorNome;
+            efeitoTexto = "+5 PV, +2 ATK";
+            msg = "💀 INIMIGO: " + autorNome + " usou [" + carta.getNome() + "] (" + efeitoTexto + ")!";
         } else {
             if (!armadilhasAtivas.isEmpty()) {
                 Map trap = (Map) armadilhasAtivas.remove(0);
                 int danoTrap = (int) trap.get("poder");
                 iniAtivo.put("pv", Math.max(0, (int) iniAtivo.get("pv") - danoTrap));
-                msg = "💥 ARMADILHA ATIVADA! [" + trap.get("cartaNome") + "] de " + trap.get("donoNome") + " causou " + danoTrap + " de dano em " + iniAtivo.get("nome") + "!";
+                alvoFinalNome = autorNome;
+                efeitoTexto = "Armadilha -" + danoTrap + " PV!";
+                msg = "💥 ARMADILHA ATIVADA! [" + trap.get("cartaNome") + "] de " + trap.get("donoNome") + " causou " + danoTrap + " de dano em " + autorNome + "!";
             } else {
                 int dano = Math.max(1, carta.getValorBase() + (dadoBase >= 18 ? 3 : 0) - (alvo.getDef() + alvo.getDefTemp()));
                 if (alvo.getEscudo() > 0) {
@@ -363,11 +482,16 @@ public class JogoController {
                     dano -= absorvido;
                 }
                 alvo.setPv(Math.max(0, alvo.getPv() - dano));
-                msg = "🩸 " + iniAtivo.get("nome") + " jogou [" + carta.getNome() + "] em " + alvo.getNome() +
-                      " (Dado: " + dadoBase + ") causando " + dano + " de dano!";
+                alvoFinalNome = alvo.getNome();
+                alvoFinalImg = alvo.getImagemUrl();
+                efeitoTexto = "-" + dano + " PV (d20: " + dadoBase + ")";
+                msg = "🩸 ATAQUE INIMIGO! " + autorNome + " usou [" + carta.getNome() + "] em " + alvo.getNome() + " (" + efeitoTexto + ")!";
             }
         }
 
+        adicionarCartaMesa(autorNome, alvoFinalNome, carta.getNome(), "INIMIGO", efeitoTexto);
+        registrarEventoVisual("INIMIGO", carta.getEfeitoEspecial(), autorNome, "",
+                              alvoFinalNome, alvoFinalImg, carta.getNome(), "", efeitoTexto, msg);
         recalcularOrdemTurnos();
         registrarLog(msg);
         return Map.of("ok", true, "mensagem", msg);
@@ -375,11 +499,13 @@ public class JogoController {
 
     @PostMapping("/turno")
     public Map encerrarTurno(@RequestBody(required = false) Map payload) {
-        recalcularOrdemTurnos();
+        if (ordemTurnos.isEmpty()) recalcularOrdemTurnos();
         if (ordemTurnos.isEmpty()) return Map.of("ok", true);
 
+        cartasNaMesa.clear();
         indiceTurnoAtual++;
         if (indiceTurnoAtual >= ordemTurnos.size()) {
+            recalcularOrdemTurnos();
             indiceTurnoAtual = 0;
             numeroRodada++;
             for (Object obj : herois.values()) {
@@ -417,6 +543,7 @@ public class JogoController {
         String sucesso = total >= 15 ? "✅ SUCESSO ÉPICO!" : (total >= 10 ? "☑️ SUCESSO!" : "❌ FALHA!");
         String msg = "🎲 Improviso de " + p.getNome() + " [" + descricao + "]: Dado " + dadoFisico +
                      " + " + atributo + " (" + bonusAtributo + ") = " + total + " → " + sucesso;
+        registrarEventoVisual("SUPORTE", "FOCO", p.getNome(), p.getImagemUrl(), "", "", descricao, "", "Total: " + total + " " + sucesso, msg);
         registrarLog(msg);
         return Map.of("ok", true, "mensagem", msg, "total", total);
     }
@@ -473,16 +600,7 @@ public class JogoController {
         if (limparAnteriores) inimigos.clear();
         adicionarInimigoInterno(nome, pv, atk, def, vlc, arquetipo);
         recalcularOrdemTurnos();
-        registrarLog("💀 Novo oponente entrou na arena: " + nome + " (PV " + pv + " | VLC " + vlc + ")!");
-        return Map.of("ok", true);
-    }
-
-    @PostMapping("/mestre/remover-inimigo")
-    public Map removerInimigo(@RequestBody Map payload) {
-        String id = String.valueOf(payload.get("inimigoId"));
-        inimigos.removeIf(obj -> ((Map) obj).get("id").equals(id));
-        recalcularOrdemTurnos();
-        registrarLog("🗑️ Oponente removido da arena pelo Mestre.");
+        registrarLog("💀 Oponente preparado: " + nome + " (PV " + pv + " | VLC " + vlc + ")!");
         return Map.of("ok", true);
     }
 
@@ -492,6 +610,31 @@ public class JogoController {
         if (p == null) return Map.of("erro", "Herói inválido.");
         String acao = payload.get("acao").toString();
         switch (acao) {
+            case "alterarPv" -> {
+                int delta = Integer.parseInt(payload.getOrDefault("valor", 0).toString());
+                int novoPv = Math.max(0, Math.min(p.getPvMax(), p.getPv() + delta));
+                p.setPv(novoPv);
+                if (delta >= 0) {
+                    String msg = "💚 Mestre curou +" + delta + " PV de " + p.getNome() + " (" + p.getPv() + "/" + p.getPvMax() + ").";
+                    registrarLog(msg);
+                    registrarEventoVisual("SUPORTE", "CURA_RUNICA", "Mestre", "", p.getNome(), p.getImagemUrl(),
+                                          "Bênção de Cura", "", "+" + delta + " PV", msg);
+                } else {
+                    String msg = "💔 Mestre aplicou " + delta + " PV em " + p.getNome() + " (" + p.getPv() + "/" + p.getPvMax() + ").";
+                    registrarLog(msg);
+                    registrarEventoVisual("INIMIGO", "SANGRAMENTO", "Evento Narrativo", "", p.getNome(), p.getImagemUrl(),
+                                          "Dano de Improviso", "", delta + " PV", msg);
+                }
+                recalcularOrdemTurnos();
+            }
+            case "curar" -> {
+                p.setPv(p.getPvMax());
+                p.setEp(p.getEpMax());
+                String msg = "✨ " + p.getNome() + " teve PV e EP restaurados ao máximo (" + p.getPvMax() + " PV)!";
+                registrarLog(msg);
+                registrarEventoVisual("SUPORTE", "CURA_RUNICA", "Mestre", "", p.getNome(), p.getImagemUrl(),
+                                      "Restauração Total", "", "PV & EP MÁX!", msg);
+            }
             case "ouro" -> { p.setOuro(p.getOuro() + 15); registrarLog("💰 Mestre concedeu +15g para " + p.getNome()); }
             case "nivel" -> {
                 p.setNivel(p.getNivel() + 1);
@@ -512,7 +655,6 @@ public class JogoController {
                 p.setBonusImproviso(p.getBonusImproviso() + 3);
                 registrarLog("🎲 " + p.getNome() + " recebeu +3 de bônus para a próxima rolagem de d20!");
             }
-            case "curar" -> { p.setPv(p.getPvMax()); p.setEp(p.getEpMax()); registrarLog("✨ " + p.getNome() + " teve PV e EP restaurados!"); }
         }
         return Map.of("ok", true);
     }
