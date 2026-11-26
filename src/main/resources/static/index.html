@@ -294,7 +294,7 @@
     }
 
     .comandante-card.alvo-atingido {
-      box-shadow: 0 0 32px #ef4444, inset 0 0 20px rgba(239, 68, 68, 0.6);
+      box-shadow: 0 0 36px #ef4444, inset 0 0 22px rgba(239, 68, 68, 0.65);
       border-color: #fca5a5;
       animation: pulsoAlvoAtingido 0.55s ease-in-out 2;
     }
@@ -375,19 +375,18 @@
     }
 
     .card-inimigo-vanguarda.alvo-atingido {
-      box-shadow: 0 0 34px #ef4444, inset 0 0 20px rgba(239, 68, 68, 0.7);
+      box-shadow: 0 0 38px #ef4444, inset 0 0 24px rgba(239, 68, 68, 0.75);
       border-color: #fff;
       animation: pulsoAlvoAtingido 0.55s ease-in-out 2;
     }
 
     @keyframes pulsoAlvoAtingido {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.09); filter: brightness(1.6); }
+      50% { transform: scale(1.1); filter: brightness(1.7); }
     }
 
     .card-inimigo-vanguarda.derrotado { opacity: 0.35; filter: grayscale(1); pointer-events: none; }
 
-    /* CARTA MANIFESTADA NA MESA COM RASTRO DE ATAQUE */
     .carta-em-campo {
       min-width: 132px;
       max-width: 155px;
@@ -576,27 +575,35 @@
       .carta-mao:active { transform: scale(0.95) !important; }
     }
 
-    /* ==================== EFEITOS VISUAIS DE CARTA NO CENÁRIO (VFX) ==================== */
-    #camada-vfx { position: fixed; inset: 0; pointer-events: none; z-index: 160; overflow: hidden; }
-    .tremor-tela { animation: tremerImpacto 0.45s ease-in-out; }
-    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-8px, 4px); } 50% { transform: translate(8px, -4px); } 75% { transform: translate(-5px, -2px); } }
+    /* ==================== CANVAS 2D VFX (60FPS) + HUD FLUTUANTE ==================== */
+    #canvas-vfx {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      pointer-events: none;
+      z-index: 165;
+    }
 
-    /* TEXTO FLUTUANTE DIRETO NO TABULEIRO (SEM COBRIR A ARENA) */
+    #camada-vfx-texto { position: fixed; inset: 0; pointer-events: none; z-index: 170; overflow: hidden; }
+    .tremor-tela { animation: tremerImpacto 0.45s ease-in-out; }
+    @keyframes tremerImpacto { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-9px, 5px); } 50% { transform: translate(9px, -5px); } 75% { transform: translate(-5px, -2px); } }
+
     .texto-flutuante-vfx {
       position: fixed;
       left: 50%;
-      top: 15%;
+      top: 13%;
       transform: translateX(-50%);
       font-family: 'Cinzel Decorative', serif;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 900;
       text-align: center;
       max-width: 92vw;
       background: rgba(12, 8, 5, 0.94);
       border: 2px solid var(--ouro);
-      padding: 8px 16px;
+      padding: 7px 16px;
       border-radius: 12px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.92);
       animation: flutuarAvisoTabuleiro 2.5s ease-out forwards;
     }
 
@@ -607,80 +614,20 @@
       100% { transform: translate(-50%, -26px); opacity: 0; }
     }
 
-    /* MANIFESTAÇÕES ELEMENTAIS INTENSAS */
-    .vfx-labaredas {
-      position: fixed; inset: 0;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(255, 190, 60, 0.72) 0%, rgba(234, 88, 12, 0.55) 38%, rgba(185, 28, 28, 0.35) 70%, transparent 90%);
-      mix-blend-mode: screen;
-      animation: pulsoFogoIntenso 1.15s ease-out forwards;
-    }
-    @keyframes pulsoFogoIntenso {
-      0% { opacity: 0; transform: scale(0.75); }
-      25% { opacity: 1; transform: scale(1.06); }
-      100% { opacity: 0; transform: scale(1.2); }
+    .dano-flutuante-alvo {
+      position: fixed;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.75rem;
+      font-weight: 900;
+      text-shadow: 0 0 12px #000, 0 3px 8px #000;
+      transform: translate(-50%, -50%);
+      animation: subirNumeroDano 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .vfx-polvora-tiro {
-      position: fixed; left: 50%; top: 42%;
-      width: 20px; height: 20px; border-radius: 50%;
-      background: #fffbeb;
-      box-shadow: 0 0 60px 30px #fbbf24, 0 0 120px 60px #ea580c;
-      transform: translate(-50%, -50%) scale(0.2);
-      animation: explosaoPolvora 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes explosaoPolvora {
-      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
-      40% { transform: translate(-50%, -50%) scale(4.5); opacity: 0.95; }
-      100% { transform: translate(-50%, -50%) scale(7.5); opacity: 0; }
-    }
-
-    .vfx-corte-duplo-1, .vfx-corte-duplo-2 {
-      position: fixed; left: 50%; top: 44%;
-      width: 480px; height: 10px;
-      background: linear-gradient(90deg, transparent, #ffffff, #38bdf8, transparent);
-      box-shadow: 0 0 28px #7dd3fc, 0 0 50px #0284c7;
-      border-radius: 50%;
-    }
-    .vfx-corte-duplo-1 {
-      transform: translate(-50%, -50%) rotate(-34deg) scaleX(0);
-      animation: rasgoLamina 0.65s ease-out forwards;
-    }
-    .vfx-corte-duplo-2 {
-      transform: translate(-50%, -50%) rotate(34deg) scaleX(0);
-      animation: rasgoLamina 0.65s ease-out 0.14s forwards;
-    }
-    @keyframes rasgoLamina {
-      0% { transform: translate(-50%, -50%) rotate(var(--ang, -34deg)) scaleX(0); opacity: 1; }
-      45% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    .vfx-domo-escudo {
-      position: fixed; left: 50%; top: 46%;
-      width: 260px; height: 260px; border-radius: 50%;
-      border: 5px solid #38bdf8;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.25), rgba(29, 78, 216, 0.45));
-      box-shadow: inset 0 0 45px #7dd3fc, 0 0 55px #38bdf8;
-      transform: translate(-50%, -50%) scale(0.3);
-      animation: expandirEscudo 1.1s ease-out forwards;
-    }
-    @keyframes expandirEscudo {
-      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1.65); opacity: 0; }
-    }
-
-    .vfx-aura-cura {
-      position: fixed; inset: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.5) 0%, rgba(16, 185, 129, 0.25) 55%, transparent 85%);
-      animation: pulsoFogoIntenso 1.2s ease-out forwards;
-    }
-
-    .vfx-golpe-inimigo {
-      position: fixed; inset: 0;
-      box-shadow: inset 0 0 130px rgba(220, 38, 38, 0.92);
-      background: radial-gradient(circle at 50% 45%, rgba(239, 68, 68, 0.35), transparent 70%);
-      animation: pulsoFogoIntenso 1.1s ease-out forwards;
+    @keyframes subirNumeroDano {
+      0% { transform: translate(-50%, -20%) scale(0.5); opacity: 0; }
+      20% { transform: translate(-50%, -60%) scale(1.25); opacity: 1; }
+      100% { transform: translate(-50%, -165%) scale(1); opacity: 0; }
     }
 
     /* MODAL SOLICITAÇÃO DE IMPROVISO DO JOGADOR */
@@ -884,10 +831,8 @@
       <button class="btn-pirata" style="padding:3px 9px;" onclick="toggleGaveta('gaveta-mestre')">✕</button>
     </div>
 
-    <!-- ALERTA AUTOMÁTICO QUANDO UM JOGADOR SOLICITA IMPROVISO -->
     <div id="box-alerta-improviso-mestre"></div>
 
-    <!-- RESOLUÇÃO DE D20 DO IMPROVISO PELO MESTRE -->
     <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(212,175,55,0.4); border-radius:8px; padding:8px; margin-bottom:10px;">
       <label style="font-size:0.78rem; color:var(--ouro-brilho); display:block; margin-bottom:4px;">🎲 Registrar Rolagem d20 de Improviso:</label>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
@@ -908,736 +853,7 @@
       </div>
     </div>
 
-    <!-- SELETOR UNIVERSAL DE ALVO (JOGADORES OU INIMIGOS) -->
     <label style="font-size:0.82rem; color:var(--ouro-brilho);">🎯 Alvo (Pirata ou Inimigo) para PV / Buffs / Debuffs:</label>
     <select id="select-entidade-mestre" class="select-pirata" onchange="aoMudarEntidadeMestre(this.value)"></select>
 
-    <!-- AJUSTE DE PV E BUFFS / DEBUFFS -->
     <div style="background:rgba(0,0,0,0.45); border:1px solid rgba(212,175,55,0.4); border-radius:8px; padding:8px; margin-bottom:10px;">
-      <div style="display:flex; gap:5px; align-items:center; margin-bottom:6px;">
-        <input id="mestre-valor-pv" type="number" min="1" value="5" class="input-pirata" style="width:62px; margin-bottom:0; text-align:center;">
-        <button class="btn-pirata" style="flex:1; background:#14532d; border-color:#4ade80;" onclick="ajustarEntidadeServidor('pv', 1)">💚 +Curar</button>
-        <button class="btn-pirata" style="flex:1; background:#7f1d1d; border-color:#f87171;" onclick="ajustarEntidadeServidor('pv', -1)">💔 -Dano</button>
-        <button class="btn-pirata" style="background:#0f4c81; border-color:#7dd3fc;" onclick="ajustarEntidadeServidor('pvMax', 1)">✨ Máx</button>
-      </div>
-
-      <label style="font-size:0.75rem; color:var(--pergaminho-escuro); display:block; margin-bottom:4px;">⚡ Buffs &amp; Debuffs Narrativos (Jogadores ou Inimigos):</label>
-      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;">
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('atk', 2)">+2 ATK</button>
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('def', 2)">+2 DEF</button>
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem;" onclick="ajustarEntidadeServidor('vlc', 2)">+2 VLC</button>
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('atk', -2)">-2 ATK</button>
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('def', -2)">-2 DEF</button>
-        <button class="btn-pirata" style="padding:4px; font-size:0.7rem; background:#450a0a;" onclick="ajustarEntidadeServidor('vlc', -2)">-2 VLC</button>
-      </div>
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px;">
-      <button class="btn-pirata" onclick="acaoMestreHeroi('nivel')">⭐ +1 Nível Pirata</button>
-      <button class="btn-pirata" onclick="acaoMestreHeroi('ouro')">💰 +15 Ouro Pirata</button>
-      <button class="btn-pirata" onclick="acaoMestreHeroi('fruta')">🍎 Fruta (+2 ATK)</button>
-      <button class="btn-pirata" onclick="acaoMestreHeroi('bonusDado')">🎲 +3 Bônus Imp.</button>
-    </div>
-
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">💀 Adicionar Oponente na Fila:</label>
-    <input id="novo-ini-nome" class="input-pirata" placeholder="Nome (ex: Atirador do Cesto)">
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-bottom:6px;">
-      <input id="novo-ini-pv" type="number" class="input-pirata" placeholder="PV (35)">
-      <input id="novo-ini-atk" type="number" class="input-pirata" placeholder="ATK (4)">
-      <input id="novo-ini-vlc" type="number" class="input-pirata" placeholder="VLC (4)">
-    </div>
-    <select id="novo-ini-arquetipo" class="select-pirata">
-      <option value="corsario">Baralho: Corsário / Espadachim</option>
-      <option value="atirador">Baralho: Atirador / Canhoneiro</option>
-      <option value="fera">Baralho: Fera / Monstro Marinho</option>
-      <option value="arcano">Baralho: Arcano / Feiticeiro</option>
-    </select>
-    <div style="display:flex; gap:6px; margin-bottom:12px;">
-      <button class="btn-pirata" style="flex:1;" onclick="invocarInimigo(false)">➕ Adicionar</button>
-      <button class="btn-pirata" style="background:#5c1116;" onclick="invocarInimigo(true)">🔄 Substituir</button>
-    </div>
-
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">🗺️ Cenário:</label>
-    <select class="select-pirata" onchange="mudarCenario(this.value)">
-      <option value="porto">Porto Pirata — Docas da Alvorada</option>
-      <option value="conves">Convés do Galeão — Tempestade</option>
-      <option value="ruinas">Ilha das Ruínas — Santuário</option>
-      <option value="taverna">Taverna Subterrânea</option>
-    </select>
-
-    <label style="font-size:0.82rem; color:var(--ouro-brilho);">📖 Campanha:</label>
-    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
-      <button class="btn-pirata" onclick="baixarSave()">💾 Baixar Save (.json)</button>
-      <label class="btn-pirata" style="text-align:center; display:block;">
-        📂 Carregar Save (.json)
-        <input type="file" accept=".json" style="display:none;" onchange="carregarArquivoSave(event)">
-      </label>
-      <button class="btn-pirata" style="background:#5c1116;" onclick="resetarBatalha()">🕊️ Reiniciar Campanha</button>
-    </div>
-  </div>
-
-  <div id="camada-vfx"></div>
-
-  <script>
-    const CHAVE_SAVE = "cronicas_sete_mares_save_v6";
-    let estadoAtual = null;
-    let ultimoEstadoJson = "";
-    let ultimoEventoIdExibido = 0;
-    let heroiSelecionadoId = "lua";
-    let inimigoSelecionadoId = "";
-    let entidadeMestreId = "lua";
-    let modoMestre = new URLSearchParams(window.location.search).get("mestre") === "1";
-    let autoTrocaTela = true;
-    let verificouRestauracaoInicial = false;
-    let cliquesBrasao = 0;
-    let ultimoAlvoAtingidoId = "";
-
-    const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨", INIMIGO: "🩸" };
-
-    function alternarAutoTrocaTela() {
-      autoTrocaTela = !autoTrocaTela;
-      const btn = document.getElementById('btn-auto-troca');
-      btn.textContent = autoTrocaTela ? "🖥️ Mesa: ON" : "📱 Meu Pirata";
-      sincronizarCameraTurno();
-      renderizarTudo();
-    }
-
-    function sincronizarCameraTurno() {
-      if (!estadoAtual || !estadoAtual.turnoAtual) return;
-      const turno = estadoAtual.turnoAtual;
-
-      if (turno.tipo === 'HEROI' && autoTrocaTela) {
-        heroiSelecionadoId = turno.id;
-      } else if (turno.tipo === 'INIMIGO') {
-        inimigoSelecionadoId = turno.id;
-      }
-    }
-
-    function cliqueBrasaoMestre() {
-      cliquesBrasao++;
-      if (cliquesBrasao >= 3) {
-        modoMestre = true;
-        document.getElementById('btn-mestre-exp').style.display = 'inline-block';
-        manifestarVfxNoTabuleiro({
-          tipo: 'SUPORTE', efeitoEspecial: 'FOCO', autor: 'Mestre', alvo: '',
-          cartaNome: 'Controle de Mestre', valorDestaque: 'Ativado',
-          mensagem: '👑 Controle de Mestre ativado neste dispositivo!'
-        });
-      }
-    }
-
-    function iniciarParticulasVivas() {
-      const camada = document.getElementById('camada-viva');
-      for (let i = 0; i < 14; i++) {
-        const brasa = document.createElement('div');
-        brasa.className = 'brasa';
-        brasa.style.left = Math.random() * 100 + 'vw';
-        brasa.style.animationDuration = (5 + Math.random() * 7) + 's';
-        brasa.style.animationDelay = (Math.random() * 5) + 's';
-        camada.appendChild(brasa);
-      }
-    }
-
-    // EFEITOS VISUAIS DIRETAMENTE NO TABULEIRO (SEM POPUP CENTRAL BLOQUEANDO A TELA)
-    function manifestarVfxNoTabuleiro(ev) {
-      if (!ev || !ev.mensagem) return;
-      const vfx = document.getElementById('camada-vfx');
-      const mesa = document.getElementById('mesa-batalha');
-      const ef = ev.efeitoEspecial || '';
-      const isInimigo = ev.tipo === 'INIMIGO';
-
-      if (ev.alvoId) {
-        ultimoAlvoAtingidoId = ev.alvoId;
-        setTimeout(() => {
-          ultimoAlvoAtingidoId = "";
-          if (estadoAtual && estadoAtual.faseJogo === 'COMBATE') renderizarArena();
-        }, 1400);
-      }
-
-      // 1. Efeito Elemental na Arena
-      if (ef.includes('CHAMAS') || ef.includes('QUEIMADURA')) {
-        const fogo = document.createElement('div');
-        fogo.className = 'vfx-labaredas';
-        vfx.appendChild(fogo);
-        setTimeout(() => fogo.remove(), 1200);
-      } else if (ef.includes('CRITICO') || ef.includes('TIRO') || ef.includes('CANHAO')) {
-        const tiro = document.createElement('div');
-        tiro.className = 'vfx-polvora-tiro';
-        vfx.appendChild(tiro);
-        setTimeout(() => tiro.remove(), 900);
-      } else if (ev.tipo === 'DEFESA') {
-        const escudo = document.createElement('div');
-        escudo.className = 'vfx-domo-escudo';
-        vfx.appendChild(escudo);
-        setTimeout(() => escudo.remove(), 1150);
-      } else if (ev.tipo === 'SUPORTE') {
-        const cura = document.createElement('div');
-        cura.className = 'vfx-aura-cura';
-        vfx.appendChild(cura);
-        setTimeout(() => cura.remove(), 1250);
-      } else if (isInimigo) {
-        const sangue = document.createElement('div');
-        sangue.className = 'vfx-golpe-inimigo';
-        vfx.appendChild(sangue);
-        setTimeout(() => sangue.remove(), 1150);
-      } else {
-        const c1 = document.createElement('div');
-        c1.className = 'vfx-corte-duplo-1';
-        const c2 = document.createElement('div');
-        c2.className = 'vfx-corte-duplo-2';
-        vfx.appendChild(c1);
-        vfx.appendChild(c2);
-        setTimeout(() => { c1.remove(); c2.remove(); }, 850);
-      }
-
-      // 2. Tremor de impacto
-      if (ev.tipo === 'ATAQUE' || isInimigo) {
-        mesa.classList.remove('tremor-tela');
-        void mesa.offsetWidth;
-        mesa.classList.add('tremor-tela');
-      }
-
-      // 3. Faixa superior clara indicando Atacante -> Alvo e Efeito
-      const txt = document.createElement('div');
-      txt.className = 'texto-flutuante-vfx';
-      txt.style.borderColor = isInimigo ? '#ef4444' : 'var(--ouro-brilho)';
-      txt.style.color = isInimigo ? '#fca5a5' : '#ffe082';
-      txt.textContent = ev.mensagem;
-      vfx.appendChild(txt);
-      setTimeout(() => txt.remove(), 2500);
-    }
-
-    function toggleGaveta(id) {
-      const el = document.getElementById(id);
-      const visivel = el.style.display === 'block';
-      document.querySelectorAll('.gaveta-modal').forEach(g => g.style.display = 'none');
-      el.style.display = visivel ? 'none' : 'block';
-    }
-
-    function ehEstadoInicialVirgem(estado) {
-      return estado.herois.every(h => h.nivel === 1 && h.ouro === 20 && h.pv === h.pvMax) &&
-             estado.logs && estado.logs.length <= 1;
-    }
-
-    async function carregarEstado(forcar = false) {
-      try {
-        const resp = await fetch('/api/jogo/estado');
-        const novoEstado = await resp.json();
-
-        if (!verificouRestauracaoInicial) {
-          verificouRestauracaoInicial = true;
-          const saveLocal = localStorage.getItem(CHAVE_SAVE);
-          if (saveLocal && ehEstadoInicialVirgem(novoEstado)) {
-            await fetch('/api/jogo/mestre/restaurar-save', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: saveLocal
-            });
-            return carregarEstado(true);
-          }
-        }
-
-        const novoJson = JSON.stringify(novoEstado);
-        if (!forcar && novoJson === ultimoEstadoJson) return;
-
-        estadoAtual = novoEstado;
-        ultimoEstadoJson = novoJson;
-
-        if (!ehEstadoInicialVirgem(novoEstado)) {
-          localStorage.setItem(CHAVE_SAVE, novoJson);
-        }
-
-        const ev = estadoAtual.ultimoEventoVisual;
-        if (ev && ev.id && ev.id > ultimoEventoIdExibido) {
-          if (ultimoEventoIdExibido !== 0) {
-            manifestarVfxNoTabuleiro(ev);
-          }
-          ultimoEventoIdExibido = ev.id;
-        }
-
-        if (!inimigoSelecionadoId || !estadoAtual.inimigos.some(i => i.id === inimigoSelecionadoId && i.pv > 0)) {
-          const vivo = estadoAtual.inimigos.find(i => i.pv > 0);
-          if (vivo) inimigoSelecionadoId = vivo.id;
-        }
-
-        sincronizarCameraTurno();
-        renderizarTudo();
-      } catch (e) { console.error(e); }
-    }
-
-    function renderizarTudo() {
-      if (!estadoAtual) return;
-      const emCombate = estadoAtual.faseJogo === 'COMBATE';
-
-      document.getElementById('tela-exploracao').style.display = emCombate ? 'none' : 'block';
-      document.getElementById('mesa-batalha').style.display = emCombate ? 'block' : 'none';
-      document.getElementById('btn-painel-mestre').style.display = modoMestre ? 'inline-block' : 'none';
-      document.getElementById('btn-mestre-exp').style.display = modoMestre ? 'inline-block' : 'none';
-
-      const hAtivo = estadoAtual.herois.find(h => h.id === heroiSelecionadoId) || estadoAtual.herois[0];
-      document.getElementById('nome-pirata-taverna').textContent = hAtivo.nome;
-
-      atualizarPainelMestre();
-
-      if (emCombate) {
-        renderizarArena();
-      } else {
-        renderizarExploracao();
-      }
-    }
-
-    function atualizarPainelMestre() {
-      const sel = document.getElementById('select-entidade-mestre');
-      const opcoesHerois = estadoAtual.herois.map(h =>
-        `<option value="${h.id}">⚓ Pirata: ${h.nome} (PV ${h.pv}/${h.pvMax} | VLC ${h.vlc})</option>`
-      ).join('');
-      const opcoesInimigos = (estadoAtual.inimigos || []).map(i =>
-        `<option value="${i.id}">💀 Inimigo: ${i.nome.split('—')[0]} (PV ${i.pv}/${i.pvMax} | VLC ${i.vlc})</option>`
-      ).join('');
-      sel.innerHTML = opcoesHerois + opcoesInimigos;
-
-      if ([...estadoAtual.herois, ...(estadoAtual.inimigos || [])].some(e => e.id === entidadeMestreId)) {
-        sel.value = entidadeMestreId;
-      } else {
-        entidadeMestreId = heroiSelecionadoId;
-        sel.value = entidadeMestreId;
-      }
-
-      // Alerta automático quando jogador pede improviso narrativo
-      const boxAlerta = document.getElementById('box-alerta-improviso-mestre');
-      const sol = estadoAtual.solicitacaoImprovisoAtiva;
-      if (sol) {
-        document.getElementById('mestre-imp-pirata').value = sol.personagemId;
-        boxAlerta.innerHTML = `
-          <div class="alerta-improviso-mestre">
-            <div style="font-family:'Cinzel',serif; font-size:0.76rem; color:var(--ouro-brilho);">🎭 PEDIDO DE IMPROVISO ATIVO!</div>
-            <div style="font-size:0.92rem; color:#fff; margin:3px 0;">
-              <strong>${sol.personagemNome}:</strong> "${sol.descricao}"
-            </div>
-            <div style="font-size:0.82rem; color:#4ade80; font-weight:700;">
-              ${sol.bonusAcumulado > 0
-                ? `✨ ALERTA: ${sol.personagemNome} possui +${sol.bonusAcumulado} de bônus de cartas para este teste!`
-                : 'Sem bônus extras de cartas acumulados.'}
-            </div>
-          </div>
-        `;
-      } else {
-        boxAlerta.innerHTML = '';
-      }
-    }
-
-    function aoMudarEntidadeMestre(id) {
-      entidadeMestreId = id;
-      if (estadoAtual.herois.some(h => h.id === id)) {
-        heroiSelecionadoId = id;
-        renderizarTudo();
-      }
-    }
-
-    function renderizarExploracao() {
-      document.getElementById('exp-cenario-titulo').textContent = `🧭 Fase de Exploração — ${estadoAtual.cenarioTitulo}`;
-      const inimigosLista = estadoAtual.inimigos || [];
-      document.getElementById('exp-lista-inimigos').textContent = inimigosLista.length
-        ? inimigosLista.map(i => `${i.nome} (PV ${i.pv} | VLC ${i.vlc})`).join('  •  ')
-        : 'Nenhum oponente posicionado ainda';
-
-      const container = document.getElementById('lista-herois-selecao');
-      container.innerHTML = estadoAtual.herois.map(h => {
-        const focado = h.id === heroiSelecionadoId ? 'focado' : '';
-        return `
-          <div class="card-heroi-selecao ${focado}">
-            <div class="moldura-retrato" onclick="heroiSelecionadoId='${h.id}'; renderizarTudo();">
-              <img src="${h.imagemUrl}" alt="${h.nome}">
-              <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
-            </div>
-            <div class="info-heroi-selecao">
-              <h3>${h.nome}</h3>
-              <div class="epitetos">"${h.titulo}"</div>
-              <div class="atributos-mini">
-                <span>❤️ ${h.pv}/${h.pvMax}</span>
-                <span>⚔️ ${h.atk}</span>
-                <span>💨 VLC ${h.vlc}</span>
-                <span>💰 ${h.ouro}g</span>
-              </div>
-              <button class="btn-pirata" style="width:100%; background:#78350f;" onclick="iniciarCombateServidor('${h.id}')">
-                ⚡ Emboscar com ${h.nome} (1º Turno)
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('lista-logs').innerHTML = (estadoAtual.logs || [])
-        .map(l => `<div class="log-item">${l}</div>`).join('');
-    }
-
-    async function iniciarCombateServidor(iniciadorId) {
-      if (iniciadorId) heroiSelecionadoId = iniciadorId;
-      await fetch('/api/jogo/iniciar-combate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ iniciadorId })
-      });
-      await carregarEstado(true);
-    }
-
-    async function voltarExploracao() {
-      await fetch('/api/jogo/voltar-exploracao', { method: 'POST' });
-      await carregarEstado(true);
-    }
-
-    function selecionarInimigoNaArena(id) {
-      inimigoSelecionadoId = id;
-      renderizarArena();
-    }
-
-    function renderizarArena() {
-      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
-      const inimigosLista = estadoAtual.inimigos || [];
-      const iniFocado = inimigosLista.find(i => i.id === inimigoSelecionadoId) || inimigosLista[0];
-      const turno = estadoAtual.turnoAtual || { id: '', nome: '', tipo: 'HEROI' };
-
-      document.getElementById('badge-rodada').textContent = `R${estadoAtual.numeroRodada || 1}`;
-      document.getElementById('badge-cenario-lateral').textContent = estadoAtual.cenarioTitulo;
-      document.getElementById('nome-turno-lateral').textContent = turno.nome;
-
-      // Botão de Improviso (1 por batalha por pirata)
-      const jaUsouImp = (estadoAtual.improvisosUsadosBatalha || []).includes(h.id);
-      const btnImp = document.getElementById('btn-improviso-batalha');
-      btnImp.disabled = jaUsouImp;
-      btnImp.textContent = jaUsouImp ? "🎭 Usado (0/1)" : `🎭 Improviso (1/1)${h.bonusImproviso > 0 ? ' +'+h.bonusImproviso : ''}`;
-
-      document.getElementById('barra-iniciativa').innerHTML = (estadoAtual.ordemTurnos || []).map(item => {
-        const ativo = item.id === turno.id ? 'ativo' : '';
-        const classeTipo = item.tipo === 'INIMIGO' ? 'inimigo' : '';
-        return `<span class="pill-turno ${classeTipo} ${ativo}">${item.tipo === 'INIMIGO' ? '💀' : '⚓'} ${item.nome.split('—')[0]} (VLC ${item.vlc})</span>`;
-      }).join('');
-
-      if (iniFocado) {
-        const pctIni = Math.max(0, Math.min(100, (iniFocado.pv / iniFocado.pvMax) * 100));
-        const atingidoIni = ultimoAlvoAtingidoId === iniFocado.id ? 'alvo-atingido' : '';
-        document.getElementById('card-comandante-inimigo').innerHTML = `
-          <div class="comandante-card inimigo ${atingidoIni}">
-            <div class="comandante-topo">
-              <div class="avatar-inimigo-icone">☠️</div>
-              <div style="min-width:0;">
-                <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.8rem; color:#ff8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${iniFocado.nome}</div>
-                <div style="font-size:0.72rem; color:#f5b7b1;">⚔️ ${iniFocado.atk} • 🛡️ ${iniFocado.def} • 💨 ${iniFocado.vlc}</div>
-              </div>
-            </div>
-            <div class="barra-hp">
-              <div class="barra-hp-fill" style="width:${pctIni}%; background:linear-gradient(90deg,#7f1d1d,#dc2626);"></div>
-              <div class="barra-hp-texto">🩸 ${iniFocado.pv}/${iniFocado.pvMax} ${iniFocado.escudo ? '(+🛡️'+iniFocado.escudo+')' : ''}</div>
-            </div>
-          </div>
-        `;
-      }
-
-      const pctHeroi = Math.max(0, Math.min(100, (h.pv / h.pvMax) * 100));
-      const atingidoHeroi = ultimoAlvoAtingidoId === h.id ? 'alvo-atingido' : '';
-      let gemas = '';
-      for (let i = 0; i < h.epMax; i++) gemas += `<span class="gema-ep ${i < h.ep ? '' : 'vazia'}"></span>`;
-
-      document.getElementById('card-comandante-heroi').innerHTML = `
-        <div class="comandante-card ${atingidoHeroi}">
-          <div class="comandante-topo">
-            <img class="avatar-arena" src="${h.imagemUrl}" alt="${h.nome}">
-            <div style="min-width:0;">
-              <div style="font-family:'Cinzel',serif; font-weight:700; font-size:0.88rem; color:var(--ouro-brilho);">${h.nome} (Nv.${h.nivel})</div>
-              <div style="font-size:0.72rem; color:var(--pergaminho-escuro);">⚔️ ${h.atk}${h.atkTemp ? (h.atkTemp > 0 ? '+'+h.atkTemp : h.atkTemp) : ''} • 🛡️ ${h.def}${h.defTemp ? (h.defTemp > 0 ? '+'+h.defTemp : h.defTemp) : ''} • 💨 ${h.vlc}</div>
-            </div>
-          </div>
-          <div class="barra-hp">
-            <div class="barra-hp-fill" style="width:${pctHeroi}%; background:linear-gradient(90deg,#14532d,#16a34a);"></div>
-            <div class="barra-hp-texto">❤️ ${h.pv}/${h.pvMax} ${h.escudo > 0 ? '(+🛡️' + h.escudo + ')' : ''}</div>
-          </div>
-          <div class="cristais-linha"><span style="font-family:'Cinzel',serif; font-size:0.68rem;">EP:</span>${gemas}</div>
-        </div>
-      `;
-
-      document.getElementById('fileira-inimiga').innerHTML = `
-        <span class="fileira-label">⚔️ Vanguarda Corsária (Toque para mirar alvo)</span>
-        ${inimigosLista.map(ini => {
-          const sel = ini.id === inimigoSelecionadoId ? 'selecionado' : '';
-          const atingido = ultimoAlvoAtingidoId === ini.id ? 'alvo-atingido' : '';
-          const morto = ini.pv <= 0 ? 'derrotado' : '';
-          return `
-            <div class="card-inimigo-vanguarda ${sel} ${atingido} ${morto}" onclick="selecionarInimigoNaArena('${ini.id}')">
-              <div style="font-family:'Cinzel',serif; font-size:0.66rem; font-weight:700; color:#fca5a5;">${ini.nome.split('—')[0]}</div>
-              <div style="font-size:0.68rem;">🩸 ${ini.pv}/${ini.pvMax} • 💨 ${ini.vlc}</div>
-              <div style="font-size:0.62rem; background:#7f1d1d; padding:2px 5px; border-radius:4px;">ATK ${ini.atk} • DEF ${ini.def}</div>
-            </div>
-          `;
-        }).join('')}
-      `;
-
-      const traps = estadoAtual.armadilhasAtivas || [];
-      document.getElementById('fileira-armadilhas').innerHTML = `
-        <span class="fileira-label">🪤 Emboscadas (${traps.length})</span>
-        ${traps.length === 0
-          ? '<span style="font-size:0.76rem; color:rgba(244,230,200,0.35); font-style:italic;">Nenhuma armadilha oculta</span>'
-          : traps.map(t => `
-              <div class="carta-armadilha-mesa">
-                <span style="font-size:1.3rem;">🪤</span>
-                <strong style="font-family:'Cinzel',serif; font-size:0.62rem; color:#e9d5ff;">Oculta</strong>
-                <span style="font-size:0.6rem; color:#d8b4fe;">(${t.donoNome})</span>
-              </div>
-            `).join('')}
-      `;
-
-      const mesaCartas = estadoAtual.cartasNaMesa || [];
-      document.getElementById('fileira-aliada').innerHTML = `
-        <span class="fileira-label">⚓ Ações Manifestadas em Campo</span>
-        ${mesaCartas.map(c => `
-          <div class="carta-em-campo ${c.tipo === 'INIMIGO' ? 'inimiga' : ''}">
-            <div style="font-family:'Cinzel',serif; font-size:0.56rem; color:${c.tipo === 'INIMIGO' ? '#fca5a5' : '#fde68a'};">
-              ${c.autor.split('—')[0]} ➔ ${c.alvo ? c.alvo.split('—')[0] : ''}
-            </div>
-            <strong style="font-family:'Cinzel',serif; font-size:0.64rem; color:#fff;">${c.nome}</strong>
-            <div style="font-size:0.6rem; font-weight:700; color:#fbbf24;">${c.efeito}</div>
-          </div>
-        `).join('')}
-      `;
-
-      const mostrandoMaoInimigo = modoMestre && (turno.tipo === 'INIMIGO');
-      const podeAgir = modoMestre
-        ? (turno.tipo === 'INIMIGO')
-        : (turno.tipo === 'HEROI' && turno.id === h.id);
-
-      const avisoTrava = document.getElementById('aviso-trava-turno');
-      if (turno.tipo === 'INIMIGO' && !modoMestre) {
-        avisoTrava.style.display = 'block';
-        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
-        avisoTrava.textContent = `☠️ TURNO DO INIMIGO: ${turno.nome} — Preparem-se!`;
-      } else if (!podeAgir) {
-        avisoTrava.style.display = 'block';
-        avisoTrava.style.background = 'rgba(30, 41, 59, 0.94)';
-        avisoTrava.textContent = `⏳ Aguardando turno de: ${turno.nome}`;
-      } else if (mostrandoMaoInimigo) {
-        avisoTrava.style.display = 'block';
-        avisoTrava.style.background = 'rgba(153, 27, 27, 0.96)';
-        avisoTrava.textContent = `👑 Turno do Inimigo: ${turno.nome} (Alvo no painel Mestre: ${h.nome})`;
-      } else {
-        avisoTrava.style.display = 'none';
-      }
-
-      const cartasMao = mostrandoMaoInimigo
-        ? (iniFocado ? iniFocado.baralho : [])
-        : h.baralho;
-
-      const total = cartasMao.length;
-      document.getElementById('container-cartas').innerHTML = cartasMao.map((c, idx) => {
-        const angulo = (idx - (total - 1) / 2) * 3;
-        const elevacao = Math.abs(idx - (total - 1) / 2) * 3;
-        const semEp = !mostrandoMaoInimigo && (h.ep < c.custoEp);
-        const bloqueada = (!podeAgir || semEp) ? 'bloqueada' : '';
-
-        return `
-          <div class="carta-mao ${bloqueada}"
-               style="transform: rotate(${angulo}deg) translateY(${elevacao}px); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
-               onclick="aoClicarCarta('${c.id}', ${podeAgir}, ${mostrandoMaoInimigo})">
-            <div>
-              <div class="carta-mao-topo">
-                <span class="carta-mao-nome">${c.nome}</span>
-                <span class="carta-mao-custo" style="${mostrandoMaoInimigo ? 'background:#7f1d1d;' : ''}">${c.custoEp}</span>
-              </div>
-              <div class="carta-mao-arte">
-                ${c.imagemUrl
-                  ? `<img src="${c.imagemUrl}" alt="${c.nome}" onerror="this.parentElement.innerHTML='<span style=\\'font-size:1.8rem;\\'>${iconesTipo[c.tipo] || '🃏'}</span>'">`
-                  : `<span style="font-size:1.8rem;">${iconesTipo[c.tipo] || '🃏'}</span>`}
-              </div>
-              <span class="badge-tipo bg-${c.tipo}">${c.tipo}</span>
-            </div>
-            <p class="carta-mao-desc">${c.descricao}</p>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('lista-logs').innerHTML = (estadoAtual.logs || [])
-        .map(l => `<div class="log-item">${l}</div>`).join('');
-    }
-
-    // EXECUÇÃO DIRETA DA CARTA SEM MODAL DE DADO BLOQUEANDO O RITMO
-    async function aoClicarCarta(cartaId, podeAgir, isInimigoTurno) {
-      if (!podeAgir) return;
-
-      if (isInimigoTurno) {
-        const resp = await fetch('/api/jogo/mestre/jogar-carta-inimigo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            inimigoId: inimigoSelecionadoId,
-            cartaId: cartaId,
-            alvoId: heroiSelecionadoId
-          })
-        });
-        const res = await resp.json();
-        if (res.erro) alert(res.erro);
-      } else {
-        const resp = await fetch('/api/jogo/jogar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            personagemId: heroiSelecionadoId,
-            cartaId: cartaId,
-            inimigoAlvoId: inimigoSelecionadoId
-          })
-        });
-        const res = await resp.json();
-        if (res.erro) alert(res.erro);
-      }
-      await carregarEstado(true);
-    }
-
-    // IMPROVISO NARRATIVO DO JOGADOR
-    function abrirModalSolicitarImproviso() {
-      const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
-      document.getElementById('nome-pirata-improviso').textContent = h.nome;
-      document.getElementById('aviso-bonus-improviso-jogador').textContent = h.bonusImproviso > 0
-        ? `✨ Você possui +${h.bonusImproviso} de bônus acumulado de cartas para este improviso!`
-        : '';
-      document.getElementById('texto-pedido-improviso').value = '';
-      document.getElementById('modal-solicitar-improviso').style.display = 'flex';
-    }
-
-    function fecharModalImproviso() {
-      document.getElementById('modal-solicitar-improviso').style.display = 'none';
-    }
-
-    async function enviarSolicitacaoImproviso() {
-      const descricao = document.getElementById('texto-pedido-improviso').value || "Ação Criativa";
-      fecharModalImproviso();
-      const resp = await fetch('/api/jogo/solicitar-improviso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personagemId: heroiSelecionadoId, descricao })
-      });
-      const res = await resp.json();
-      if (res.erro) alert(res.erro);
-      await carregarEstado(true);
-    }
-
-    async function resolverImprovisoMestre() {
-      const dado = parseInt(document.getElementById('mestre-imp-d20').value) || 10;
-      const pirataId = document.getElementById('mestre-imp-pirata').value;
-      const atributo = document.getElementById('mestre-imp-atributo').value;
-      const sol = estadoAtual.solicitacaoImprovisoAtiva;
-      const desc = sol ? sol.descricao : "Improviso Narrativo";
-
-      await fetch('/api/jogo/mestre/improviso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          personagemId: pirataId,
-          dadoFisico: dado,
-          atributo: atributo,
-          descricao: desc
-        })
-      });
-      document.getElementById('mestre-imp-d20').value = '';
-      await carregarEstado(true);
-    }
-
-    // AJUSTE UNIVERSAL DO MESTRE (JOGADORES E INIMIGOS: PV, CURA, BUFFS E DEBUFFS)
-    async function ajustarEntidadeServidor(tipoAjuste, sinal) {
-      const qtd = Math.abs(parseInt(document.getElementById('mestre-valor-pv').value) || 0);
-      const valorFinal = (tipoAjuste === 'pv') ? (sinal * qtd) : sinal;
-
-      await fetch('/api/jogo/mestre/ajustar-entidade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          alvoId: entidadeMestreId,
-          tipoAjuste: tipoAjuste,
-          valor: valorFinal
-        })
-      });
-      await carregarEstado(true);
-    }
-
-    async function encerrarTurno() {
-      await fetch('/api/jogo/turno', { method: 'POST' });
-      await carregarEstado(true);
-    }
-
-    async function comprarLoja(item) {
-      const resp = await fetch('/api/jogo/loja', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personagemId: heroiSelecionadoId, item })
-      });
-      const res = await resp.json();
-      if (res.erro) alert(res.erro);
-      await carregarEstado(true);
-    }
-
-    async function acaoMestreHeroi(acao) {
-      const frutaNome = acao === 'fruta' ? (prompt("Nome da Fruta do Poder:") || "Fruta Mística") : "";
-      await fetch('/api/jogo/mestre/heroi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personagemId: heroiSelecionadoId, acao, frutaNome })
-      });
-      await carregarEstado(true);
-    }
-
-    async function mudarCenario(cenario) {
-      await fetch('/api/jogo/mestre/cenario', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cenario })
-      });
-      await carregarEstado(true);
-    }
-
-    async function invocarInimigo(limpar) {
-      const nome = document.getElementById('novo-ini-nome').value || "Corsário Sombrio";
-      const pv = document.getElementById('novo-ini-pv').value || 35;
-      const atk = document.getElementById('novo-ini-atk').value || 4;
-      const vlc = document.getElementById('novo-ini-vlc').value || 4;
-      const arquetipo = document.getElementById('novo-ini-arquetipo').value;
-
-      await fetch('/api/jogo/mestre/novo-inimigo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, pv, atk, def: 2, vlc, arquetipo, limpar })
-      });
-      await carregarEstado(true);
-    }
-
-    function baixarSave() {
-      if (!estadoAtual) return;
-      const blob = new Blob([JSON.stringify(estadoAtual, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `cronica-pirata-${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    async function carregarArquivoSave(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const texto = await file.text();
-      localStorage.setItem(CHAVE_SAVE, texto);
-      await fetch('/api/jogo/mestre/restaurar-save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: texto
-      });
-      await carregarEstado(true);
-    }
-
-    async function resetarBatalha() {
-      localStorage.removeItem(CHAVE_SAVE);
-      await fetch('/api/jogo/mestre/resetar', { method: 'POST' });
-      await carregarEstado(true);
-    }
-
-    iniciarParticulasVivas();
-    carregarEstado(true);
-    setInterval(() => carregarEstado(false), 2000);
-  </script>
-</body>
-</html>
