@@ -84,14 +84,12 @@
       background:
         radial-gradient(circle at 50% 18%, rgba(212, 175, 55, 0.16), transparent 55%),
         radial-gradient(circle at 15% 85%, rgba(14, 116, 144, 0.18), transparent 50%),
-        /* Linhas de grade cartográfica */
         linear-gradient(90deg, rgba(212, 175, 55, 0.045) 1px, transparent 1px),
         linear-gradient(0deg, rgba(212, 175, 55, 0.045) 1px, transparent 1px),
         radial-gradient(ellipse at center, #161c24 0%, #0a0d12 72%, #05070a 100%);
       background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px, 100% 100%;
     }
 
-    /* ROSA DOS VENTOS MONUMENTAL GIRANDO NO FUNDO */
     .rosa-ventos-fundo {
       position: fixed;
       top: 50%;
@@ -131,7 +129,7 @@
       margin-bottom: 14px;
     }
 
-    /* PALCO DO BAÚ / ENIGMA DE EXPLORAÇÃO (ESTILO GRAVURA) */
+    /* PALCO DO BAÚ / ENIGMA DE EXPLORAÇÃO */
     .palco-objeto-exploracao {
       margin-bottom: 14px;
       background:
@@ -301,7 +299,6 @@
       background-color: #0b0f14;
     }
 
-    /* TEMA 1: PORTO PIRATA (DOCAS AO CREPÚSCULO) */
     #mesa-batalha.tema-porto {
       background:
         radial-gradient(ellipse at 50% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
@@ -310,7 +307,6 @@
         linear-gradient(180deg, #0c1f33 0%, #1c2430 28%, #28180e 52%, #1b1009 82%, #0c0704 100%);
     }
 
-    /* TEMA 2: CONVÉS DO GALEÃO (TEMPESTADE EM ALTO-MAR) */
     #mesa-batalha.tema-conves {
       background:
         radial-gradient(ellipse at 50% 20%, rgba(56, 189, 248, 0.22) 0%, transparent 55%),
@@ -318,7 +314,6 @@
         linear-gradient(180deg, #071926 0%, #0f2c3d 32%, #331e10 48%, #221309 85%, #0f0804 100%);
     }
 
-    /* TEMA 3: ILHA DAS RUÍNAS (SANTUÁRIO ARCANO) */
     #mesa-batalha.tema-ruinas {
       background:
         radial-gradient(ellipse at 50% 30%, rgba(16, 185, 129, 0.22) 0%, transparent 58%),
@@ -327,7 +322,6 @@
         linear-gradient(180deg, #091c18 0%, #132b24 35%, #19211e 65%, #090e0c 100%);
     }
 
-    /* TEMA 4: TAVERNA SUBTERRÂNEA */
     #mesa-batalha.tema-taverna {
       background:
         radial-gradient(ellipse at 50% 35%, rgba(234, 88, 12, 0.25) 0%, transparent 60%),
@@ -335,7 +329,6 @@
         linear-gradient(180deg, #1f1109 0%, #361c0e 35%, #261309 75%, #0e0704 100%);
     }
 
-    /* SILHUETA DE HORIZONTE NAUTICO / RUINAS NO FUNDO DA ARENA */
     .cenografia-svg-fundo {
       position: absolute;
       inset: 0;
@@ -346,7 +339,6 @@
       opacity: 0.26;
     }
 
-    /* MOLDURA DE MADEIRA ESCULPIDA NAS BORDAS DA MESA */
     #mesa-batalha::before {
       content: "";
       position: absolute;
@@ -419,7 +411,7 @@
       padding: 5px 12px;
       border-radius: 22px;
       overflow-x: auto;
-      max-width: 48vw;
+      max-width: 44vw;
     }
 
     .pill-turno {
@@ -548,7 +540,6 @@
 
     .inimigo-palco-actor.derrotado { opacity: 0.25; filter: grayscale(1); pointer-events: none; }
 
-    /* BALÃO ESCURO DE INTENÇÃO ACIMA DO INIMIGO */
     .balao-intencao {
       background: linear-gradient(180deg, #1c0b0b, #090404);
       border: 2px solid #ef4444;
@@ -699,7 +690,6 @@
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.8);
     }
 
-    /* TIMÃO / MEDALHÃO DE PASSAR TURNO */
     .medalhao-turno {
       width: 112px;
       height: 112px;
@@ -723,7 +713,7 @@
     .medalhao-turno:hover { transform: scale3d(1.05, 1.05, 1); }
     .medalhao-turno:active { transform: scale3d(0.93, 0.93, 1); }
 
-    /* MÃO DE CARTAS ESTILIZADAS EM PERGAMINHO & TINTA */
+    /* MÃO DE CARTAS */
     .zona-mao-jogador {
       grid-column: 2 / 3;
       grid-row: 3 / 4;
@@ -959,7 +949,6 @@
 
   <!-- TELA 1: EXPLORAÇÃO & CARTA NÁUTICA -->
   <section id="tela-exploracao">
-    <!-- ROSA DOS VENTOS DECORATIVA NO FUNDO -->
     <svg class="rosa-ventos-fundo" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="200" cy="200" r="185" stroke="#d4af37" stroke-width="2" stroke-dasharray="6 6"/>
       <circle cx="200" cy="200" r="150" stroke="#d4af37" stroke-width="1.5"/>
@@ -980,6 +969,7 @@
         </div>
 
         <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <button class="btn-pirata btn-toggle-som" onclick="alternarAudioGlobal()">🔊 Som: ON</button>
           <button class="btn-pirata" onclick="abrirModalSolicitarImproviso()">🎭 Solicitar Improviso</button>
           <button class="btn-pirata" onclick="toggleGaveta('gaveta-taverna')">⚖️ Taverna</button>
           <button class="btn-pirata" onclick="toggleGaveta('gaveta-logs')">📜 Diário</button>
@@ -1011,17 +1001,12 @@
 
   <!-- TELA 2: MESA DE BATALHA -->
   <div id="mesa-batalha" class="tema-porto">
-    <!-- CENOGRAFIA VETORIAL DE HORIZONTE PIRATA / FANTASIA -->
     <svg class="cenografia-svg-fundo" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <!-- Lua / Sol místico no horizonte -->
       <circle cx="600" cy="175" r="95" fill="#d4af37" fill-opacity="0.22" stroke="#ffe48f" stroke-width="1.5"/>
-      <!-- Silhueta de Galeão ao fundo -->
       <path d="M130 290 L270 290 L250 335 L150 335 Z" fill="#05070a"/>
       <rect x="196" y="165" width="6" height="125" fill="#05070a"/>
       <path d="M202 175 Q255 215 202 260 Z" fill="#080b10" stroke="#d4af37" stroke-opacity="0.35"/>
-      <!-- Ilha / Rochedos à direita -->
       <path d="M880 340 L940 235 L985 275 L1045 200 L1130 340 Z" fill="#05070a"/>
-      <!-- Ondas estilizadas -->
       <path d="M0 340 Q150 325 300 340 T600 340 T900 340 T1200 340 L1200 375 L0 375 Z" fill="#07111a"/>
     </svg>
 
@@ -1034,6 +1019,7 @@
       <div class="zona-topo-inimigo">
         <div style="display:flex; align-items:center; gap:6px;">
           <button class="btn-pirata" onclick="voltarExploracao()" title="Voltar para Exploração">🧭</button>
+          <button class="btn-pirata btn-toggle-som" onclick="alternarAudioGlobal()" title="Ativar/Silenciar Áudio">🔊</button>
           <button class="btn-pirata" id="btn-auto-troca" onclick="alternarAutoTrocaTela()" title="Alterna automaticamente entre os jogadores">
             🖥️ Mesa: ON
           </button>
@@ -1227,12 +1213,13 @@
     </div>
   </div>
 
-  <!-- MOTOR CANVAS 2D LEVE (SEM SHADOWBLUR, LOOP SOB DEMANDA) -->
+  <!-- MOTOR CANVAS 2D LEVE -->
   <canvas id="canvas-vfx"></canvas>
   <div id="camada-vfx-texto"></div>
 
   <script>
-    const CHAVE_SAVE = "cronicas_sete_mares_save_v9";
+    const CHAVE_SAVE = "cronicas_sete_mares_save_v10";
+    const CHAVE_SOM = "cronicas_sete_mares_som_ativo";
     let estadoAtual = null;
     let ultimoEstadoJson = "";
     let ultimoEventoIdExibido = 0;
@@ -1247,9 +1234,442 @@
     let cartaEmHoverEl = null;
     let assinaturaEntidadesMestre = "";
 
+    /* =====================================================================
+       MOTOR DE ÁUDIO PIRATA & FANTASIA (WEB AUDIO API — ZERO TRAVAMENTOS)
+       Roda na thread dedicada de áudio do navegador com buffers reutilizáveis.
+       ===================================================================== */
+    const MotorAudioPirata = (() => {
+      let ctx = null;
+      let masterGain = null;
+      let musicGain = null;
+      let sfxGain = null;
+      let bufferRuido = null;
+      let ativo = localStorage.getItem(CHAVE_SOM) !== "0";
+      let trilhaAtual = ""; // "EXPLORACAO" | "COMBATE"
+      let timerMusica = null;
+      let passoSequencia = 0;
+      let proximoTempoNota = 0;
+      let ultimoHoverSom = 0;
+
+      // Escala Ré Dórico / Ré Menor Pirata (frequências em Hz)
+      const NOTAS = {
+        D2: 73.42, A2: 110.00, C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.00, A3: 220.00, Bb3: 233.08, C4: 261.63,
+        D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, Bb4: 466.16, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46
+      };
+
+      // Tema 1: Aventura & Taverna Náutica (compasso 6/8 — Alaúde & Bordão)
+      const MELODIA_EXPLORACAO = [
+        { mel: NOTAS.D4, baix: NOTAS.D2, dur: 0.34 },
+        { mel: NOTAS.F4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.A4, baix: NOTAS.A2, dur: 0.34 },
+        { mel: NOTAS.G4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.F4, baix: NOTAS.C3, dur: 0.34 },
+        { mel: NOTAS.E4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.D4, baix: NOTAS.D2, dur: 0.50 },
+        { mel: 0, baix: NOTAS.A2, dur: 0.25 },
+
+        { mel: NOTAS.F4, baix: NOTAS.F3, dur: 0.34 },
+        { mel: NOTAS.A4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.C5, baix: NOTAS.C3, dur: 0.34 },
+        { mel: NOTAS.Bb4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.A4, baix: NOTAS.A2, dur: 0.34 },
+        { mel: NOTAS.G4, baix: 0, dur: 0.17 },
+        { mel: NOTAS.A4, baix: NOTAS.D2, dur: 0.50 },
+        { mel: 0, baix: NOTAS.A2, dur: 0.25 }
+      ];
+
+      // Tema 2: Batalha Pirata (ritmo 6/8 acelerado com tambores e cordas)
+      const MELODIA_COMBATE = [
+        { mel: NOTAS.D4, baix: NOTAS.D2, tambor: "BUM", dur: 0.18 },
+        { mel: NOTAS.D4, baix: 0, tambor: "TAK", dur: 0.18 },
+        { mel: NOTAS.F4, baix: NOTAS.D2, tambor: "", dur: 0.18 },
+        { mel: NOTAS.A4, baix: NOTAS.A2, tambor: "BUM", dur: 0.18 },
+        { mel: NOTAS.A4, baix: 0, tambor: "TAK", dur: 0.18 },
+        { mel: NOTAS.Bb4, baix: NOTAS.A2, tambor: "TAK", dur: 0.18 },
+
+        { mel: NOTAS.A4, baix: NOTAS.F3, tambor: "BUM", dur: 0.18 },
+        { mel: NOTAS.G4, baix: 0, tambor: "TAK", dur: 0.18 },
+        { mel: NOTAS.F4, baix: NOTAS.C3, tambor: "", dur: 0.18 },
+        { mel: NOTAS.E4, baix: NOTAS.A2, tambor: "BUM", dur: 0.36 },
+        { mel: NOTAS.C4, baix: NOTAS.A2, tambor: "TAK", dur: 0.18 },
+
+        { mel: NOTAS.D4, baix: NOTAS.D2, tambor: "BUM", dur: 0.18 },
+        { mel: NOTAS.F4, baix: 0, tambor: "TAK", dur: 0.18 },
+        { mel: NOTAS.A4, baix: NOTAS.D2, tambor: "", dur: 0.18 },
+        { mel: NOTAS.D5, baix: NOTAS.Bb3, tambor: "BUM", dur: 0.36 },
+        { mel: NOTAS.C5, baix: NOTAS.A2, tambor: "TAK", dur: 0.18 },
+
+        { mel: NOTAS.Bb4, baix: NOTAS.G3, tambor: "BUM", dur: 0.18 },
+        { mel: NOTAS.A4, baix: 0, tambor: "TAK", dur: 0.18 },
+        { mel: NOTAS.G4, baix: NOTAS.A2, tambor: "", dur: 0.18 },
+        { mel: NOTAS.A4, baix: NOTAS.D2, tambor: "BUM", dur: 0.54 }
+      ];
+
+      function garantirContexto() {
+        if (!ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return false;
+          ctx = new AudioCtx();
+
+          masterGain = ctx.createGain();
+          masterGain.gain.value = ativo ? 0.65 : 0;
+          masterGain.connect(ctx.destination);
+
+          musicGain = ctx.createGain();
+          musicGain.gain.value = 0.24;
+          musicGain.connect(masterGain);
+
+          sfxGain = ctx.createGain();
+          sfxGain.gain.value = 0.72;
+          sfxGain.connect(masterGain);
+
+          // Pré-aloca buffer de ruído branco de 1.5s uma única vez (zero alocação em batalha)
+          const tamanhoBuffer = Math.floor(ctx.sampleRate * 1.5);
+          bufferRuido = ctx.createBuffer(1, tamanhoBuffer, ctx.sampleRate);
+          const dados = bufferRuido.getChannelData(0);
+          for (let i = 0; i < tamanhoBuffer; i++) {
+            dados[i] = Math.random() * 2 - 1;
+          }
+        }
+        if (ctx.state === "suspended") {
+          ctx.resume();
+        }
+        return true;
+      }
+
+      function tocarNotaCorda(freq, inicio, duracao, volume, tipoOnda = "triangle") {
+        if (!freq || !ctx) return;
+        const osc = ctx.createOscillator();
+        const filtro = ctx.createBiquadFilter();
+        const env = ctx.createGain();
+
+        osc.type = tipoOnda;
+        osc.frequency.setValueAtTime(freq, inicio);
+
+        filtro.type = "lowpass";
+        filtro.frequency.setValueAtTime(freq * 3.8, inicio);
+        filtro.frequency.exponentialRampToValueAtTime(freq * 1.2, inicio + duracao);
+
+        env.gain.setValueAtTime(0.0001, inicio);
+        env.gain.linearRampToValueAtTime(volume, inicio + 0.018);
+        env.gain.exponentialRampToValueAtTime(0.0001, inicio + duracao * 1.35);
+
+        osc.connect(filtro);
+        filtro.connect(env);
+        env.connect(musicGain);
+
+        osc.start(inicio);
+        osc.stop(inicio + duracao * 1.4);
+      }
+
+      function tocarTamborGuerra(inicio, tipo) {
+        if (!tipo || !ctx) return;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = "sine";
+
+        if (tipo === "BUM") {
+          osc.frequency.setValueAtTime(115, inicio);
+          osc.frequency.exponentialRampToValueAtTime(42, inicio + 0.16);
+          env.gain.setValueAtTime(0.45, inicio);
+          env.gain.exponentialRampToValueAtTime(0.001, inicio + 0.22);
+        } else {
+          osc.frequency.setValueAtTime(195, inicio);
+          osc.frequency.exponentialRampToValueAtTime(85, inicio + 0.09);
+          env.gain.setValueAtTime(0.22, inicio);
+          env.gain.exponentialRampToValueAtTime(0.001, inicio + 0.11);
+        }
+
+        osc.connect(env);
+        env.connect(musicGain);
+        osc.start(inicio);
+        osc.stop(inicio + 0.24);
+      }
+
+      function agendarPassoMusica() {
+        if (!ativo || !ctx || ctx.state !== "running" || document.hidden) return;
+        const horizonte = ctx.currentTime + 0.25;
+
+        while (proximoTempoNota < horizonte) {
+          if (trilhaAtual === "COMBATE") {
+            const passo = MELODIA_COMBATE[passoSequencia % MELODIA_COMBATE.length];
+            tocarNotaCorda(passo.mel, proximoTempoNota, passo.dur, 0.28, "sawtooth");
+            tocarNotaCorda(passo.baix, proximoTempoNota, passo.dur * 1.2, 0.34, "triangle");
+            tocarTamborGuerra(proximoTempoNota, passo.tambor);
+            proximoTempoNota += passo.dur;
+          } else {
+            const passo = MELODIA_EXPLORACAO[passoSequencia % MELODIA_EXPLORACAO.length];
+            tocarNotaCorda(passo.mel, proximoTempoNota, passo.dur, 0.26, "triangle");
+            tocarNotaCorda(passo.baix, proximoTempoNota, passo.dur * 1.4, 0.30, "sine");
+            proximoTempoNota += passo.dur;
+          }
+          passoSequencia++;
+        }
+      }
+
+      function iniciarAgendador() {
+        if (timerMusica) return;
+        proximoTempoNota = ctx.currentTime + 0.05;
+        timerMusica = setInterval(agendarPassoMusica, 90);
+      }
+
+      function definirTrilha(novaTrilha) {
+        if (trilhaAtual === novaTrilha) return;
+        trilhaAtual = novaTrilha;
+        passoSequencia = 0;
+        if (ctx && ctx.state === "running") {
+          proximoTempoNota = ctx.currentTime + 0.06;
+        }
+      }
+
+      /* ==================== EFEITOS SONOROS (SFX) ==================== */
+      function tocarRuidoFiltrado(duracao, freqInicial, freqFinal, tipoFiltro, volume) {
+        if (!ativo || !garantirContexto() || !bufferRuido) return;
+        const agora = ctx.currentTime;
+        const src = ctx.createBufferSource();
+        src.buffer = bufferRuido;
+
+        const filtro = ctx.createBiquadFilter();
+        filtro.type = tipoFiltro;
+        filtro.frequency.setValueAtTime(freqInicial, agora);
+        filtro.frequency.exponentialRampToValueAtTime(Math.max(40, freqFinal), agora + duracao);
+
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(volume, agora);
+        env.gain.exponentialRampToValueAtTime(0.001, agora + duracao);
+
+        src.connect(filtro);
+        filtro.connect(env);
+        env.connect(sfxGain);
+
+        src.start(agora, Math.random() * 0.4, duracao);
+      }
+
+      function somHoverCarta() {
+        const agoraMs = performance.now();
+        if (agoraMs - ultimoHoverSom < 90) return;
+        ultimoHoverSom = agoraMs;
+        tocarRuidoFiltrado(0.055, 2400, 900, "bandpass", 0.14);
+      }
+
+      function somCliqueBotao() {
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(420, t);
+        osc.frequency.exponentialRampToValueAtTime(210, t + 0.06);
+        env.gain.setValueAtTime(0.22, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.065);
+        osc.connect(env);
+        env.connect(sfxGain);
+        osc.start(t);
+        osc.stop(t + 0.07);
+      }
+
+      function somEspada() {
+        tocarRuidoFiltrado(0.22, 3200, 450, "bandpass", 0.42);
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        [980, 1480].forEach(freq => {
+          const osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, t + 0.04);
+          osc.frequency.exponentialRampToValueAtTime(freq * 0.72, t + 0.28);
+          env.gain.setValueAtTime(0.18, t + 0.04);
+          env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+          osc.connect(env);
+          env.connect(sfxGain);
+          osc.start(t + 0.04);
+          osc.stop(t + 0.31);
+        });
+      }
+
+      function somTiroCanhao() {
+        tocarRuidoFiltrado(0.45, 950, 75, "lowpass", 0.65);
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(160, t);
+        osc.frequency.exponentialRampToValueAtTime(34, t + 0.36);
+        env.gain.setValueAtTime(0.65, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+        osc.connect(env);
+        env.connect(sfxGain);
+        osc.start(t);
+        osc.stop(t + 0.42);
+      }
+
+      function somFogo() {
+        tocarRuidoFiltrado(0.55, 650, 1800, "bandpass", 0.52);
+      }
+
+      function somEscudo() {
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        [330, 495, 660].forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(f, t + idx * 0.04);
+          env.gain.setValueAtTime(0.24, t + idx * 0.04);
+          env.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+          osc.connect(env);
+          env.connect(sfxGain);
+          osc.start(t + idx * 0.04);
+          osc.stop(t + 0.46);
+        });
+      }
+
+      function somCura() {
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        [440, 554.37, 659.25, 880].forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(f, t + idx * 0.065);
+          env.gain.setValueAtTime(0.22, t + idx * 0.065);
+          env.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.065 + 0.38);
+          osc.connect(env);
+          env.connect(sfxGain);
+          osc.start(t + idx * 0.065);
+          osc.stop(t + idx * 0.065 + 0.4);
+        });
+      }
+
+      function somBauOuro() {
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        [1318.5, 1567.98, 2093].forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(f, t + idx * 0.055);
+          env.gain.setValueAtTime(0.22, t + idx * 0.055);
+          env.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.055 + 0.25);
+          osc.connect(env);
+          env.connect(sfxGain);
+          osc.start(t + idx * 0.055);
+          osc.stop(t + idx * 0.055 + 0.26);
+        });
+      }
+
+      function somAtaqueInimigo() {
+        tocarRuidoFiltrado(0.28, 800, 140, "lowpass", 0.5);
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(140, t);
+        osc.frequency.exponentialRampToValueAtTime(52, t + 0.28);
+        env.gain.setValueAtTime(0.32, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        osc.connect(env);
+        env.connect(sfxGain);
+        osc.start(t);
+        osc.stop(t + 0.31);
+      }
+
+      function somPassarTurno() {
+        if (!ativo || !garantirContexto()) return;
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(784, t);
+        env.gain.setValueAtTime(0.22, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+        osc.connect(env);
+        env.connect(sfxGain);
+        osc.start(t);
+        osc.stop(t + 0.44);
+      }
+
+      function dispararPorEvento(ev) {
+        if (!ev) return;
+        const ef = (ev.efeitoEspecial || "").toUpperCase();
+        const tipo = (ev.tipo || "").toUpperCase();
+
+        if (ev.alvoId === "obj_exploracao") {
+          somBauOuro();
+        } else if (tipo === "INIMIGO") {
+          somAtaqueInimigo();
+        } else if (ef.includes("CHAMAS") || ef.includes("QUEIMADURA") || ef.includes("QUEIMAR")) {
+          somFogo();
+        } else if (ef.includes("CRITICO") || ef.includes("TIRO") || ef.includes("CANHAO")) {
+          somTiroCanhao();
+        } else if (tipo === "DEFESA") {
+          somEscudo();
+        } else if (tipo === "SUPORTE") {
+          somCura();
+        } else if (tipo === "ARMADILHA") {
+          somCliqueBotao();
+        } else {
+          somEspada();
+        }
+      }
+
+      function desbloquearNoToque() {
+        if (garantirContexto()) {
+          iniciarAgendador();
+        }
+      }
+
+      function alternarMute() {
+        ativo = !ativo;
+        localStorage.setItem(CHAVE_SOM, ativo ? "1" : "0");
+        if (ativo) {
+          garantirContexto();
+          iniciarAgendador();
+        }
+        if (masterGain && ctx) {
+          masterGain.gain.setTargetAtTime(ativo ? 0.65 : 0, ctx.currentTime, 0.04);
+        }
+        return ativo;
+      }
+
+      return {
+        isAtivo: () => ativo,
+        desbloquearNoToque,
+        alternarMute,
+        definirTrilha,
+        dispararPorEvento,
+        somHoverCarta,
+        somCliqueBotao,
+        somPassarTurno
+      };
+    })();
+
+    function atualizarBotoesAudio() {
+      const ligado = MotorAudioPirata.isAtivo();
+      document.querySelectorAll(".btn-toggle-som").forEach(btn => {
+        btn.textContent = btn.closest("#tela-exploracao")
+          ? (ligado ? "🔊 Som: ON" : "🔇 Mudo")
+          : (ligado ? "🔊" : "🔇");
+      });
+    }
+
+    function alternarAudioGlobal() {
+      MotorAudioPirata.alternarMute();
+      atualizarBotoesAudio();
+      if (MotorAudioPirata.isAtivo()) {
+        MotorAudioPirata.somCliqueBotao();
+      }
+    }
+
+    // Destrava o áudio no primeiro clique/toque na página sem interferir nos botões
+    window.addEventListener("pointerdown", () => {
+      MotorAudioPirata.desbloquearNoToque();
+    }, { once: true });
+
     const iconesTipo = { ATAQUE: "⚔️", DEFESA: "🛡️", ARMADILHA: "🪤", SUPORTE: "✨", INIMIGO: "🩸", EXPLORACAO: "🗝️" };
 
-    /* ILUSTRAÇÕES VETORIAIS ESTILO GRAVURA PARA INIMIGOS E OBJETOS */
     const svgsArquetipo = {
       corsario: `<svg viewBox="0 0 80 80" width="66" height="66" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 34 Q40 12 68 34 L62 42 Q40 28 18 42 Z" fill="#1c0d06" stroke="#f3c65f" stroke-width="2.5"/>
@@ -1412,7 +1832,6 @@
     function loopRenderCanvas() {
       ctxVfx.clearRect(0, 0, canvasVfx.width, canvasVfx.height);
 
-      // Linha tracejada de mira ao passar o dedo/mouse numa carta de ataque
       if (cartaEmHoverEl && inimigoSelecionadoId && estadoAtual && estadoAtual.faseJogo === 'COMBATE') {
         const rCarta = cartaEmHoverEl.getBoundingClientRect();
         const posAlvo = obterCentroElemento(`[data-entidade-id="${inimigoSelecionadoId}"]`, 0, 0);
@@ -1595,6 +2014,7 @@
        LÓGICA DO JOGO & SINCRONIZAÇÃO
        ===================================================================== */
     function alternarAutoTrocaTela() {
+      MotorAudioPirata.somCliqueBotao();
       autoTrocaTela = !autoTrocaTela;
       const btn = document.getElementById('btn-auto-troca');
       btn.textContent = autoTrocaTela ? "🖥️ Mesa: ON" : "📱 Meu Pirata";
@@ -1614,6 +2034,7 @@
     }
 
     function cliqueBrasaoMestre() {
+      MotorAudioPirata.somCliqueBotao();
       cliquesBrasao++;
       if (cliquesBrasao >= 3) {
         modoMestre = true;
@@ -1652,6 +2073,7 @@
         }, 1200);
       }
 
+      MotorAudioPirata.dispararPorEvento(ev);
       dispararEfeitoVisualCanvas(ev);
 
       if (ev.tipo === 'ATAQUE' || isInimigo) {
@@ -1669,6 +2091,7 @@
     }
 
     function toggleGaveta(id) {
+      MotorAudioPirata.somCliqueBotao();
       const el = document.getElementById(id);
       const visivel = el.style.display === 'block';
       document.querySelectorAll('.gaveta-modal').forEach(g => g.style.display = 'none');
@@ -1729,6 +2152,10 @@
     function renderizarTudo() {
       if (!estadoAtual) return;
       const emCombate = estadoAtual.faseJogo === 'COMBATE';
+
+      // Alterna automaticamente entre a trilha de Exploração e a trilha de Combate
+      MotorAudioPirata.definirTrilha(emCombate ? "COMBATE" : "EXPLORACAO");
+      atualizarBotoesAudio();
 
       document.getElementById('tela-exploracao').style.display = emCombate ? 'none' : 'block';
       const mesaEl = document.getElementById('mesa-batalha');
@@ -1863,7 +2290,7 @@
               <path d="M2 30 L2 6 Q2 2 6 2 L30 2" stroke="#ffe48f" stroke-width="2.5"/>
               <circle cx="7" cy="7" r="3" fill="#d4af37"/>
             </svg>
-            <div class="moldura-retrato" onclick="heroiSelecionadoId='${h.id}'; renderizarTudo();">
+            <div class="moldura-retrato" onclick="MotorAudioPirata.somCliqueBotao(); heroiSelecionadoId='${h.id}'; renderizarTudo();">
               <img src="${h.imagemUrl}" alt="${h.nome}">
               <span class="tag-profissao">${h.profissao} • Nv.${h.nivel}</span>
             </div>
@@ -1900,6 +2327,7 @@
     }
 
     async function criarEventoExploracaoMestre() {
+      MotorAudioPirata.somCliqueBotao();
       const titulo = document.getElementById('exp-novo-titulo').value || "Baú Corsário Acorrentado";
       await fetch('/api/jogo/mestre/evento-exploracao', {
         method: 'POST',
@@ -1911,6 +2339,7 @@
     }
 
     async function iniciarCombateServidor(iniciadorId) {
+      MotorAudioPirata.somCliqueBotao();
       if (iniciadorId) heroiSelecionadoId = iniciadorId;
       await fetch('/api/jogo/iniciar-combate', {
         method: 'POST',
@@ -1921,11 +2350,13 @@
     }
 
     async function voltarExploracao() {
+      MotorAudioPirata.somCliqueBotao();
       await fetch('/api/jogo/voltar-exploracao', { method: 'POST' });
       await carregarEstado(true);
     }
 
     function selecionarInimigoNaArena(id) {
+      MotorAudioPirata.somCliqueBotao();
       inimigoSelecionadoId = id;
       renderizarArena();
     }
@@ -1994,7 +2425,6 @@
         </div>
       `;
 
-      // INIMIGOS EM PÉ NO PALCO COM ILUSTRAÇÃO SVG EM ESTILO GRAVURA
       document.getElementById('fileira-inimiga').innerHTML = `
         <span class="fileira-label">⚔️ Oponentes em Campo (Toque para mirar)</span>
         ${inimigosLista.map(ini => {
@@ -2086,7 +2516,7 @@
         return `
           <div class="carta-mao ${bloqueada}"
                style="transform: rotate(${angulo}deg) translate3d(0, ${elevacao}px, 0); ${mostrandoMaoInimigo ? 'border-color:#dc2626;' : ''}"
-               onmouseenter="if('${c.tipo}'==='ATAQUE') { cartaEmHoverEl = this; iniciarLoopCanvas(); }"
+               onmouseenter="MotorAudioPirata.somHoverCarta(); if('${c.tipo}'==='ATAQUE') { cartaEmHoverEl = this; iniciarLoopCanvas(); }"
                onmouseleave="cartaEmHoverEl = null;"
                onclick="cartaEmHoverEl = null; aoClicarCarta('${c.id}', ${podeAgir}, ${mostrandoMaoInimigo})">
             <div>
@@ -2142,6 +2572,7 @@
     }
 
     function abrirModalSolicitarImproviso() {
+      MotorAudioPirata.somCliqueBotao();
       const h = estadoAtual.herois.find(item => item.id === heroiSelecionadoId) || estadoAtual.herois[0];
       document.getElementById('nome-pirata-improviso').textContent = h.nome;
       document.getElementById('aviso-bonus-improviso-jogador').textContent = h.bonusImproviso > 0
@@ -2152,6 +2583,7 @@
     }
 
     function fecharModalImproviso() {
+      MotorAudioPirata.somCliqueBotao();
       document.getElementById('modal-solicitar-improviso').style.display = 'none';
     }
 
@@ -2190,6 +2622,7 @@
     }
 
     async function ajustarEntidadeServidor(tipoAjuste, sinal) {
+      MotorAudioPirata.somCliqueBotao();
       const qtd = Math.abs(parseInt(document.getElementById('mestre-valor-pv').value) || 0);
       const valorFinal = (tipoAjuste === 'pv') ? (sinal * qtd) : sinal;
 
@@ -2206,11 +2639,13 @@
     }
 
     async function encerrarTurno() {
+      MotorAudioPirata.somPassarTurno();
       await fetch('/api/jogo/turno', { method: 'POST' });
       await carregarEstado(true);
     }
 
     async function comprarLoja(item) {
+      MotorAudioPirata.somCliqueBotao();
       const resp = await fetch('/api/jogo/loja', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2222,6 +2657,7 @@
     }
 
     async function acaoMestreHeroi(acao) {
+      MotorAudioPirata.somCliqueBotao();
       const frutaNome = acao === 'fruta' ? (prompt("Nome da Fruta do Poder:") || "Fruta Mística") : "";
       await fetch('/api/jogo/mestre/heroi', {
         method: 'POST',
@@ -2232,6 +2668,7 @@
     }
 
     async function mudarCenario(cenario) {
+      MotorAudioPirata.somCliqueBotao();
       await fetch('/api/jogo/mestre/cenario', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2241,6 +2678,7 @@
     }
 
     async function invocarInimigo(limpar) {
+      MotorAudioPirata.somCliqueBotao();
       const nome = document.getElementById('novo-ini-nome').value || "Corsário Sombrio";
       const pv = document.getElementById('novo-ini-pv').value || 35;
       const atk = document.getElementById('novo-ini-atk').value || 4;
@@ -2256,6 +2694,7 @@
     }
 
     function baixarSave() {
+      MotorAudioPirata.somCliqueBotao();
       if (!estadoAtual) return;
       const blob = new Blob([JSON.stringify(estadoAtual, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -2280,11 +2719,13 @@
     }
 
     async function resetarBatalha() {
+      MotorAudioPirata.somCliqueBotao();
       localStorage.removeItem(CHAVE_SAVE);
       await fetch('/api/jogo/mestre/resetar', { method: 'POST' });
       await carregarEstado(true);
     }
 
+    atualizarBotoesAudio();
     iniciarParticulasVivas();
     carregarEstado(true);
     setInterval(() => carregarEstado(false), 2000);
